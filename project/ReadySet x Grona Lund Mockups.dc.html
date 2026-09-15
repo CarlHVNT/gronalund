@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_ds/readyset-design-system-e20b2196-a7d6-4862-9c4a-e5d36f8d48ac/components/fig-tokens.css">
+<link rel="stylesheet" href="_ds/readyset-design-system-e20b2196-a7d6-4862-9c4a-e5d36f8d48ac/components/fig-typography.css">
+<script src="_ds/readyset-design-system-e20b2196-a7d6-4862-9c4a-e5d36f8d48ac/_ds_bundle.js"></script>
+<style>
+body{margin:0;background:#EFEBE2;font-family:'Plus Jakarta Sans',system-ui,sans-serif}
+a{color:#2C8294}a:hover{color:#122A31}
+.dv-turn{padding:44px 48px 36px;border-bottom:1px solid rgba(18,42,49,.1);scroll-margin-top:16px}
+.dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 24px}
+.dv-tid{font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#122A31;color:#fff;border-radius:4px;text-decoration:none}
+.dv-tname{font:600 13px/1.2 'Plus Jakarta Sans',sans-serif;color:#122A31}
+.dv-opts{display:flex;flex-direction:column;gap:46px;align-items:flex-start}
+.dv-opt{display:flex;flex-direction:column;gap:14px;scroll-margin-top:16px}
+.dv-oid{font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:rgba(18,42,49,.09);color:#122A31;border-radius:5px;text-decoration:none}
+.dv-olabel{display:flex;align-items:baseline;gap:9px;font:500 11.5px/1.3 'Plus Jakarta Sans',sans-serif;color:rgba(18,42,49,.62)}
+.dv-opt:target .dv-oid{background:#4FB4C6;color:#fff}
+.dv-next{margin:26px 0 0;font:12px/1.6 'Plus Jakarta Sans',sans-serif;color:rgba(18,42,49,.5)}
+.ph{display:flex;flex-direction:column;gap:11px;flex:none}
+.cap{font:600 11.5px/1.35 'Plus Jakarta Sans',sans-serif;color:#122A31;max-width:402px}
+.cap i{display:block;font-style:normal;font-weight:500;color:rgba(18,42,49,.5);margin-top:2px}
+</style>
+</helmet>
+
+<div style="background: {{ boardBg }}">
+
+<header style="padding:52px 48px 40px;border-bottom:1px solid rgba(18,42,49,.1);max-width:1180px">
+  <div style="display:flex;align-items:center;gap:10px;font:700 9.5px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.15em;text-transform:uppercase;color:#2C8294;margin-bottom:18px"><span style="width:5px;height:5px;border-radius:50%;background:#4FB4C6"></span>Sales mockups · White-label pitch</div>
+  <h1 style="margin:0 0 14px;font:800 34px/1.08 'Plus Jakarta Sans',sans-serif;letter-spacing:-.025em;color:#122A31;max-width:740px;text-wrap:balance">ReadySet as Gröna Lund's own app — a location-based skattjakt across the park.</h1>
+  <p style="margin:0 0 26px;font:500 14px/1.6 'Plus Jakarta Sans',sans-serif;color:#46606A;max-width:680px">Six screens, shown twice in two brand treatments, plus the same engine dressed for three other activation types. Everything is real ReadySet functionality: event code entry, a map board of checkpoints, mission cards, live scoring, reward redemption.</p>
+  <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:rgba(18,42,49,.12);border:1px solid rgba(18,42,49,.12);border-radius:12px;overflow:hidden;max-width:880px">
+    <div style="background:#fff;padding:13px 15px"><div style="font:700 8px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.11em;text-transform:uppercase;color:#2C8294;margin-bottom:6px">Prospect</div><div style="font:700 12.5px/1.25 'Plus Jakarta Sans',sans-serif;color:#122A31">Tivoli Gröna Lund</div></div>
+    <div style="background:#fff;padding:13px 15px"><div style="font:700 8px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.11em;text-transform:uppercase;color:#2C8294;margin-bottom:6px">Use case</div><div style="font:700 12.5px/1.25 'Plus Jakarta Sans',sans-serif;color:#122A31">Park-wide scavenger hunt</div></div>
+    <div style="background:#fff;padding:13px 15px"><div style="font:700 8px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.11em;text-transform:uppercase;color:#2C8294;margin-bottom:6px">Delivery</div><div style="font:700 12.5px/1.25 'Plus Jakarta Sans',sans-serif;color:#122A31">White-label app</div></div>
+    <div style="background:#fff;padding:13px 15px"><div style="font:700 8px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.11em;text-transform:uppercase;color:#2C8294;margin-bottom:6px">Copy language</div><div style="font:700 12.5px/1.25 'Plus Jakarta Sans',sans-serif;color:#122A31">Swedish</div></div>
+  </div>
+  <p style="margin:22px 0 0;font:500 12px/1.65 'Plus Jakarta Sans',sans-serif;color:rgba(18,42,49,.55);max-width:680px">Turn 2 is built on the shipped ReadySet app — its screen skeleton, spacing and components, with Gröna Lund's logo and palette swapped in. Turn 1 below is the earlier from-scratch direction, kept for reference. Assumptions I made — tell me to change any of them: the park map is a schematic stand-in (drop in Gröna Lund's real park artwork and it slots straight in), photography is a labelled placeholder, ride names are the real attractions, and nine checkpoints is a one-evening trail. The logo is the file you sent.</p>
+</header>
+
+<section class="dv-turn" id="t3">
+<div class="dv-thd"><a class="dv-tid" href="#t3">3</a><span class="dv-tname">Map screen reworked — isometric park with their attractions built in</span></div>
+<div class="dv-opts">
+
+<div class="dv-opt" id="3a">
+<div class="dv-olabel"><a class="dv-oid" href="#3a">3a</a>3D park map, daylight skin — same app sheet as <a class="dv-oid" href="#2a">2a</a>, new map body</div>
+<div style="display:flex;gap: {{ gapPx }};flex-wrap:nowrap">
+
+<div class="ph">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:100%;background:#fff;display:flex;flex-direction:column;font-family:'Plus Jakarta Sans',system-ui">
+  <div style="flex:1;position:relative;background:#CFE6D6">
+    <svg viewBox="0 0 402 620" style="position:absolute;inset:0;width:100%;height:100%">
+      <rect width="402" height="620" fill="#CFE6D6"></rect>
+      <path d="M0 0h402v150c-70 34-150 24-250 62C86 240 30 232 0 250Z" fill="#B7D6E2"></path>
+      <g transform="translate(0,64) scale(1.04)">
+      <g transform="translate(200,318) rotate(-40) scale(1.0,0.54)">
+        <rect x="-200" y="-200" width="400" height="400" rx="46" fill="#D7EDDB"></rect>
+        <rect x="-200" y="-200" width="400" height="64" rx="40" fill="#C5E2CB"></rect>
+        <path d="M-130 140C-150 60-160-40-60-150-20-200 120-200 170-160 210-120 180-80 120-60 160-20 170 40 150 90 100 120 60 90 20 60-20 100-30 140-60 160Z" fill="none" stroke="#FFFFFF" stroke-width="24" stroke-linejoin="round"></path>
+        <path d="M-130 140C-150 60-160-40-60-150-20-200 120-200 170-160 210-120 180-80 120-60 160-20 170 40 150 90 100 120 60 90 20 60-20 100-30 140-60 160Z" fill="none" stroke="#E0B54A" stroke-width="2.5" stroke-dasharray="8 12"></path>
+        <g fill="rgba(11,59,34,.10)">
+          <ellipse cx="120" cy="-60" rx="30" ry="30"></ellipse>
+          <ellipse cx="-20" cy="-150" rx="34" ry="34"></ellipse>
+          <ellipse cx="150" cy="90" rx="30" ry="30"></ellipse>
+          <ellipse cx="20" cy="60" rx="28" ry="28"></ellipse>
+          <ellipse cx="-140" cy="-20" rx="30" ry="30"></ellipse>
+          <ellipse cx="-60" cy="160" rx="26" ry="26"></ellipse>
+          <ellipse cx="170" cy="-160" rx="24" ry="24"></ellipse>
+        </g>
+        <g fill="#8FC79E">
+          <circle cx="-90" cy="60" r="11"></circle><circle cx="-60" cy="30" r="8"></circle>
+          <circle cx="60" cy="-100" r="10"></circle><circle cx="100" cy="30" r="9"></circle>
+          <circle cx="-170" cy="-120" r="10"></circle><circle cx="30" cy="170" r="9"></circle>
+          <circle cx="190" cy="-40" r="8"></circle><circle cx="-110" cy="-90" r="8"></circle>
+        </g>
+        <circle cx="65" cy="130" r="32" fill="#C5E2CB" stroke="#FFFFFF" stroke-width="6"></circle>
+      </g>
+
+      <g transform="translate(-54,28)">
+        <path d="M258 169L258 141 266 141 266 169Z" fill="#9FD3AE"></path>
+        <path d="M266 141L266 169 271 166 271 138Z" fill="#4E9E6B"></path>
+        <path d="M248 150L277 150" stroke="#C8102E" stroke-width="2.5"></path>
+        <circle cx="262" cy="134" r="5" fill="#E0B54A"></circle>
+      </g>
+
+      <g>
+        <path d="M254 233L254 143 266 143 266 233Z" fill="#9FD3AE"></path>
+        <path d="M266 143L266 233 272 228 272 138Z" fill="#4E9E6B"></path>
+        <path d="M254 143L266 143 272 138 260 138Z" fill="#E8F6EC"></path>
+        <rect x="246" y="196" width="26" height="11" rx="3.5" fill="#E0B54A"></rect>
+        <circle cx="261" cy="132" r="5" fill="#C8102E"></circle>
+      </g>
+
+      <g>
+        <path d="M118 283L118 266M134 286L134 252M152 288L152 262M170 285L170 258" stroke="#9FD3AE" stroke-width="3" stroke-linecap="round"></path>
+        <path d="M110 284C118 246 132 238 146 258 160 278 166 248 178 256" fill="none" stroke="#C8102E" stroke-width="4" stroke-linecap="round"></path>
+        <circle cx="146" cy="243" r="11" fill="none" stroke="#C8102E" stroke-width="3.2"></circle>
+      </g>
+
+      <g>
+        <path d="M313 272L325 246 337 272" fill="none" stroke="#4E9E6B" stroke-width="4" stroke-linecap="round"></path>
+        <circle cx="325" cy="242" r="27" fill="none" stroke="#0E7C3A" stroke-width="3.5"></circle>
+        <path d="M325 215L325 269M298 242L352 242M306 223L344 261M344 223L306 261" stroke="#9FD3AE" stroke-width="2"></path>
+        <g fill="#E0B54A"><circle cx="325" cy="215" r="4"></circle><circle cx="352" cy="242" r="4"></circle><circle cx="325" cy="269" r="4"></circle><circle cx="298" cy="242" r="4"></circle></g>
+        <circle cx="325" cy="242" r="4.5" fill="#C8102E"></circle>
+      </g>
+
+      <g>
+        <ellipse cx="231" cy="331" rx="27" ry="12" fill="#9FD3AE"></ellipse>
+        <path d="M231 303L207 322 255 322Z" fill="#C8102E"></path>
+        <rect x="229" y="310" width="4" height="22" fill="#E8F6EC"></rect>
+        <path d="M213 322L213 330M249 322L249 330" stroke="#E8F6EC" stroke-width="3"></path>
+        <circle cx="231" cy="300" r="4" fill="#E0B54A"></circle>
+      </g>
+
+      <g>
+        <path d="M79 365L103 353 127 365 103 377Z" fill="#E8F6EC"></path>
+        <path d="M79 365L103 377 103 401 79 389Z" fill="#9FD3AE"></path>
+        <path d="M103 377L127 365 127 389 103 401Z" fill="#6FB884"></path>
+        <rect x="86" y="380" width="9" height="13" rx="1.5" fill="#E0B54A"></rect>
+        <circle cx="103" cy="349" r="4" fill="#C8102E"></circle>
+      </g>
+
+      <g>
+        <path d="M190 404L209 396 228 404 209 412Z" fill="#E8F6EC"></path>
+        <path d="M190 404L209 412 209 428 190 420Z" fill="#9FD3AE"></path>
+        <path d="M209 412L228 404 228 420 209 428Z" fill="#6FB884"></path>
+        <path d="M209 396L209 384 222 388 209 392" fill="#E0B54A" stroke="#E0B54A" stroke-width="1.5"></path>
+      </g>
+
+      <g>
+        <path d="M136 444L136 422 142 419 142 441Z" fill="#0E7C3A"></path>
+        <path d="M176 444L176 422 182 419 182 441Z" fill="#0E7C3A"></path>
+        <path d="M136 422L142 419 182 419 176 422Z" fill="#E0B54A"></path>
+        <rect x="139" y="406" width="40" height="12" rx="3.5" fill="#C8102E"></rect>
+      </g>
+
+      <g>
+        <path d="M279 314L295 306 311 314 295 322Z" fill="#E8F6EC"></path>
+        <path d="M279 314L295 322 295 338 279 330Z" fill="#9FD3AE"></path>
+        <path d="M295 322L311 314 311 330 295 338Z" fill="#6FB884"></path>
+        <rect x="284" y="322" width="7" height="10" rx="1.5" fill="#E0B54A"></rect>
+        <circle cx="295" cy="301" r="4" fill="#C8102E"></circle>
+      </g>
+      <g font-family="'Plus Jakarta Sans',sans-serif" font-size="14" font-weight="800">
+        <circle cx="158" cy="404" r="16" fill="#0E7C3A"></circle><text x="158" y="409" text-anchor="middle" fill="#fff">1</text>
+        <circle cx="103" cy="344" r="16" fill="#0E7C3A"></circle><text x="103" y="349" text-anchor="middle" fill="#fff">2</text>
+        <circle cx="209" cy="374" r="16" fill="#0E7C3A"></circle><text x="209" y="379" text-anchor="middle" fill="#fff">3</text>
+        <circle cx="231" cy="292" r="19" fill="#E0B54A" stroke="#fff" stroke-width="3"></circle><text x="231" y="298" text-anchor="middle" fill="#0B3B22">4</text>
+        <circle cx="142" cy="228" r="16" fill="#fff" stroke="#0E7C3A" stroke-width="2.2"></circle><text x="142" y="233" text-anchor="middle" fill="#0E7C3A">5</text>
+        <circle cx="261" cy="112" r="16" fill="#fff" stroke="#0E7C3A" stroke-width="2.2"></circle><text x="261" y="117" text-anchor="middle" fill="#0E7C3A">6</text>
+        <circle cx="330" cy="196" r="16" fill="#fff" stroke="#0E7C3A" stroke-width="2.2"></circle><text x="330" y="201" text-anchor="middle" fill="#0E7C3A">7</text>
+        <circle cx="208" cy="134" r="16" fill="#fff" stroke="#0E7C3A" stroke-width="2.2"></circle><text x="208" y="139" text-anchor="middle" fill="#0E7C3A">8</text>
+        <circle cx="330" cy="330" r="16" fill="#fff" stroke="#0E7C3A" stroke-width="2.2"></circle><text x="330" y="335" text-anchor="middle" fill="#0E7C3A">9</text>
+      </g>
+
+      <g>
+        <circle cx="196" cy="340" r="21" fill="rgba(200,16,46,.16)"></circle>
+        <circle cx="196" cy="340" r="8" fill="#C8102E" stroke="#fff" stroke-width="3"></circle>
+      </g>
+      </g>
+    </svg>
+    <div style="position:absolute;left:18px;top:58px;height:46px;border-radius:13px;background:#fff;box-shadow:0 4px 14px rgba(11,59,34,.16);display:flex;align-items:center;padding:0 16px;font:700 13px/1 'Plus Jakarta Sans',sans-serif;color:#0B3B22">3 av 9 hittade</div>
+    <div style="position:absolute;right:18px;top:58px;width:46px;height:46px;border-radius:13px;background:#fff;box-shadow:0 4px 14px rgba(11,59,34,.16);display:flex;align-items:center;justify-content:center">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="3" stroke="#0B3B22" stroke-width="1.6"></circle><path d="M10 1.8v2.4M10 15.8v2.4M2.6 10h2.4M15 10h2.4M4.8 4.8l1.7 1.7M13.5 13.5l1.7 1.7M15.2 4.8l-1.7 1.7M6.5 13.5l-1.7 1.7" stroke="#0B3B22" stroke-width="1.6" stroke-linecap="round"></path></svg>
+    </div>
+  </div>
+  <div style="flex:none;border-radius:36px 36px 0 0;background:#fff;margin-top:-36px;padding:24px 18px 0;position:relative;z-index:2;box-shadow:0 -12px 30px rgba(11,59,34,.10)">
+    <div style="text-align:center;font:800 28px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:-.02em;color:#0B3B22;margin-bottom:18px">Kartan</div>
+    <div style="display:flex;align-items:center;gap:13px;height:64px;padding:0 15px;border-radius:18px;background:#E8F6EC;border:1px solid #CBE7D2">
+      <div style="width:42px;height:42px;border-radius:12px;background:#E0B54A;display:flex;align-items:center;justify-content:center;font:800 17px/1 'Plus Jakarta Sans',sans-serif;color:#0B3B22;flex:none">4</div>
+      <div style="flex:1;min-width:0"><div style="font:700 14.5px/1.2 'Plus Jakarta Sans',sans-serif;color:#0B3B22">Twister</div><div style="font:500 11.5px/1.3 'Plus Jakarta Sans',sans-serif;color:rgba(11,59,34,.5);margin-top:3px">Närmast dig · 35 m</div></div>
+      <div style="border-radius:99px;background:#0E4A2B;padding:11px 17px;font:700 12px/1 'Plus Jakarta Sans',sans-serif;color:#fff">Öppna</div>
+    </div>
+    <div style="height:104px;display:flex;align-items:center;justify-content:space-between;padding:0 4px;position:relative">
+      <div style="width:52px;height:52px;border-radius:14px;background:#0E4A2B;display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="3" y="4" width="16" height="2.6" rx="1.3" fill="#E0B54A"></rect><rect x="3" y="9.7" width="16" height="2.6" rx="1.3" fill="#E0B54A"></rect><rect x="3" y="15.4" width="16" height="2.6" rx="1.3" fill="#E0B54A"></rect></svg></div>
+      <div style="width:52px;height:52px;border-radius:14px;background:#E8F6EC;display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 26 26" fill="none"><path d="M13 2.5l3 6.6 7.2.6-5.5 4.8 1.7 7-6.4-3.8-6.4 3.8 1.7-7L2.8 9.7 10 9.1l3-6.6Z" fill="#0E7C3A"></path></svg></div>
+      <div style="width:76px"></div>
+      <div style="width:52px;height:52px;border-radius:14px;background:#E8F6EC;display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="2.5" y="10" width="4.5" height="9" rx="1.4" fill="#0E7C3A"></rect><rect x="8.8" y="5" width="4.5" height="14" rx="1.4" fill="#0E7C3A"></rect><rect x="15.1" y="12.5" width="4.5" height="6.5" rx="1.4" fill="#0E7C3A"></rect></svg></div>
+      <div style="width:52px;height:52px;border-radius:14px;background:#E8F6EC;display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M6 3.5h10v4a5 5 0 01-10 0v-4Z" fill="#0E7C3A"></path><path d="M9 13h4v3.5h-4zM6.5 18h9v1.6h-9z" fill="#0E7C3A"></path></svg></div>
+      <div style="position:absolute;left:50%;transform:translateX(-50%);bottom:34px;width:74px;height:74px;border-radius:50%;background:#fff;box-shadow:0 0 0 7px rgba(14,124,58,.16),0 8px 20px rgba(11,59,34,.2);display:flex;align-items:center;justify-content:center;overflow:hidden"><img src="uploads/brand_assets-1789472404439-vofo.jpeg" alt="Gröna Lund" style="width:66px;height:66px;object-fit:contain;display:block"></div>
+    </div>
+  </div>
+</div>
+</x-import>
+<div class="cap">03 · Map, isometric<i>Attractions built as volumes on a tilted park plate: drop tower, looping coaster, wheel, carousel, funhouse, station and the entrance gate. Numbered pins only — names stay in the sheet so nothing collides.</i></div>
+</div>
+
+</div>
+</div>
+</div>
+<p class="dv-next">Try next: "evening version of <a class="dv-oid" href="#3a">3a</a>" · "label the attractions on the map" · "swap the schematic volumes for Gröna Lund's real park map artwork" · "use <a class="dv-oid" href="#3a">3a</a> in the one-pager leave-behind"</p>
+</section>
+
+<section class="dv-turn" id="t2">
+<div class="dv-thd"><a class="dv-tid" href="#t2">2</a><span class="dv-tname">Built on the real app: same screen skeleton, Gröna Lund logo and colours swapped in</span></div>
+<div class="dv-opts">
+
+<div class="dv-opt" id="2a">
+<div class="dv-olabel"><a class="dv-oid" href="#2a">2a</a>Gröna Lund skin on the shipped app — pale brand gradient, white sheet, pill checkpoints, tab bar</div>
+<div style="display:flex;gap: {{ gapPx }};flex-wrap:nowrap">
+
+<div class="ph">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:100%;background:#BFE3C8;background-image:radial-gradient(70% 45% at 50% 22%, #D9F0DE, transparent 70%);display:flex;flex-direction:column;align-items:center;padding:0 28px;font-family:'Plus Jakarta Sans',system-ui">
+  <div style="height:96px"></div>
+  <div style="width:192px;height:192px;border-radius:50%;background:#fff;box-shadow:inset 0 -10px 24px rgba(11,59,34,.10),0 22px 44px rgba(11,59,34,.22);display:flex;align-items:center;justify-content:center;overflow:hidden"><img src="uploads/brand_assets-1789472404439-vofo.jpeg" alt="Gröna Lund" style="width:176px;height:176px;object-fit:contain;display:block"></div>
+  <div style="margin-top:54px;font:500 33px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:-.01em;color:#0B3B22">Välkommen till</div>
+  <div style="margin-top:8px;font:800 40px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:-.02em;color:#0B3B22;text-transform:uppercase;text-align:center">Gröna Lund</div>
+  <div style="flex:1"></div>
+  <div style="width:100%;height:58px;border-radius:12px;background:rgba(255,255,255,.55);display:flex;align-items:center;padding:0 18px;font:500 15px/1 'Plus Jakarta Sans',sans-serif;color:rgba(11,59,34,.45)">Eventkod</div>
+  <div style="margin-top:9px;font:700 11px/1 'Plus Jakarta Sans',sans-serif;color:#0B3B22">Ange en kod för att fortsätta</div>
+  <div style="width:100%;margin-top:22px;height:62px;border-radius:12px;background:#0E4A2B;display:flex;align-items:center;justify-content:center;font:700 17px/1 'Plus Jakarta Sans',sans-serif;color:#fff">Anslut med QR-kod</div>
+  <div style="height:44px"></div>
+</div>
+</x-import>
+<div class="cap">01 · Welcome<i>Exact shipped layout — mark in a glossy circle, "Välkommen till" over the wordmark, pale field, solid dark button.</i></div>
+</div>
+
+<div class="ph">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:100%;background:#fff;display:flex;flex-direction:column;font-family:'Plus Jakarta Sans',system-ui">
+  <div style="height:272px;flex:none;position:relative;background:#BFE3C8;background-image:linear-gradient(150deg,#D9F0DE,#9FD3AE)">
+    <div style="position:absolute;inset:18px;border:1.5px dashed rgba(11,59,34,.3);border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px">
+      <div style="font:700 12.5px/1.3 'Plus Jakarta Sans',sans-serif;color:rgba(11,59,34,.6)">Gröna Lund key art</div>
+      <div style="font:500 11px/1.3 'Plus Jakarta Sans',sans-serif;color:rgba(11,59,34,.45);text-align:center;max-width:220px">Placeholder — park characters or ride photography go here</div>
+    </div>
+    <div style="position:absolute;right:18px;top:58px;width:46px;height:46px;border-radius:13px;background:#fff;box-shadow:0 4px 14px rgba(11,59,34,.16);display:flex;align-items:center;justify-content:center">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="3" stroke="#0B3B22" stroke-width="1.6"></circle><path d="M10 1.8v2.4M10 15.8v2.4M2.6 10h2.4M15 10h2.4M4.8 4.8l1.7 1.7M13.5 13.5l1.7 1.7M15.2 4.8l-1.7 1.7M6.5 13.5l-1.7 1.7" stroke="#0B3B22" stroke-width="1.6" stroke-linecap="round"></path></svg>
+    </div>
+  </div>
+  <div style="flex:1;margin-top:-36px;border-radius:36px 36px 0 0;background:#fff;padding:26px 18px 0;display:flex;flex-direction:column;position:relative;z-index:2">
+    <div style="text-align:center;font:800 30px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:-.02em;color:#0B3B22;margin-bottom:20px">Hållplatser</div>
+    <div style="display:flex;flex-direction:column;gap:11px">
+
+      <div style="display:flex;align-items:center;gap:12px;height:56px;padding:0 15px;border-radius:16px;background:#E8F6EC;border:1px solid #CBE7D2">
+        <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><circle cx="13" cy="13" r="12" fill="#0E7C3A"></circle><path d="M9.8 10a3.2 3.2 0 016.4.2c0 2.2-3 2.3-3 4.3" stroke="#fff" stroke-width="1.9" stroke-linecap="round"></path><circle cx="13.1" cy="18.4" r="1.3" fill="#fff"></circle></svg>
+        <div style="flex:1;min-width:0;font:600 14.5px/1.2 'Plus Jakarta Sans',sans-serif;color:#0B3B22;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Lustiga Huset — vilket år öppna…</div>
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="10" stroke="#0E7C3A" stroke-width="1.6"></circle><path d="M6.8 11.4l2.8 2.8 5.6-5.8" stroke="#0E7C3A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:12px;height:56px;padding:0 15px;border-radius:16px;background:#E8F6EC;border:1px solid #CBE7D2">
+        <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><rect x="2" y="6" width="22" height="15" rx="4" fill="#0E7C3A"></rect><circle cx="13" cy="13.5" r="4.2" fill="#fff"></circle><rect x="9.5" y="3.5" width="7" height="3.4" rx="1.4" fill="#0E7C3A"></rect></svg>
+        <div style="flex:1;min-width:0;font:600 14.5px/1.2 'Plus Jakarta Sans',sans-serif;color:#0B3B22;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Twister — hela laget i bild…</div>
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="10" stroke="#0E7C3A" stroke-width="1.6"></circle><path d="M6.8 11.4l2.8 2.8 5.6-5.8" stroke="#0E7C3A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:12px;height:56px;padding:0 15px;border-radius:16px;background:#fff;border:1px solid #E3E9E4">
+        <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><path d="M13 2.5l3 6.6 7.2.6-5.5 4.8 1.7 7-6.4-3.8-6.4 3.8 1.7-7L2.8 9.7 10 9.1l3-6.6Z" fill="#E0B54A"></path></svg>
+        <div style="flex:1;min-width:0;font:600 14.5px/1.2 'Plus Jakarta Sans',sans-serif;color:#0B3B22;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Jetline — hitta den gömda…</div>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:12px;height:56px;padding:0 15px;border-radius:16px;background:#FDECEE;border:1px solid #F6D2D7">
+        <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><circle cx="13" cy="13" r="12" fill="#C8102E"></circle><path d="M9.8 10a3.2 3.2 0 016.4.2c0 2.2-3 2.3-3 4.3" stroke="#fff" stroke-width="1.9" stroke-linecap="round"></path><circle cx="13.1" cy="18.4" r="1.3" fill="#fff"></circle></svg>
+        <div style="flex:1;min-width:0;font:600 14.5px/1.2 'Plus Jakarta Sans',sans-serif;color:#8E0B20;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Kvasten — hur många varv…</div>
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="10" stroke="#C8102E" stroke-width="1.6"></circle><path d="M7.6 7.6l6.8 6.8M14.4 7.6l-6.8 6.8" stroke="#C8102E" stroke-width="1.8" stroke-linecap="round"></path></svg>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:12px;height:56px;padding:0 15px;border-radius:16px;background:#fff;border:1px solid #E3E9E4">
+        <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><rect x="2" y="6" width="22" height="15" rx="4" fill="#9FD3AE"></rect><circle cx="13" cy="13.5" r="4.2" fill="#fff"></circle><rect x="9.5" y="3.5" width="7" height="3.4" rx="1.4" fill="#9FD3AE"></rect></svg>
+        <div style="flex:1;min-width:0;font:600 14.5px/1.2 'Plus Jakarta Sans',sans-serif;color:#0B3B22;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Fritt Fall — fånga fallet på…</div>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:12px;height:56px;padding:0 15px;border-radius:16px;background:#fff;border:1px solid #E3E9E4">
+        <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><path d="M13 2.5l3 6.6 7.2.6-5.5 4.8 1.7 7-6.4-3.8-6.4 3.8 1.7-7L2.8 9.7 10 9.1l3-6.6Z" fill="#CBE7D2"></path></svg>
+        <div style="flex:1;min-width:0;font:600 14.5px/1.2 'Plus Jakarta Sans',sans-serif;color:#0B3B22;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Blå Tåget — ledtråd vid…</div>
+      </div>
+
+    </div>
+    <div style="flex:1"></div>
+    <div style="height:104px;display:flex;align-items:center;justify-content:space-between;padding:0 4px;position:relative">
+      <div style="width:52px;height:52px;border-radius:14px;background:#E8F6EC;display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="3" y="4" width="16" height="2.6" rx="1.3" fill="#0E7C3A"></rect><rect x="3" y="9.7" width="16" height="2.6" rx="1.3" fill="#0E7C3A"></rect><rect x="3" y="15.4" width="16" height="2.6" rx="1.3" fill="#0E7C3A"></rect></svg></div>
+      <div style="width:52px;height:52px;border-radius:14px;background:#0E4A2B;display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 26 26" fill="none"><path d="M13 2.5l3 6.6 7.2.6-5.5 4.8 1.7 7-6.4-3.8-6.4 3.8 1.7-7L2.8 9.7 10 9.1l3-6.6Z" fill="#E0B54A"></path></svg></div>
+      <div style="width:76px"></div>
+      <div style="width:52px;height:52px;border-radius:14px;background:#E8F6EC;display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="2.5" y="10" width="4.5" height="9" rx="1.4" fill="#0E7C3A"></rect><rect x="8.8" y="5" width="4.5" height="14" rx="1.4" fill="#0E7C3A"></rect><rect x="15.1" y="12.5" width="4.5" height="6.5" rx="1.4" fill="#0E7C3A"></rect></svg></div>
+      <div style="width:52px;height:52px;border-radius:14px;background:#E8F6EC;display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M6 3.5h10v4a5 5 0 01-10 0v-4Z" fill="#0E7C3A"></path><path d="M9 13h4v3.5h-4zM6.5 18h9v1.6h-9z" fill="#0E7C3A"></path></svg></div>
+      <div style="position:absolute;left:50%;transform:translateX(-50%);bottom:34px;width:74px;height:74px;border-radius:50%;background:#fff;box-shadow:0 0 0 7px rgba(14,124,58,.16),0 8px 20px rgba(11,59,34,.2);display:flex;align-items:center;justify-content:center;overflow:hidden"><img src="uploads/brand_assets-1789472404439-vofo.jpeg" alt="Gröna Lund" style="width:66px;height:66px;object-fit:contain;display:block"></div>
+    </div>
+  </div>
+</div>
+</x-import>
+<div class="cap">02 · Checkpoints<i>The app's own pattern: key-art header, gear button, sheet over the image, pill rows with green/red status tints, raised centre tab button carrying the client mark.</i></div>
+</div>
+
+<div class="ph">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:100%;background:#fff;display:flex;flex-direction:column;font-family:'Plus Jakarta Sans',system-ui">
+  <div style="flex:1;position:relative;background:#E8F0E6">
+    <svg viewBox="0 0 402 620" style="position:absolute;inset:0;width:100%;height:100%">
+      <rect width="402" height="620" fill="#EAF2E7"></rect>
+      <path d="M0 0h402v104c-96 28-214 10-272 40C80 170 30 162 0 180Z" fill="#CFE6D6"></path>
+      <path d="M0 520c104-24 162 18 258 4 56-8 100-28 144-34v130H0Z" fill="#CFE6D6"></path>
+      <g stroke="#fff" stroke-width="18" fill="none" stroke-linecap="round">
+        <path d="M56 162C46 270 104 344 190 372 282 402 340 324 336 226"></path>
+        <path d="M190 372c-8 48-42 76-92 90"></path>
+        <path d="M336 226c24-32 28-62 20-92"></path>
+      </g>
+      <g stroke="#E0B54A" stroke-width="2" stroke-dasharray="6 8" fill="none">
+        <path d="M56 162C46 270 104 344 190 372"></path>
+      </g>
+      <g fill="#DCE9D8" stroke="rgba(11,59,34,.12)">
+        <rect x="30" y="200" width="98" height="62" rx="12"></rect>
+        <rect x="160" y="160" width="112" height="72" rx="12"></rect>
+        <rect x="290" y="272" width="82" height="76" rx="12"></rect>
+        <rect x="120" y="418" width="126" height="66" rx="12"></rect>
+        <rect x="36" y="308" width="78" height="60" rx="12"></rect>
+        <rect x="276" y="418" width="96" height="60" rx="12"></rect>
+      </g>
+      <g fill="rgba(11,59,34,.45)" font-family="'Plus Jakarta Sans',sans-serif" font-size="9.5" font-weight="700" letter-spacing="1">
+        <text x="72" y="256" text-anchor="middle">LUSTIGA HUSET</text>
+        <text x="216" y="178" text-anchor="middle">JETLINE</text>
+        <text x="331" y="314" text-anchor="middle">ECLIPSE</text>
+        <text x="183" y="455" text-anchor="middle">BLÅ TÅGET</text>
+        <text x="75" y="342" text-anchor="middle">TWISTER</text>
+        <text x="324" y="452" text-anchor="middle">KVASTEN</text>
+      </g>
+      <g font-family="'Plus Jakarta Sans',sans-serif" font-size="14" font-weight="800">
+        <circle cx="56" cy="162" r="18" fill="#0E7C3A"></circle><text x="56" y="167" text-anchor="middle" fill="#fff">1</text>
+        <circle cx="136" cy="238" r="18" fill="#0E7C3A"></circle><text x="136" y="243" text-anchor="middle" fill="#fff">2</text>
+        <circle cx="208" cy="210" r="18" fill="#E0B54A"></circle><text x="208" y="215" text-anchor="middle" fill="#0B3B22">3</text>
+        <circle cx="276" cy="288" r="18" fill="#fff" stroke="#0E7C3A" stroke-width="2"></circle><text x="276" y="293" text-anchor="middle" fill="#0E7C3A">4</text>
+        <circle cx="336" cy="226" r="18" fill="#fff" stroke="#0E7C3A" stroke-width="2"></circle><text x="336" y="231" text-anchor="middle" fill="#0E7C3A">5</text>
+        <circle cx="190" cy="372" r="18" fill="#fff" stroke="#0E7C3A" stroke-width="2"></circle><text x="190" y="377" text-anchor="middle" fill="#0E7C3A">6</text>
+        <circle cx="98" cy="462" r="18" fill="#fff" stroke="#0E7C3A" stroke-width="2"></circle><text x="98" y="467" text-anchor="middle" fill="#0E7C3A">7</text>
+        <circle cx="266" cy="446" r="18" fill="#fff" stroke="#0E7C3A" stroke-width="2"></circle><text x="266" y="451" text-anchor="middle" fill="#0E7C3A">8</text>
+        <circle cx="344" cy="512" r="18" fill="#fff" stroke="#0E7C3A" stroke-width="2"></circle><text x="344" y="517" text-anchor="middle" fill="#0E7C3A">9</text>
+      </g>
+      <circle cx="162" cy="322" r="22" fill="rgba(200,16,46,.14)"></circle>
+      <circle cx="162" cy="322" r="8" fill="#C8102E" stroke="#fff" stroke-width="3"></circle>
+    </svg>
+    <div style="position:absolute;left:18px;top:58px;height:46px;border-radius:13px;background:#fff;box-shadow:0 4px 14px rgba(11,59,34,.16);display:flex;align-items:center;padding:0 16px;font:700 13px/1 'Plus Jakarta Sans',sans-serif;color:#0B3B22">3 av 9 hittade</div>
+    <div style="position:absolute;right:18px;top:58px;width:46px;height:46px;border-radius:13px;background:#fff;box-shadow:0 4px 14px rgba(11,59,34,.16);display:flex;align-items:center;justify-content:center">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="3" stroke="#0B3B22" stroke-width="1.6"></circle><path d="M10 1.8v2.4M10 15.8v2.4M2.6 10h2.4M15 10h2.4M4.8 4.8l1.7 1.7M13.5 13.5l1.7 1.7M15.2 4.8l-1.7 1.7M6.5 13.5l-1.7 1.7" stroke="#0B3B22" stroke-width="1.6" stroke-linecap="round"></path></svg>
+    </div>
+  </div>
+  <div style="flex:none;border-radius:36px 36px 0 0;background:#fff;margin-top:-36px;padding:24px 18px 0;position:relative;z-index:2;box-shadow:0 -12px 30px rgba(11,59,34,.10)">
+    <div style="text-align:center;font:800 28px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:-.02em;color:#0B3B22;margin-bottom:18px">Kartan</div>
+    <div style="display:flex;align-items:center;gap:13px;height:64px;padding:0 15px;border-radius:18px;background:#E8F6EC;border:1px solid #CBE7D2">
+      <div style="width:42px;height:42px;border-radius:12px;background:#0E7C3A;display:flex;align-items:center;justify-content:center;font:800 17px/1 'Plus Jakarta Sans',sans-serif;color:#fff;flex:none">4</div>
+      <div style="flex:1;min-width:0"><div style="font:700 14.5px/1.2 'Plus Jakarta Sans',sans-serif;color:#0B3B22">Eclipse</div><div style="font:500 11.5px/1.3 'Plus Jakarta Sans',sans-serif;color:rgba(11,59,34,.5);margin-top:3px">Närmast dig · 40 m</div></div>
+      <div style="border-radius:99px;background:#0E4A2B;padding:11px 17px;font:700 12px/1 'Plus Jakarta Sans',sans-serif;color:#fff">Öppna</div>
+    </div>
+    <div style="height:104px;display:flex;align-items:center;justify-content:space-between;padding:0 4px;position:relative">
+      <div style="width:52px;height:52px;border-radius:14px;background:#0E4A2B;display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="3" y="4" width="16" height="2.6" rx="1.3" fill="#E0B54A"></rect><rect x="3" y="9.7" width="16" height="2.6" rx="1.3" fill="#E0B54A"></rect><rect x="3" y="15.4" width="16" height="2.6" rx="1.3" fill="#E0B54A"></rect></svg></div>
+      <div style="width:52px;height:52px;border-radius:14px;background:#E8F6EC;display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 26 26" fill="none"><path d="M13 2.5l3 6.6 7.2.6-5.5 4.8 1.7 7-6.4-3.8-6.4 3.8 1.7-7L2.8 9.7 10 9.1l3-6.6Z" fill="#0E7C3A"></path></svg></div>
+      <div style="width:76px"></div>
+      <div style="width:52px;height:52px;border-radius:14px;background:#E8F6EC;display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="2.5" y="10" width="4.5" height="9" rx="1.4" fill="#0E7C3A"></rect><rect x="8.8" y="5" width="4.5" height="14" rx="1.4" fill="#0E7C3A"></rect><rect x="15.1" y="12.5" width="4.5" height="6.5" rx="1.4" fill="#0E7C3A"></rect></svg></div>
+      <div style="width:52px;height:52px;border-radius:14px;background:#E8F6EC;display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M6 3.5h10v4a5 5 0 01-10 0v-4Z" fill="#0E7C3A"></path><path d="M9 13h4v3.5h-4zM6.5 18h9v1.6h-9z" fill="#0E7C3A"></path></svg></div>
+      <div style="position:absolute;left:50%;transform:translateX(-50%);bottom:34px;width:74px;height:74px;border-radius:50%;background:#fff;box-shadow:0 0 0 7px rgba(14,124,58,.16),0 8px 20px rgba(11,59,34,.2);display:flex;align-items:center;justify-content:center;overflow:hidden"><img src="uploads/brand_assets-1789472404439-vofo.jpeg" alt="Gröna Lund" style="width:66px;height:66px;object-fit:contain;display:block"></div>
+    </div>
+  </div>
+</div>
+</x-import>
+<div class="cap">03 · Map<i>Same sheet-over-image structure, with the trail map in the image slot. Schematic stand-in for the park's real map artwork.</i></div>
+</div>
+
+<div class="ph">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:100%;background:#CFE6D6;display:flex;flex-direction:column;font-family:'Plus Jakarta Sans',system-ui">
+  <div style="padding:58px 20px 0">
+    <div style="width:46px;height:46px;border-radius:13px;background:#fff;box-shadow:0 4px 14px rgba(11,59,34,.14);display:flex;align-items:center;justify-content:center">
+      <svg width="17" height="17" viewBox="0 0 17 17" fill="none"><path d="M10.5 3L5 8.5l5.5 5.5" stroke="#0B3B22" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    </div>
+  </div>
+  <div style="margin:18px 20px 0;flex:1;border-radius:16px;background:#BFD9C6;border:1.5px dashed rgba(11,59,34,.3);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px">
+    <svg width="42" height="42" viewBox="0 0 24 24" fill="none"><rect x="2" y="6" width="20" height="14" rx="3" stroke="rgba(11,59,34,.5)" stroke-width="1.4"></rect><circle cx="12" cy="13" r="4" stroke="rgba(11,59,34,.5)" stroke-width="1.4"></circle><path d="M8.5 6l1.4-2.2h4.2L15.5 6" stroke="rgba(11,59,34,.5)" stroke-width="1.4"></path></svg>
+    <div style="font:700 12.5px/1.3 'Plus Jakarta Sans',sans-serif;color:rgba(11,59,34,.6)">Lagets foto</div>
+    <div style="font:500 11px/1.4 'Plus Jakarta Sans',sans-serif;color:rgba(11,59,34,.45);text-align:center;max-width:210px">Placeholder — the photo the team just took</div>
+  </div>
+  <div style="flex:none;margin-top:18px;border-radius:36px 36px 0 0;background:#EDF6EF;padding:26px 20px 0">
+    <div style="font:700 21px/1.25 'Plus Jakarta Sans',sans-serif;letter-spacing:-.015em;color:#0B3B22">Bilda en berg-och-dalbana med kropparna.</div>
+    <div style="margin-top:18px;height:58px;border-radius:12px;border:1.5px solid #0E7C3A;display:flex;align-items:center;justify-content:center;font:600 15px/1 'Plus Jakarta Sans',sans-serif;color:#0E7C3A">Ta om bilden</div>
+    <div style="margin-top:12px;height:58px;border-radius:12px;background:#0E4A2B;display:flex;align-items:center;justify-content:center;font:700 16px/1 'Plus Jakarta Sans',sans-serif;color:#fff">Fortsätt</div>
+    <div style="height:46px"></div>
+  </div>
+</div>
+</x-import>
+<div class="cap">04 · Photo mission<i>Shipped photo flow verbatim — back chip, framed photo, instruction sheet, outlined retake over solid proceed.</i></div>
+</div>
+
+<div class="ph">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:100%;background:#fff;display:flex;flex-direction:column;font-family:'Plus Jakarta Sans',system-ui">
+  <div style="height:230px;flex:none;position:relative;background:#BFE3C8;background-image:linear-gradient(150deg,#D9F0DE,#9FD3AE)">
+    <div style="position:absolute;inset:18px;border:1.5px dashed rgba(11,59,34,.3);border-radius:18px;display:flex;align-items:center;justify-content:center;font:700 12.5px/1.3 'Plus Jakarta Sans',sans-serif;color:rgba(11,59,34,.55)">Gröna Lund key art</div>
+  </div>
+  <div style="flex:1;margin-top:-36px;border-radius:36px 36px 0 0;background:#fff;padding:26px 18px 0;display:flex;flex-direction:column;position:relative;z-index:2">
+    <div style="text-align:center;font:800 30px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:-.02em;color:#0B3B22;margin-bottom:6px">Topplistan</div>
+    <div style="text-align:center;font:500 11.5px/1 'Plus Jakarta Sans',sans-serif;color:rgba(11,59,34,.45);margin-bottom:20px">Uppdateras direkt · 212 lag i kväll</div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;align-items:center;gap:12px;height:58px;padding:0 15px;border-radius:16px;background:#fff;border:1px solid #E3E9E4"><div style="width:24px;font:800 15px/1 'Plus Jakarta Sans',sans-serif;color:#E0B54A">1</div><div style="width:34px;height:34px;border-radius:50%;background:#E8F6EC"></div><div style="flex:1;min-width:0;font:600 14.5px/1.2 'Plus Jakarta Sans',sans-serif;color:#0B3B22">Kanonkulorna</div><div style="font:700 14px/1 'Plus Jakarta Sans',sans-serif;color:#0B3B22">1 820</div></div>
+      <div style="display:flex;align-items:center;gap:12px;height:58px;padding:0 15px;border-radius:16px;background:#fff;border:1px solid #E3E9E4"><div style="width:24px;font:800 15px/1 'Plus Jakarta Sans',sans-serif;color:#E0B54A">2</div><div style="width:34px;height:34px;border-radius:50%;background:#E8F6EC"></div><div style="flex:1;min-width:0;font:600 14.5px/1.2 'Plus Jakarta Sans',sans-serif;color:#0B3B22">Team Tivoli</div><div style="font:700 14px/1 'Plus Jakarta Sans',sans-serif;color:#0B3B22">1 640</div></div>
+      <div style="display:flex;align-items:center;gap:12px;height:58px;padding:0 15px;border-radius:16px;background:#fff;border:1px solid #E3E9E4"><div style="width:24px;font:800 15px/1 'Plus Jakarta Sans',sans-serif;color:#E0B54A">3</div><div style="width:34px;height:34px;border-radius:50%;background:#E8F6EC"></div><div style="flex:1;min-width:0;font:600 14.5px/1.2 'Plus Jakarta Sans',sans-serif;color:#0B3B22">Blå Tåget-gänget</div><div style="font:700 14px/1 'Plus Jakarta Sans',sans-serif;color:#0B3B22">1 390</div></div>
+      <div style="display:flex;align-items:center;gap:12px;height:58px;padding:0 15px;border-radius:16px;background:#E8F6EC;border:1px solid #0E7C3A"><div style="width:24px;font:800 15px/1 'Plus Jakarta Sans',sans-serif;color:#0E7C3A">4</div><div style="width:34px;height:34px;border-radius:50%;background:#CBE7D2"></div><div style="flex:1;min-width:0"><div style="font:700 14.5px/1.2 'Plus Jakarta Sans',sans-serif;color:#0B3B22">Familjen Lindqvist</div><div style="font:500 11px/1.2 'Plus Jakarta Sans',sans-serif;color:#0E7C3A;margin-top:2px">Ditt lag</div></div><div style="font:800 14px/1 'Plus Jakarta Sans',sans-serif;color:#0B3B22">1 240</div></div>
+      <div style="display:flex;align-items:center;gap:12px;height:58px;padding:0 15px;border-radius:16px;background:#fff;border:1px solid #E3E9E4"><div style="width:24px;font:800 15px/1 'Plus Jakarta Sans',sans-serif;color:rgba(11,59,34,.4)">5</div><div style="width:34px;height:34px;border-radius:50%;background:#F0F3F0"></div><div style="flex:1;min-width:0;font:600 14.5px/1.2 'Plus Jakarta Sans',sans-serif;color:rgba(11,59,34,.7)">Höjdarna</div><div style="font:600 14px/1 'Plus Jakarta Sans',sans-serif;color:rgba(11,59,34,.55)">1 180</div></div>
+      <div style="display:flex;align-items:center;gap:12px;height:58px;padding:0 15px;border-radius:16px;background:#fff;border:1px solid #E3E9E4"><div style="width:24px;font:800 15px/1 'Plus Jakarta Sans',sans-serif;color:rgba(11,59,34,.4)">6</div><div style="width:34px;height:34px;border-radius:50%;background:#F0F3F0"></div><div style="flex:1;min-width:0;font:600 14.5px/1.2 'Plus Jakarta Sans',sans-serif;color:rgba(11,59,34,.7)">Karusellkungarna</div><div style="font:600 14px/1 'Plus Jakarta Sans',sans-serif;color:rgba(11,59,34,.55)">1 020</div></div>
+    </div>
+    <div style="flex:1"></div>
+    <div style="height:104px;display:flex;align-items:center;justify-content:space-between;padding:0 4px;position:relative">
+      <div style="width:52px;height:52px;border-radius:14px;background:#E8F6EC;display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="3" y="4" width="16" height="2.6" rx="1.3" fill="#0E7C3A"></rect><rect x="3" y="9.7" width="16" height="2.6" rx="1.3" fill="#0E7C3A"></rect><rect x="3" y="15.4" width="16" height="2.6" rx="1.3" fill="#0E7C3A"></rect></svg></div>
+      <div style="width:52px;height:52px;border-radius:14px;background:#E8F6EC;display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 26 26" fill="none"><path d="M13 2.5l3 6.6 7.2.6-5.5 4.8 1.7 7-6.4-3.8-6.4 3.8 1.7-7L2.8 9.7 10 9.1l3-6.6Z" fill="#0E7C3A"></path></svg></div>
+      <div style="width:76px"></div>
+      <div style="width:52px;height:52px;border-radius:14px;background:#0E4A2B;display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="2.5" y="10" width="4.5" height="9" rx="1.4" fill="#E0B54A"></rect><rect x="8.8" y="5" width="4.5" height="14" rx="1.4" fill="#E0B54A"></rect><rect x="15.1" y="12.5" width="4.5" height="6.5" rx="1.4" fill="#E0B54A"></rect></svg></div>
+      <div style="width:52px;height:52px;border-radius:14px;background:#E8F6EC;display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M6 3.5h10v4a5 5 0 01-10 0v-4Z" fill="#0E7C3A"></path><path d="M9 13h4v3.5h-4zM6.5 18h9v1.6h-9z" fill="#0E7C3A"></path></svg></div>
+      <div style="position:absolute;left:50%;transform:translateX(-50%);bottom:34px;width:74px;height:74px;border-radius:50%;background:#fff;box-shadow:0 0 0 7px rgba(14,124,58,.16),0 8px 20px rgba(11,59,34,.2);display:flex;align-items:center;justify-content:center;overflow:hidden"><img src="uploads/brand_assets-1789472404439-vofo.jpeg" alt="Gröna Lund" style="width:66px;height:66px;object-fit:contain;display:block"></div>
+    </div>
+  </div>
+</div>
+</x-import>
+<div class="cap">05 · Leaderboard<i>Same pill rows as the checkpoint list, own team outlined in brand green rather than a separate card style.</i></div>
+</div>
+
+<div class="ph">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:100%;background:#BFE3C8;background-image:radial-gradient(70% 45% at 50% 18%, #E4F4E8, transparent 70%);display:flex;flex-direction:column;align-items:center;padding:0 24px;font-family:'Plus Jakarta Sans',system-ui">
+  <div style="height:84px"></div>
+  <div style="width:126px;height:126px;border-radius:50%;background:#fff;box-shadow:inset 0 -8px 20px rgba(11,59,34,.10),0 16px 34px rgba(11,59,34,.2);display:flex;align-items:center;justify-content:center;overflow:hidden"><img src="uploads/brand_assets-1789472404439-vofo.jpeg" alt="Gröna Lund" style="width:114px;height:114px;object-fit:contain;display:block"></div>
+  <div style="margin-top:30px;font:500 26px/1 'Plus Jakarta Sans',sans-serif;color:#0B3B22">Skattjakten klar</div>
+  <div style="margin-top:8px;font:800 40px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:-.025em;color:#0B3B22">9 AV 9</div>
+  <div style="margin-top:26px;width:100%;border-radius:20px;background:rgba(255,255,255,.62);padding:18px;display:flex;align-items:center;justify-content:space-around">
+    <div style="text-align:center"><div style="font:800 24px/1 'Plus Jakarta Sans',sans-serif;color:#0E4A2B">2 180</div><div style="margin-top:6px;font:600 10px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.1em;text-transform:uppercase;color:rgba(11,59,34,.5)">Poäng</div></div>
+    <div style="width:1px;height:34px;background:rgba(11,59,34,.14)"></div>
+    <div style="text-align:center"><div style="font:800 24px/1 'Plus Jakarta Sans',sans-serif;color:#0E4A2B">2:a</div><div style="margin-top:6px;font:600 10px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.1em;text-transform:uppercase;color:rgba(11,59,34,.5)">Placering</div></div>
+    <div style="width:1px;height:34px;background:rgba(11,59,34,.14)"></div>
+    <div style="text-align:center"><div style="font:800 24px/1 'Plus Jakarta Sans',sans-serif;color:#0E4A2B">1h 52</div><div style="margin-top:6px;font:600 10px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.1em;text-transform:uppercase;color:rgba(11,59,34,.5)">Tid</div></div>
+  </div>
+  <div style="flex:1"></div>
+  <div style="width:100%;border-radius:20px;background:#fff;padding:20px;display:flex;align-items:center;gap:15px">
+    <div style="width:56px;height:56px;border-radius:14px;background:#0E4A2B;display:flex;align-items:center;justify-content:center;flex:none">
+      <svg width="32" height="32" viewBox="0 0 34 34"><g fill="#fff"><rect x="2" y="2" width="9" height="9" rx="1.5"></rect><rect x="23" y="2" width="9" height="9" rx="1.5"></rect><rect x="2" y="23" width="9" height="9" rx="1.5"></rect><rect x="15" y="15" width="4" height="4"></rect><rect x="23" y="15" width="4" height="4"></rect><rect x="15" y="23" width="4" height="4"></rect><rect x="27" y="23" width="5" height="4"></rect><rect x="23" y="29" width="9" height="3"></rect><rect x="15" y="6" width="4" height="5"></rect></g></svg>
+    </div>
+    <div style="flex:1;min-width:0">
+      <div style="font:700 8.5px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#0E7C3A;margin-bottom:6px">Din belöning</div>
+      <div style="font:700 15.5px/1.25 'Plus Jakarta Sans',sans-serif;color:#0B3B22">En åktur på Fritt Fall</div>
+      <div style="margin-top:4px;font:600 11px/1.3 'Plus Jakarta Sans',sans-serif;color:rgba(11,59,34,.5)">Kod GL-2180 · giltig i kväll</div>
+    </div>
+  </div>
+  <div style="width:100%;margin-top:12px;height:62px;border-radius:12px;background:#0E4A2B;display:flex;align-items:center;justify-content:center;font:700 17px/1 'Plus Jakarta Sans',sans-serif;color:#fff">Visa i Tivolishopen</div>
+  <div style="height:44px"></div>
+</div>
+</x-import>
+<div class="cap">06 · Finish &amp; reward<i>Mirrors the welcome screen's composition so the trail closes where it opened, with the redeemable offer as the payoff.</i></div>
+</div>
+
+</div>
+</div>
+
+<div class="dv-opt" id="2b">
+<div class="dv-olabel"><a class="dv-oid" href="#2b">2b</a>Same app screens, evening skin — for the park after dark</div>
+<div style="display:flex;gap: {{ gapPx }};flex-wrap:nowrap">
+
+<div class="ph">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dark="{{ true }}" hint-size="402px,874px">
+<div style="height:100%;background:#0B2A18;background-image:radial-gradient(70% 45% at 50% 20%, rgba(224,181,74,.28), transparent 70%);display:flex;flex-direction:column;align-items:center;padding:0 28px;font-family:'Plus Jakarta Sans',system-ui">
+  <div style="height:96px"></div>
+  <div style="width:192px;height:192px;border-radius:50%;background:#fff;box-shadow:0 22px 50px rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;overflow:hidden"><img src="uploads/brand_assets-1789472404439-vofo.jpeg" alt="Gröna Lund" style="width:176px;height:176px;object-fit:contain;display:block"></div>
+  <div style="margin-top:54px;font:500 33px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:-.01em;color:rgba(255,255,255,.82)">Välkommen till</div>
+  <div style="margin-top:8px;font:800 40px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:-.02em;color:#fff;text-transform:uppercase;text-align:center">Gröna Lund</div>
+  <div style="flex:1"></div>
+  <div style="width:100%;height:58px;border-radius:12px;background:rgba(255,255,255,.1);display:flex;align-items:center;padding:0 18px;font:500 15px/1 'Plus Jakarta Sans',sans-serif;color:rgba(255,255,255,.45)">Eventkod</div>
+  <div style="margin-top:9px;font:700 11px/1 'Plus Jakarta Sans',sans-serif;color:rgba(255,255,255,.6)">Ange en kod för att fortsätta</div>
+  <div style="width:100%;margin-top:22px;height:62px;border-radius:12px;background:#E0B54A;display:flex;align-items:center;justify-content:center;font:700 17px/1 'Plus Jakarta Sans',sans-serif;color:#0B2A18">Anslut med QR-kod</div>
+  <div style="height:44px"></div>
+</div>
+</x-import>
+<div class="cap">01 · Welcome, evening<i>Identical structure; ground goes deep green and the primary action takes the gold from the logo.</i></div>
+</div>
+
+<div class="ph">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dark="{{ true }}" hint-size="402px,874px">
+<div style="height:100%;background:#0B2A18;display:flex;flex-direction:column;font-family:'Plus Jakarta Sans',system-ui">
+  <div style="height:272px;flex:none;position:relative;background:#123A22;background-image:linear-gradient(150deg,rgba(224,181,74,.28),rgba(11,42,24,.9))">
+    <div style="position:absolute;inset:18px;border:1.5px dashed rgba(224,181,74,.4);border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px">
+      <div style="font:700 12.5px/1.3 'Plus Jakarta Sans',sans-serif;color:rgba(224,181,74,.85)">Gröna Lund key art</div>
+      <div style="font:500 11px/1.3 'Plus Jakarta Sans',sans-serif;color:rgba(255,255,255,.45);text-align:center;max-width:220px">Placeholder — night photography of the park</div>
+    </div>
+    <div style="position:absolute;right:18px;top:58px;width:46px;height:46px;border-radius:13px;background:rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="3" stroke="#fff" stroke-width="1.6"></circle><path d="M10 1.8v2.4M10 15.8v2.4M2.6 10h2.4M15 10h2.4M4.8 4.8l1.7 1.7M13.5 13.5l1.7 1.7M15.2 4.8l-1.7 1.7M6.5 13.5l-1.7 1.7" stroke="#fff" stroke-width="1.6" stroke-linecap="round"></path></svg>
+    </div>
+  </div>
+  <div style="flex:1;margin-top:-36px;border-radius:36px 36px 0 0;background:#0F3320;padding:26px 18px 0;display:flex;flex-direction:column;position:relative;z-index:2">
+    <div style="text-align:center;font:800 30px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:-.02em;color:#fff;margin-bottom:20px">Hållplatser</div>
+    <div style="display:flex;flex-direction:column;gap:11px">
+      <div style="display:flex;align-items:center;gap:12px;height:56px;padding:0 15px;border-radius:16px;background:rgba(224,181,74,.14);border:1px solid rgba(224,181,74,.4)">
+        <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><circle cx="13" cy="13" r="12" fill="#E0B54A"></circle><path d="M9.8 10a3.2 3.2 0 016.4.2c0 2.2-3 2.3-3 4.3" stroke="#0B2A18" stroke-width="1.9" stroke-linecap="round"></path><circle cx="13.1" cy="18.4" r="1.3" fill="#0B2A18"></circle></svg>
+        <div style="flex:1;min-width:0;font:600 14.5px/1.2 'Plus Jakarta Sans',sans-serif;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Lustiga Huset — vilket år öppna…</div>
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="10" stroke="#E0B54A" stroke-width="1.6"></circle><path d="M6.8 11.4l2.8 2.8 5.6-5.8" stroke="#E0B54A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;height:56px;padding:0 15px;border-radius:16px;background:rgba(224,181,74,.14);border:1px solid rgba(224,181,74,.4)">
+        <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><rect x="2" y="6" width="22" height="15" rx="4" fill="#E0B54A"></rect><circle cx="13" cy="13.5" r="4.2" fill="#0B2A18"></circle><rect x="9.5" y="3.5" width="7" height="3.4" rx="1.4" fill="#E0B54A"></rect></svg>
+        <div style="flex:1;min-width:0;font:600 14.5px/1.2 'Plus Jakarta Sans',sans-serif;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Twister — hela laget i bild…</div>
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="10" stroke="#E0B54A" stroke-width="1.6"></circle><path d="M6.8 11.4l2.8 2.8 5.6-5.8" stroke="#E0B54A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;height:56px;padding:0 15px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14)">
+        <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><path d="M13 2.5l3 6.6 7.2.6-5.5 4.8 1.7 7-6.4-3.8-6.4 3.8 1.7-7L2.8 9.7 10 9.1l3-6.6Z" fill="#E0B54A"></path></svg>
+        <div style="flex:1;min-width:0;font:600 14.5px/1.2 'Plus Jakarta Sans',sans-serif;color:rgba(255,255,255,.9);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Jetline — hitta den gömda…</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;height:56px;padding:0 15px;border-radius:16px;background:rgba(200,16,46,.18);border:1px solid rgba(200,16,46,.55)">
+        <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><circle cx="13" cy="13" r="12" fill="#C8102E"></circle><path d="M9.8 10a3.2 3.2 0 016.4.2c0 2.2-3 2.3-3 4.3" stroke="#fff" stroke-width="1.9" stroke-linecap="round"></path><circle cx="13.1" cy="18.4" r="1.3" fill="#fff"></circle></svg>
+        <div style="flex:1;min-width:0;font:600 14.5px/1.2 'Plus Jakarta Sans',sans-serif;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Kvasten — hur många varv…</div>
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="10" stroke="#FF6B7E" stroke-width="1.6"></circle><path d="M7.6 7.6l6.8 6.8M14.4 7.6l-6.8 6.8" stroke="#FF6B7E" stroke-width="1.8" stroke-linecap="round"></path></svg>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;height:56px;padding:0 15px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14)">
+        <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><rect x="2" y="6" width="22" height="15" rx="4" fill="rgba(224,181,74,.45)"></rect><circle cx="13" cy="13.5" r="4.2" fill="#0F3320"></circle><rect x="9.5" y="3.5" width="7" height="3.4" rx="1.4" fill="rgba(224,181,74,.45)"></rect></svg>
+        <div style="flex:1;min-width:0;font:600 14.5px/1.2 'Plus Jakarta Sans',sans-serif;color:rgba(255,255,255,.9);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Fritt Fall — fånga fallet på…</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;height:56px;padding:0 15px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14)">
+        <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><path d="M13 2.5l3 6.6 7.2.6-5.5 4.8 1.7 7-6.4-3.8-6.4 3.8 1.7-7L2.8 9.7 10 9.1l3-6.6Z" fill="rgba(224,181,74,.45)"></path></svg>
+        <div style="flex:1;min-width:0;font:600 14.5px/1.2 'Plus Jakarta Sans',sans-serif;color:rgba(255,255,255,.9);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Blå Tåget — ledtråd vid…</div>
+      </div>
+    </div>
+    <div style="flex:1"></div>
+    <div style="height:104px;display:flex;align-items:center;justify-content:space-between;padding:0 4px;position:relative">
+      <div style="width:52px;height:52px;border-radius:14px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="3" y="4" width="16" height="2.6" rx="1.3" fill="#E0B54A"></rect><rect x="3" y="9.7" width="16" height="2.6" rx="1.3" fill="#E0B54A"></rect><rect x="3" y="15.4" width="16" height="2.6" rx="1.3" fill="#E0B54A"></rect></svg></div>
+      <div style="width:52px;height:52px;border-radius:14px;background:#E0B54A;display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 26 26" fill="none"><path d="M13 2.5l3 6.6 7.2.6-5.5 4.8 1.7 7-6.4-3.8-6.4 3.8 1.7-7L2.8 9.7 10 9.1l3-6.6Z" fill="#0B2A18"></path></svg></div>
+      <div style="width:76px"></div>
+      <div style="width:52px;height:52px;border-radius:14px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="2.5" y="10" width="4.5" height="9" rx="1.4" fill="#E0B54A"></rect><rect x="8.8" y="5" width="4.5" height="14" rx="1.4" fill="#E0B54A"></rect><rect x="15.1" y="12.5" width="4.5" height="6.5" rx="1.4" fill="#E0B54A"></rect></svg></div>
+      <div style="width:52px;height:52px;border-radius:14px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M6 3.5h10v4a5 5 0 01-10 0v-4Z" fill="#E0B54A"></path><path d="M9 13h4v3.5h-4zM6.5 18h9v1.6h-9z" fill="#E0B54A"></path></svg></div>
+      <div style="position:absolute;left:50%;transform:translateX(-50%);bottom:34px;width:74px;height:74px;border-radius:50%;background:#fff;box-shadow:0 0 0 7px rgba(224,181,74,.22),0 8px 20px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;overflow:hidden"><img src="uploads/brand_assets-1789472404439-vofo.jpeg" alt="Gröna Lund" style="width:66px;height:66px;object-fit:contain;display:block"></div>
+    </div>
+  </div>
+</div>
+</x-import>
+<div class="cap">02 · Checkpoints, evening<i>Status tints hold their meaning against the dark sheet — gold for cleared, red for missed.</i></div>
+</div>
+
+<div class="ph">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dark="{{ true }}" hint-size="402px,874px">
+<div style="height:100%;background:#123A22;display:flex;flex-direction:column;font-family:'Plus Jakarta Sans',system-ui">
+  <div style="padding:58px 20px 0">
+    <div style="width:46px;height:46px;border-radius:13px;background:rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center">
+      <svg width="17" height="17" viewBox="0 0 17 17" fill="none"><path d="M10.5 3L5 8.5l5.5 5.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    </div>
+  </div>
+  <div style="margin:18px 20px 0;flex:1;border-radius:16px;background:rgba(255,255,255,.06);border:1.5px dashed rgba(224,181,74,.4);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px">
+    <svg width="42" height="42" viewBox="0 0 24 24" fill="none"><rect x="2" y="6" width="20" height="14" rx="3" stroke="rgba(224,181,74,.8)" stroke-width="1.4"></rect><circle cx="12" cy="13" r="4" stroke="rgba(224,181,74,.8)" stroke-width="1.4"></circle><path d="M8.5 6l1.4-2.2h4.2L15.5 6" stroke="rgba(224,181,74,.8)" stroke-width="1.4"></path></svg>
+    <div style="font:700 12.5px/1.3 'Plus Jakarta Sans',sans-serif;color:rgba(224,181,74,.9)">Lagets foto</div>
+    <div style="font:500 11px/1.4 'Plus Jakarta Sans',sans-serif;color:rgba(255,255,255,.45);text-align:center;max-width:210px">Placeholder — the photo the team just took</div>
+  </div>
+  <div style="flex:none;margin-top:18px;border-radius:36px 36px 0 0;background:#0F3320;padding:26px 20px 0">
+    <div style="font:700 21px/1.25 'Plus Jakarta Sans',sans-serif;letter-spacing:-.015em;color:#fff">Bilda en berg-och-dalbana med kropparna.</div>
+    <div style="margin-top:18px;height:58px;border-radius:12px;border:1.5px solid #E0B54A;display:flex;align-items:center;justify-content:center;font:600 15px/1 'Plus Jakarta Sans',sans-serif;color:#E0B54A">Ta om bilden</div>
+    <div style="margin-top:12px;height:58px;border-radius:12px;background:#E0B54A;display:flex;align-items:center;justify-content:center;font:700 16px/1 'Plus Jakarta Sans',sans-serif;color:#0B2A18">Fortsätt</div>
+    <div style="height:46px"></div>
+  </div>
+</div>
+</x-import>
+<div class="cap">04 · Photo mission, evening<i>Only the ground and accent change — spacing, radii and button order are the app's.</i></div>
+</div>
+
+</div>
+</div>
+
+</div>
+<p class="dv-next">Try next: "use <a class="dv-oid" href="#2a">2a</a> for the leave-behind one-pager" · "drop in the real park map and key art" · "add trivia and avatar screens to <a class="dv-oid" href="#2a">2a</a>" · "try <a class="dv-oid" href="#2b">2b</a> with red as the accent instead of gold"</p>
+</section>
+
+<section class="dv-turn" id="t1">
+<div class="dv-thd"><a class="dv-tid" href="#t1">1</a><span class="dv-tname">Two brand treatments of the same six screens, plus the engine across activation types</span></div>
+<div class="dv-opts">
+
+<div class="dv-opt" id="1a">
+<div class="dv-olabel"><a class="dv-oid" href="#1a">1a</a>Park Nights — deep green ground, gold as the only accent, evening premium</div>
+<div style="display:flex;gap: {{ gapPx }};flex-wrap:nowrap">
+
+<div class="ph">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dark="{{ true }}" hint-size="402px,874px">
+<div style="height:100%;background:#08200F;background-image:radial-gradient(120% 60% at 50% 8%, rgba(227,190,94,.20), transparent 62%);display:flex;flex-direction:column;align-items:center;padding:0 30px;font-family:'Plus Jakarta Sans',system-ui">
+  <div style="height:92px"></div>
+  <div style="width:128px;height:128px;border-radius:30px;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:0 18px 44px rgba(0,0,0,.45)"><img src="uploads/brand_assets-1789472404439-vofo.jpeg" alt="Gröna Lund" style="width:118px;height:118px;object-fit:contain;display:block"></div>
+  <div style="margin-top:34px;font:700 9.5px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#E3BE5E">Tivoli Gröna Lund</div>
+  <h1 style="margin:14px 0 0;font:800 40px/1.02 'Plus Jakarta Sans',sans-serif;letter-spacing:-.03em;color:#FBF6EA;text-align:center">Skattjakten</h1>
+  <p style="margin:14px 0 0;font:500 14.5px/1.5 'Plus Jakarta Sans',sans-serif;color:rgba(251,246,234,.66);text-align:center;max-width:250px">Nio hållplatser i parken. Spela som lag, en kväll.</p>
+  <div style="flex:1"></div>
+  <div style="width:100%;display:flex;flex-direction:column;gap:12px">
+    <div style="border:1px solid rgba(227,190,94,.38);border-radius:16px;background:rgba(251,246,234,.06);padding:15px 18px">
+      <div style="font:700 8.5px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#E3BE5E;margin-bottom:7px">Eventkod</div>
+      <div style="display:flex;align-items:center;gap:3px;font:800 25px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.14em;color:#FBF6EA">GRONA<span style="color:rgba(251,246,234,.34)">26</span><span style="width:2px;height:26px;background:#E3BE5E;margin-left:4px"></span></div>
+    </div>
+    <div style="height:56px;border-radius:16px;background:#E3BE5E;display:flex;align-items:center;justify-content:center;font:800 16px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:-.01em;color:#08200F">Gå med</div>
+    <div style="height:56px;border-radius:16px;border:1px solid rgba(251,246,234,.22);display:flex;align-items:center;justify-content:center;gap:9px;font:700 15px/1 'Plus Jakarta Sans',sans-serif;color:rgba(251,246,234,.85)">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M1 5V2.5A1.5 1.5 0 012.5 1H5M11 1h2.5A1.5 1.5 0 0115 2.5V5M15 11v2.5a1.5 1.5 0 01-1.5 1.5H11M5 15H2.5A1.5 1.5 0 011 13.5V11" stroke="rgba(251,246,234,.85)" stroke-width="1.6" stroke-linecap="round"></path></svg>Skanna QR vid entrén
+    </div>
+    <div style="display:flex;align-items:center;justify-content:center;gap:7px;padding:10px 0 0;font:600 10px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.06em;color:rgba(251,246,234,.36)">Drivs av ReadySet</div>
+  </div>
+  <div style="height:34px"></div>
+</div>
+</x-import>
+<div class="cap">01 · Entry<i>Event code is pre-filled from the QR at the gate. No account, no signup.</i></div>
+</div>
+
+<div class="ph">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dark="{{ true }}" hint-size="402px,874px">
+<div style="height:100%;background:#08200F;display:flex;flex-direction:column;font-family:'Plus Jakarta Sans',system-ui">
+  <div style="padding:62px 22px 14px;display:flex;align-items:flex-end;justify-content:space-between">
+    <div>
+      <div style="font:700 8.5px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#E3BE5E;margin-bottom:8px">Skattjakten</div>
+      <div style="font:800 28px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:-.025em;color:#FBF6EA">Kartan</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;border:1px solid rgba(227,190,94,.35);border-radius:99px;padding:8px 13px;font:700 11.5px/1 'Plus Jakarta Sans',sans-serif;color:#E3BE5E">3 / 9 hittade</div>
+  </div>
+  <div style="flex:1;position:relative;margin:0 14px;border-radius:22px;overflow:hidden;border:1px solid rgba(227,190,94,.18)">
+    <svg viewBox="0 0 374 560" style="width:100%;height:100%;display:block">
+      <rect width="374" height="560" fill="#0B2A14"></rect>
+      <path d="M0 0h374v96c-90 26-200 10-254 38C74 158 28 150 0 168Z" fill="#07361F" opacity=".85"></path>
+      <path d="M0 470c96-22 150 16 240 4 52-7 94-26 134-32v118H0Z" fill="#07361F" opacity=".85"></path>
+      <g stroke="rgba(227,190,94,.30)" stroke-width="16" fill="none" stroke-linecap="round">
+        <path d="M52 150C42 250 96 318 176 344 262 372 316 300 312 210"></path>
+        <path d="M176 344c-8 44-40 70-86 84"></path>
+        <path d="M312 210c22-30 26-58 18-86"></path>
+      </g>
+      <g stroke="rgba(227,190,94,.55)" stroke-width="1.5" stroke-dasharray="5 7" fill="none">
+        <path d="M52 150C42 250 96 318 176 344 262 372 316 300 312 210"></path>
+      </g>
+      <g fill="#0F3D1E" stroke="rgba(227,190,94,.20)">
+        <rect x="28" y="186" width="92" height="58" rx="10"></rect>
+        <rect x="150" y="150" width="104" height="66" rx="10"></rect>
+        <rect x="270" y="252" width="76" height="70" rx="10"></rect>
+        <rect x="112" y="386" width="118" height="62" rx="10"></rect>
+        <rect x="34" y="286" width="72" height="56" rx="10"></rect>
+        <rect x="256" y="386" width="90" height="56" rx="10"></rect>
+      </g>
+      <g fill="rgba(251,246,234,.30)" font-family="'Plus Jakarta Sans',sans-serif" font-size="9" font-weight="700" letter-spacing="1">
+        <text x="68" y="239" text-anchor="middle">LUSTIGA HUSET</text>
+        <text x="202" y="168" text-anchor="middle">JETLINE</text>
+        <text x="308" y="291" text-anchor="middle">ECLIPSE</text>
+        <text x="171" y="421" text-anchor="middle">BLÅ TÅGET</text>
+        <text x="70" y="318" text-anchor="middle">TWISTER</text>
+        <text x="301" y="418" text-anchor="middle">KVASTEN</text>
+      </g>
+      <g>
+        <path d="M180 62c0-8 6-14 14-14s14 6 14 14c0 10-14 26-14 26s-14-16-14-26Z" fill="#E3BE5E"></path>
+        <circle cx="194" cy="62" r="5" fill="#08200F"></circle>
+        <text x="194" y="106" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="10" font-weight="800" fill="#E3BE5E" letter-spacing="1">FRITT FALL</text>
+      </g>
+      <g font-family="'Plus Jakarta Sans',sans-serif" font-size="13" font-weight="800">
+        <circle cx="52" cy="150" r="17" fill="#E3BE5E"></circle><text x="52" y="155" text-anchor="middle" fill="#08200F">1</text>
+        <circle cx="128" cy="222" r="17" fill="#E3BE5E"></circle><text x="128" y="227" text-anchor="middle" fill="#08200F">2</text>
+        <circle cx="194" cy="196" r="17" fill="#E3BE5E"></circle><text x="194" y="201" text-anchor="middle" fill="#08200F">3</text>
+        <circle cx="256" cy="268" r="17" fill="#0B2A14" stroke="#E3BE5E" stroke-width="2"></circle><text x="256" y="273" text-anchor="middle" fill="#E3BE5E">4</text>
+        <circle cx="312" cy="210" r="17" fill="#0B2A14" stroke="#E3BE5E" stroke-width="2"></circle><text x="312" y="215" text-anchor="middle" fill="#E3BE5E">5</text>
+        <circle cx="176" cy="344" r="17" fill="#0B2A14" stroke="#E3BE5E" stroke-width="2"></circle><text x="176" y="349" text-anchor="middle" fill="#E3BE5E">6</text>
+        <circle cx="90" cy="428" r="17" fill="#0B2A14" stroke="#E3BE5E" stroke-width="2"></circle><text x="90" y="433" text-anchor="middle" fill="#E3BE5E">7</text>
+        <circle cx="248" cy="414" r="17" fill="#0B2A14" stroke="#E3BE5E" stroke-width="2"></circle><text x="248" y="419" text-anchor="middle" fill="#E3BE5E">8</text>
+        <circle cx="322" cy="476" r="17" fill="#0B2A14" stroke="#E3BE5E" stroke-width="2"></circle><text x="322" y="481" text-anchor="middle" fill="#E3BE5E">9</text>
+      </g>
+      <g>
+        <circle cx="150" cy="300" r="20" fill="rgba(79,180,198,.20)"></circle>
+        <circle cx="150" cy="300" r="7" fill="#4FB4C6" stroke="#FBF6EA" stroke-width="2.5"></circle>
+      </g>
+    </svg>
+    <div style="position:absolute;left:14px;bottom:14px;right:14px;background:rgba(8,32,15,.86);border:1px solid rgba(227,190,94,.26);border-radius:18px;padding:14px 16px;display:flex;align-items:center;gap:13px">
+      <div style="width:44px;height:44px;border-radius:13px;background:#E3BE5E;display:flex;align-items:center;justify-content:center;font:800 17px/1 'Plus Jakarta Sans',sans-serif;color:#08200F;flex:none">4</div>
+      <div style="flex:1;min-width:0">
+        <div style="font:700 14.5px/1.2 'Plus Jakarta Sans',sans-serif;color:#FBF6EA">Eclipse</div>
+        <div style="font:500 11.5px/1.3 'Plus Jakarta Sans',sans-serif;color:rgba(251,246,234,.55);margin-top:3px">Närmast dig · 40 m</div>
+      </div>
+      <div style="border-radius:99px;background:rgba(251,246,234,.1);padding:9px 14px;font:700 11.5px/1 'Plus Jakarta Sans',sans-serif;color:#E3BE5E">Öppna</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:8px;padding:14px 16px 0">
+    <div style="flex:1;height:52px;border-radius:15px;background:rgba(227,190,94,.14);display:flex;align-items:center;justify-content:center;font:700 12.5px/1 'Plus Jakarta Sans',sans-serif;color:#E3BE5E">Karta</div>
+    <div style="flex:1;height:52px;border-radius:15px;display:flex;align-items:center;justify-content:center;font:600 12.5px/1 'Plus Jakarta Sans',sans-serif;color:rgba(251,246,234,.45)">Hållplatser</div>
+    <div style="flex:1;height:52px;border-radius:15px;display:flex;align-items:center;justify-content:center;font:600 12.5px/1 'Plus Jakarta Sans',sans-serif;color:rgba(251,246,234,.45)">Topplista</div>
+  </div>
+  <div style="height:34px"></div>
+</div>
+</x-import>
+<div class="cap">02 · Map board<i>Schematic park plan — real Gröna Lund artwork drops in here. Pins are GPS-gated; found ones fill gold.</i></div>
+</div>
+
+<div class="ph">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dark="{{ true }}" hint-size="402px,874px">
+<div style="height:100%;background:#08200F;display:flex;flex-direction:column;font-family:'Plus Jakarta Sans',system-ui">
+  <div style="padding:62px 22px 16px">
+    <div style="font:700 8.5px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#E3BE5E;margin-bottom:8px">Skattjakten</div>
+    <div style="display:flex;align-items:flex-end;justify-content:space-between">
+      <div style="font:800 28px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:-.025em;color:#FBF6EA">Hållplatser</div>
+      <div style="font:700 12px/1 'Plus Jakarta Sans',sans-serif;color:rgba(251,246,234,.5)">1 240 p</div>
+    </div>
+    <div style="margin-top:16px;height:5px;border-radius:99px;background:rgba(251,246,234,.12);overflow:hidden"><div style="width:33%;height:100%;background:#E3BE5E"></div></div>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;gap:9px;padding:0 16px;overflow:hidden">
+
+    <div style="display:flex;align-items:center;gap:13px;border-radius:17px;border:1px solid rgba(227,190,94,.30);background:rgba(227,190,94,.10);padding:14px 15px">
+      <div style="width:40px;height:40px;border-radius:12px;background:#E3BE5E;display:flex;align-items:center;justify-content:center;font:800 15px/1 'Plus Jakarta Sans',sans-serif;color:#08200F;flex:none">1</div>
+      <div style="flex:1;min-width:0"><div style="font:700 14.5px/1.2 'Plus Jakarta Sans',sans-serif;color:#FBF6EA">Lustiga Huset</div><div style="font:500 11px/1.3 'Plus Jakarta Sans',sans-serif;color:rgba(251,246,234,.5);margin-top:3px">Fråga · 150 p</div></div>
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" fill="#E3BE5E"></circle><path d="M6 10.4l2.6 2.6L14 7.6" stroke="#08200F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:13px;border-radius:17px;border:1px solid rgba(227,190,94,.30);background:rgba(227,190,94,.10);padding:14px 15px">
+      <div style="width:40px;height:40px;border-radius:12px;background:#E3BE5E;display:flex;align-items:center;justify-content:center;font:800 15px/1 'Plus Jakarta Sans',sans-serif;color:#08200F;flex:none">2</div>
+      <div style="flex:1;min-width:0"><div style="font:700 14.5px/1.2 'Plus Jakarta Sans',sans-serif;color:#FBF6EA">Twister</div><div style="font:500 11px/1.3 'Plus Jakarta Sans',sans-serif;color:rgba(251,246,234,.5);margin-top:3px">Foto · 200 p</div></div>
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" fill="#E3BE5E"></circle><path d="M6 10.4l2.6 2.6L14 7.6" stroke="#08200F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:13px;border-radius:17px;border:1px solid rgba(227,190,94,.30);background:rgba(227,190,94,.10);padding:14px 15px">
+      <div style="width:40px;height:40px;border-radius:12px;background:#E3BE5E;display:flex;align-items:center;justify-content:center;font:800 15px/1 'Plus Jakarta Sans',sans-serif;color:#08200F;flex:none">3</div>
+      <div style="flex:1;min-width:0"><div style="font:700 14.5px/1.2 'Plus Jakarta Sans',sans-serif;color:#FBF6EA">Jetline</div><div style="font:500 11px/1.3 'Plus Jakarta Sans',sans-serif;color:rgba(251,246,234,.5);margin-top:3px">Fråga · 150 p</div></div>
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" fill="#E3BE5E"></circle><path d="M6 10.4l2.6 2.6L14 7.6" stroke="#08200F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:13px;border-radius:17px;border:1px solid #E3BE5E;background:rgba(251,246,234,.05);padding:14px 15px;box-shadow:0 0 0 3px rgba(227,190,94,.10)">
+      <div style="width:40px;height:40px;border-radius:12px;border:1.5px solid #E3BE5E;display:flex;align-items:center;justify-content:center;font:800 15px/1 'Plus Jakarta Sans',sans-serif;color:#E3BE5E;flex:none">4</div>
+      <div style="flex:1;min-width:0"><div style="font:700 14.5px/1.2 'Plus Jakarta Sans',sans-serif;color:#FBF6EA">Eclipse</div><div style="font:500 11px/1.3 'Plus Jakarta Sans',sans-serif;color:#E3BE5E;margin-top:3px">Du är här · 40 m</div></div>
+      <div style="border-radius:99px;background:#E3BE5E;padding:9px 14px;font:800 11.5px/1 'Plus Jakarta Sans',sans-serif;color:#08200F">Spela</div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:13px;border-radius:17px;border:1px solid rgba(251,246,234,.12);padding:14px 15px">
+      <div style="width:40px;height:40px;border-radius:12px;background:rgba(251,246,234,.08);display:flex;align-items:center;justify-content:center;font:800 15px/1 'Plus Jakarta Sans',sans-serif;color:rgba(251,246,234,.4);flex:none">5</div>
+      <div style="flex:1;min-width:0"><div style="font:700 14.5px/1.2 'Plus Jakarta Sans',sans-serif;color:rgba(251,246,234,.62)">Fritt Fall</div><div style="font:500 11px/1.3 'Plus Jakarta Sans',sans-serif;color:rgba(251,246,234,.34);margin-top:3px">Foto · 250 p</div></div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:13px;border-radius:17px;border:1px solid rgba(251,246,234,.12);padding:14px 15px">
+      <div style="width:40px;height:40px;border-radius:12px;background:rgba(251,246,234,.08);display:flex;align-items:center;justify-content:center;font:800 15px/1 'Plus Jakarta Sans',sans-serif;color:rgba(251,246,234,.4);flex:none">6</div>
+      <div style="flex:1;min-width:0"><div style="font:700 14.5px/1.2 'Plus Jakarta Sans',sans-serif;color:rgba(251,246,234,.62)">Blå Tåget</div><div style="font:500 11px/1.3 'Plus Jakarta Sans',sans-serif;color:rgba(251,246,234,.34);margin-top:3px">Ledtråd · 100 p</div></div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:13px;border-radius:17px;border:1px solid rgba(251,246,234,.12);padding:14px 15px">
+      <div style="width:40px;height:40px;border-radius:12px;background:rgba(251,246,234,.08);display:flex;align-items:center;justify-content:center;font:800 15px/1 'Plus Jakarta Sans',sans-serif;color:rgba(251,246,234,.4);flex:none">7</div>
+      <div style="flex:1;min-width:0"><div style="font:700 14.5px/1.2 'Plus Jakarta Sans',sans-serif;color:rgba(251,246,234,.62)">Kvasten</div><div style="font:500 11px/1.3 'Plus Jakarta Sans',sans-serif;color:rgba(251,246,234,.34);margin-top:3px">Foto · 200 p</div></div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:13px;border-radius:17px;border:1px dashed rgba(227,190,94,.35);padding:14px 15px">
+      <div style="width:40px;height:40px;border-radius:12px;border:1px dashed rgba(227,190,94,.5);display:flex;align-items:center;justify-content:center;flex:none">
+        <svg width="15" height="18" viewBox="0 0 15 18" fill="none"><rect x="1" y="7" width="13" height="10" rx="2.5" stroke="#E3BE5E" stroke-width="1.5"></rect><path d="M4 7V4.5a3.5 3.5 0 017 0V7" stroke="#E3BE5E" stroke-width="1.5"></path></svg>
+      </div>
+      <div style="flex:1;min-width:0"><div style="font:700 14.5px/1.2 'Plus Jakarta Sans',sans-serif;color:rgba(227,190,94,.8)">Finalen</div><div style="font:500 11px/1.3 'Plus Jakarta Sans',sans-serif;color:rgba(251,246,234,.34);margin-top:3px">Öppnas efter åtta hållplatser</div></div>
+    </div>
+
+  </div>
+  <div style="height:34px"></div>
+</div>
+</x-import>
+<div class="cap">03 · Checkpoints<i>Mixed activity types, points per stop, one locked finale to pull teams through the whole park.</i></div>
+</div>
+
+<div class="ph">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dark="{{ true }}" hint-size="402px,874px">
+<div style="height:100%;background:#08200F;display:flex;flex-direction:column;font-family:'Plus Jakarta Sans',system-ui">
+  <div style="padding:62px 22px 14px;display:flex;align-items:center;justify-content:space-between">
+    <div style="width:38px;height:38px;border-radius:12px;border:1px solid rgba(251,246,234,.2);display:flex;align-items:center;justify-content:center"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M9.5 2.5L4 7.5l5.5 5" stroke="#FBF6EA" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></div>
+    <div style="font:700 11.5px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#E3BE5E">Hållplats 5</div>
+    <div style="width:38px"></div>
+  </div>
+  <div style="margin:6px 16px 0;flex:1;border-radius:22px;background:#0F3D1E;border:1px dashed rgba(227,190,94,.3);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;position:relative;overflow:hidden">
+    <svg width="46" height="46" viewBox="0 0 24 24" fill="none"><rect x="2" y="6" width="20" height="14" rx="3" stroke="rgba(227,190,94,.55)" stroke-width="1.4"></rect><circle cx="12" cy="13" r="4" stroke="rgba(227,190,94,.55)" stroke-width="1.4"></circle><path d="M8.5 6l1.4-2.2h4.2L15.5 6" stroke="rgba(227,190,94,.55)" stroke-width="1.4"></path></svg>
+    <div style="font:700 12.5px/1.4 'Plus Jakarta Sans',sans-serif;color:rgba(227,190,94,.7);text-align:center;max-width:220px">Camera viewfinder</div>
+    <div style="font:500 11px/1.4 'Plus Jakarta Sans',sans-serif;color:rgba(251,246,234,.38);text-align:center;max-width:230px">Placeholder — live camera feed in the app</div>
+    <div style="position:absolute;left:16px;top:16px;background:rgba(8,32,15,.7);border-radius:99px;padding:8px 13px;font:700 11px/1 'Plus Jakarta Sans',sans-serif;color:#E3BE5E">Fritt Fall · 250 p</div>
+  </div>
+  <div style="padding:20px 22px 0">
+    <div style="font:700 8.5px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#E3BE5E;margin-bottom:10px">Uppdrag</div>
+    <div style="font:800 26px/1.12 'Plus Jakarta Sans',sans-serif;letter-spacing:-.025em;color:#FBF6EA;text-wrap:balance">Fånga hela laget i fritt fall.</div>
+    <p style="margin:10px 0 0;font:500 13.5px/1.5 'Plus Jakarta Sans',sans-serif;color:rgba(251,246,234,.6)">Alla i bild, armarna i luften. Domaren poängsätter efteråt.</p>
+  </div>
+  <div style="padding:22px 16px 0;display:flex;flex-direction:column;gap:11px">
+    <div style="height:58px;border-radius:17px;background:#E3BE5E;display:flex;align-items:center;justify-content:center;font:800 16px/1 'Plus Jakarta Sans',sans-serif;color:#08200F">Ta bilden</div>
+    <div style="height:58px;border-radius:17px;border:1px solid rgba(251,246,234,.2);display:flex;align-items:center;justify-content:center;font:700 15px/1 'Plus Jakarta Sans',sans-serif;color:rgba(251,246,234,.8)">Hoppa över</div>
+  </div>
+  <div style="height:34px"></div>
+</div>
+</x-import>
+<div class="cap">04 · Photo mission<i>Every stop can be a photo, trivia, clue or custom instruction. Submissions feed the organiser's judging queue.</i></div>
+</div>
+
+<div class="ph">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dark="{{ true }}" hint-size="402px,874px">
+<div style="height:100%;background:#08200F;display:flex;flex-direction:column;font-family:'Plus Jakarta Sans',system-ui">
+  <div style="padding:62px 22px 16px">
+    <div style="font:700 8.5px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#E3BE5E;margin-bottom:8px">Live</div>
+    <div style="font:800 28px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:-.025em;color:#FBF6EA">Topplistan</div>
+  </div>
+  <div style="margin:0 16px;border-radius:20px;background:rgba(227,190,94,.12);border:1px solid rgba(227,190,94,.32);padding:16px 18px;display:flex;align-items:center;gap:14px">
+    <div style="font:800 30px/1 'Plus Jakarta Sans',sans-serif;color:#E3BE5E">4</div>
+    <div style="flex:1"><div style="font:700 15px/1.2 'Plus Jakarta Sans',sans-serif;color:#FBF6EA">Familjen Lindqvist</div><div style="font:500 11.5px/1.3 'Plus Jakarta Sans',sans-serif;color:rgba(251,246,234,.55);margin-top:3px">Ditt lag · 3 hållplatser kvar</div></div>
+    <div style="font:800 17px/1 'Plus Jakarta Sans',sans-serif;color:#FBF6EA">1 240</div>
+  </div>
+  <div style="flex:1;padding:18px 20px 0;display:flex;flex-direction:column">
+    <div style="display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid rgba(251,246,234,.1)"><div style="width:26px;font:800 15px/1 'Plus Jakarta Sans',sans-serif;color:#E3BE5E">1</div><div style="width:34px;height:34px;border-radius:50%;background:rgba(227,190,94,.22)"></div><div style="flex:1;font:700 14px/1.2 'Plus Jakarta Sans',sans-serif;color:#FBF6EA">Kanonkulorna</div><div style="font:700 14px/1 'Plus Jakarta Sans',sans-serif;color:rgba(251,246,234,.8)">1 820</div></div>
+    <div style="display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid rgba(251,246,234,.1)"><div style="width:26px;font:800 15px/1 'Plus Jakarta Sans',sans-serif;color:#E3BE5E">2</div><div style="width:34px;height:34px;border-radius:50%;background:rgba(227,190,94,.18)"></div><div style="flex:1;font:700 14px/1.2 'Plus Jakarta Sans',sans-serif;color:#FBF6EA">Team Tivoli</div><div style="font:700 14px/1 'Plus Jakarta Sans',sans-serif;color:rgba(251,246,234,.8)">1 640</div></div>
+    <div style="display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid rgba(251,246,234,.1)"><div style="width:26px;font:800 15px/1 'Plus Jakarta Sans',sans-serif;color:#E3BE5E">3</div><div style="width:34px;height:34px;border-radius:50%;background:rgba(227,190,94,.14)"></div><div style="flex:1;font:700 14px/1.2 'Plus Jakarta Sans',sans-serif;color:#FBF6EA">Blå Tåget-gänget</div><div style="font:700 14px/1 'Plus Jakarta Sans',sans-serif;color:rgba(251,246,234,.8)">1 390</div></div>
+    <div style="display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid rgba(251,246,234,.1)"><div style="width:26px;font:800 15px/1 'Plus Jakarta Sans',sans-serif;color:rgba(251,246,234,.45)">5</div><div style="width:34px;height:34px;border-radius:50%;background:rgba(251,246,234,.08)"></div><div style="flex:1;font:600 14px/1.2 'Plus Jakarta Sans',sans-serif;color:rgba(251,246,234,.72)">Höjdarna</div><div style="font:600 14px/1 'Plus Jakarta Sans',sans-serif;color:rgba(251,246,234,.5)">1 180</div></div>
+    <div style="display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid rgba(251,246,234,.1)"><div style="width:26px;font:800 15px/1 'Plus Jakarta Sans',sans-serif;color:rgba(251,246,234,.45)">6</div><div style="width:34px;height:34px;border-radius:50%;background:rgba(251,246,234,.08)"></div><div style="flex:1;font:600 14px/1.2 'Plus Jakarta Sans',sans-serif;color:rgba(251,246,234,.72)">Karusellkungarna</div><div style="font:600 14px/1 'Plus Jakarta Sans',sans-serif;color:rgba(251,246,234,.5)">1 020</div></div>
+    <div style="display:flex;align-items:center;gap:14px;padding:13px 0"><div style="width:26px;font:800 15px/1 'Plus Jakarta Sans',sans-serif;color:rgba(251,246,234,.45)">7</div><div style="width:34px;height:34px;border-radius:50%;background:rgba(251,246,234,.08)"></div><div style="flex:1;font:600 14px/1.2 'Plus Jakarta Sans',sans-serif;color:rgba(251,246,234,.72)">Spökhusets vänner</div><div style="font:600 14px/1 'Plus Jakarta Sans',sans-serif;color:rgba(251,246,234,.5)">940</div></div>
+    <div style="flex:1"></div>
+    <div style="padding:0 0 16px;font:500 11px/1.4 'Plus Jakarta Sans',sans-serif;color:rgba(251,246,234,.35);text-align:center">Uppdateras direkt · 212 lag i kväll</div>
+  </div>
+  <div style="height:34px"></div>
+</div>
+</x-import>
+<div class="cap">05 · Live leaderboard<i>Your own team pinned at the top. The park can project the same board on screens by the entrance.</i></div>
+</div>
+
+<div class="ph">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dark="{{ true }}" hint-size="402px,874px">
+<div style="height:100%;background:#08200F;background-image:radial-gradient(110% 50% at 50% 92%, rgba(227,190,94,.22), transparent 60%);display:flex;flex-direction:column;align-items:center;padding:0 26px;font-family:'Plus Jakarta Sans',system-ui">
+  <div style="height:86px"></div>
+  <div style="font:700 9.5px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#E3BE5E">Skattjakten klar</div>
+  <h1 style="margin:16px 0 0;font:800 36px/1.05 'Plus Jakarta Sans',sans-serif;letter-spacing:-.03em;color:#FBF6EA;text-align:center;text-wrap:balance">Nio av nio.<br>Hela parken avklarad.</h1>
+  <div style="margin-top:26px;display:flex;align-items:center;gap:26px">
+    <div style="text-align:center"><div style="font:800 30px/1 'Plus Jakarta Sans',sans-serif;color:#E3BE5E">2 180</div><div style="margin-top:6px;font:600 10px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.12em;text-transform:uppercase;color:rgba(251,246,234,.45)">Poäng</div></div>
+    <div style="width:1px;height:40px;background:rgba(251,246,234,.15)"></div>
+    <div style="text-align:center"><div style="font:800 30px/1 'Plus Jakarta Sans',sans-serif;color:#E3BE5E">2:a</div><div style="margin-top:6px;font:600 10px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.12em;text-transform:uppercase;color:rgba(251,246,234,.45)">Placering</div></div>
+    <div style="width:1px;height:40px;background:rgba(251,246,234,.15)"></div>
+    <div style="text-align:center"><div style="font:800 30px/1 'Plus Jakarta Sans',sans-serif;color:#E3BE5E">1h 52</div><div style="margin-top:6px;font:600 10px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.12em;text-transform:uppercase;color:rgba(251,246,234,.45)">Tid</div></div>
+  </div>
+  <div style="flex:1"></div>
+  <div style="width:100%;border-radius:22px;background:#FBF6EA;padding:22px;position:relative;overflow:hidden">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <div style="font:700 8.5px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#0E7C3A">Din belöning</div>
+      <div style="font:600 10.5px/1 'Plus Jakarta Sans',sans-serif;color:rgba(8,32,15,.45)">Giltig i kväll</div>
+    </div>
+    <div style="margin-top:12px;font:800 23px/1.15 'Plus Jakarta Sans',sans-serif;letter-spacing:-.025em;color:#08200F">En åktur på Fritt Fall</div>
+    <p style="margin:8px 0 0;font:500 12.5px/1.45 'Plus Jakarta Sans',sans-serif;color:rgba(8,32,15,.55)">Visa den här koden i kassan vid Fritt Fall.</p>
+    <div style="margin-top:16px;border-top:1px dashed rgba(8,32,15,.22);padding-top:16px;display:flex;align-items:center;gap:14px">
+      <div style="width:58px;height:58px;border-radius:12px;background:#08200F;display:flex;align-items:center;justify-content:center">
+        <svg width="34" height="34" viewBox="0 0 34 34"><g fill="#FBF6EA"><rect x="2" y="2" width="9" height="9" rx="1.5"></rect><rect x="23" y="2" width="9" height="9" rx="1.5"></rect><rect x="2" y="23" width="9" height="9" rx="1.5"></rect><rect x="15" y="15" width="4" height="4"></rect><rect x="23" y="15" width="4" height="4"></rect><rect x="15" y="23" width="4" height="4"></rect><rect x="27" y="23" width="5" height="4"></rect><rect x="23" y="29" width="9" height="3"></rect><rect x="15" y="6" width="4" height="5"></rect></g></svg>
+      </div>
+      <div><div style="font:800 17px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.1em;color:#08200F">GL-2180</div><div style="margin-top:5px;font:600 10.5px/1 'Plus Jakarta Sans',sans-serif;color:rgba(8,32,15,.45)">Familjen Lindqvist</div></div>
+    </div>
+  </div>
+  <div style="width:100%;padding:12px 0 0"><div style="height:56px;border-radius:17px;border:1px solid rgba(251,246,234,.22);display:flex;align-items:center;justify-content:center;font:700 15px/1 'Plus Jakarta Sans',sans-serif;color:rgba(251,246,234,.85)">Dela laget</div></div>
+  <div style="height:34px"></div>
+</div>
+</x-import>
+<div class="cap">06 · Finish &amp; reward<i>The commercial hook — the trail ends in a redeemable in-park offer, tracked back to the organiser dashboard.</i></div>
+</div>
+
+</div>
+</div>
+
+<div class="dv-opt" id="1b">
+<div class="dv-olabel"><a class="dv-oid" href="#1b">1b</a>Tivoli Daylight — cream paper, red and green from the logo, serif display</div>
+<div style="display:flex;gap: {{ gapPx }};flex-wrap:nowrap">
+
+<div class="ph">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:100%;background:#FBF4E4;display:flex;flex-direction:column;align-items:center;padding:0 30px;font-family:'Plus Jakarta Sans',system-ui">
+  <div style="height:88px"></div>
+  <div style="width:150px;height:150px;border-radius:50%;background:#fff;border:2px solid #C8102E;display:flex;align-items:center;justify-content:center;overflow:hidden"><img src="uploads/brand_assets-1789472404439-vofo.jpeg" alt="Gröna Lund" style="width:138px;height:138px;object-fit:contain;display:block"></div>
+  <div style="margin-top:30px;display:flex;align-items:center;gap:8px;font:700 9.5px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#C8102E"><span style="width:5px;height:5px;border-radius:50%;background:#C79A3A"></span>Tivoli Gröna Lund</div>
+  <h1 style="margin:12px 0 0;font:400 52px/.98 'Instrument Serif',Georgia,serif;letter-spacing:-.02em;color:#12331C;text-align:center">Skattjakten</h1>
+  <p style="margin:14px 0 0;font:500 14.5px/1.5 'Plus Jakarta Sans',sans-serif;color:rgba(18,51,28,.62);text-align:center;max-width:250px">Nio hållplatser i parken. Spela som lag, en kväll.</p>
+  <div style="flex:1"></div>
+  <div style="width:100%;display:flex;flex-direction:column;gap:12px">
+    <div style="border:1.5px solid rgba(18,51,28,.16);border-radius:16px;background:#fff;padding:15px 18px">
+      <div style="font:700 8.5px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#0E7C3A;margin-bottom:7px">Eventkod</div>
+      <div style="display:flex;align-items:center;gap:3px;font:800 25px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.14em;color:#12331C">GRONA<span style="color:rgba(18,51,28,.3)">26</span><span style="width:2px;height:26px;background:#C8102E;margin-left:4px"></span></div>
+    </div>
+    <div style="height:56px;border-radius:16px;background:#C8102E;display:flex;align-items:center;justify-content:center;font:800 16px/1 'Plus Jakarta Sans',sans-serif;color:#fff">Gå med</div>
+    <div style="height:56px;border-radius:16px;border:1.5px solid rgba(18,51,28,.2);display:flex;align-items:center;justify-content:center;gap:9px;font:700 15px/1 'Plus Jakarta Sans',sans-serif;color:#12331C">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M1 5V2.5A1.5 1.5 0 012.5 1H5M11 1h2.5A1.5 1.5 0 0115 2.5V5M15 11v2.5a1.5 1.5 0 01-1.5 1.5H11M5 15H2.5A1.5 1.5 0 011 13.5V11" stroke="#12331C" stroke-width="1.6" stroke-linecap="round"></path></svg>Skanna QR vid entrén
+    </div>
+    <div style="display:flex;align-items:center;justify-content:center;padding:10px 0 0;font:600 10px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.06em;color:rgba(18,51,28,.38)">Drivs av ReadySet</div>
+  </div>
+  <div style="height:34px"></div>
+</div>
+</x-import>
+<div class="cap">01 · Entry<i>Same flow, daylight identity: the logo's red carries the primary action, gold is trim only.</i></div>
+</div>
+
+<div class="ph">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:100%;background:#FBF4E4;display:flex;flex-direction:column;font-family:'Plus Jakarta Sans',system-ui">
+  <div style="padding:62px 22px 14px;display:flex;align-items:flex-end;justify-content:space-between">
+    <div>
+      <div style="font:700 8.5px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#C8102E;margin-bottom:8px">Skattjakten</div>
+      <div style="font:400 34px/1 'Instrument Serif',Georgia,serif;color:#12331C">Kartan</div>
+    </div>
+    <div style="border:1.5px solid rgba(18,51,28,.18);border-radius:99px;padding:8px 13px;font:700 11.5px/1 'Plus Jakarta Sans',sans-serif;color:#0E7C3A;background:#fff">3 / 9 hittade</div>
+  </div>
+  <div style="flex:1;position:relative;margin:0 14px;border-radius:22px;overflow:hidden;border:1.5px solid rgba(18,51,28,.14)">
+    <svg viewBox="0 0 374 560" style="width:100%;height:100%;display:block">
+      <rect width="374" height="560" fill="#F2EAD4"></rect>
+      <path d="M0 0h374v96c-90 26-200 10-254 38C74 158 28 150 0 168Z" fill="#DCEAD9"></path>
+      <path d="M0 470c96-22 150 16 240 4 52-7 94-26 134-32v118H0Z" fill="#DCEAD9"></path>
+      <g stroke="#fff" stroke-width="16" fill="none" stroke-linecap="round">
+        <path d="M52 150C42 250 96 318 176 344 262 372 316 300 312 210"></path>
+        <path d="M176 344c-8 44-40 70-86 84"></path>
+        <path d="M312 210c22-30 26-58 18-86"></path>
+      </g>
+      <g stroke="#C79A3A" stroke-width="1.5" stroke-dasharray="5 7" fill="none">
+        <path d="M52 150C42 250 96 318 176 344 262 372 316 300 312 210"></path>
+      </g>
+      <g fill="#E7DCC0" stroke="rgba(18,51,28,.14)">
+        <rect x="28" y="186" width="92" height="58" rx="10"></rect>
+        <rect x="150" y="150" width="104" height="66" rx="10"></rect>
+        <rect x="270" y="252" width="76" height="70" rx="10"></rect>
+        <rect x="112" y="386" width="118" height="62" rx="10"></rect>
+        <rect x="34" y="286" width="72" height="56" rx="10"></rect>
+        <rect x="256" y="386" width="90" height="56" rx="10"></rect>
+      </g>
+      <g fill="rgba(18,51,28,.45)" font-family="'Plus Jakarta Sans',sans-serif" font-size="9" font-weight="700" letter-spacing="1">
+        <text x="68" y="239" text-anchor="middle">LUSTIGA HUSET</text>
+        <text x="202" y="168" text-anchor="middle">JETLINE</text>
+        <text x="308" y="291" text-anchor="middle">ECLIPSE</text>
+        <text x="171" y="421" text-anchor="middle">BLÅ TÅGET</text>
+        <text x="70" y="318" text-anchor="middle">TWISTER</text>
+        <text x="301" y="418" text-anchor="middle">KVASTEN</text>
+      </g>
+      <g>
+        <path d="M180 62c0-8 6-14 14-14s14 6 14 14c0 10-14 26-14 26s-14-16-14-26Z" fill="#C8102E"></path>
+        <circle cx="194" cy="62" r="5" fill="#FBF4E4"></circle>
+        <text x="194" y="106" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="10" font-weight="800" fill="#C8102E" letter-spacing="1">FRITT FALL</text>
+      </g>
+      <g font-family="'Plus Jakarta Sans',sans-serif" font-size="13" font-weight="800">
+        <circle cx="52" cy="150" r="17" fill="#0E7C3A"></circle><text x="52" y="155" text-anchor="middle" fill="#fff">1</text>
+        <circle cx="128" cy="222" r="17" fill="#0E7C3A"></circle><text x="128" y="227" text-anchor="middle" fill="#fff">2</text>
+        <circle cx="194" cy="196" r="17" fill="#0E7C3A"></circle><text x="194" y="201" text-anchor="middle" fill="#fff">3</text>
+        <circle cx="256" cy="268" r="17" fill="#fff" stroke="#0E7C3A" stroke-width="2"></circle><text x="256" y="273" text-anchor="middle" fill="#0E7C3A">4</text>
+        <circle cx="312" cy="210" r="17" fill="#fff" stroke="#0E7C3A" stroke-width="2"></circle><text x="312" y="215" text-anchor="middle" fill="#0E7C3A">5</text>
+        <circle cx="176" cy="344" r="17" fill="#fff" stroke="#0E7C3A" stroke-width="2"></circle><text x="176" y="349" text-anchor="middle" fill="#0E7C3A">6</text>
+        <circle cx="90" cy="428" r="17" fill="#fff" stroke="#0E7C3A" stroke-width="2"></circle><text x="90" y="433" text-anchor="middle" fill="#0E7C3A">7</text>
+        <circle cx="248" cy="414" r="17" fill="#fff" stroke="#0E7C3A" stroke-width="2"></circle><text x="248" y="419" text-anchor="middle" fill="#0E7C3A">8</text>
+        <circle cx="322" cy="476" r="17" fill="#fff" stroke="#0E7C3A" stroke-width="2"></circle><text x="322" y="481" text-anchor="middle" fill="#0E7C3A">9</text>
+      </g>
+      <g>
+        <circle cx="150" cy="300" r="20" fill="rgba(200,16,46,.14)"></circle>
+        <circle cx="150" cy="300" r="7" fill="#C8102E" stroke="#fff" stroke-width="2.5"></circle>
+      </g>
+    </svg>
+    <div style="position:absolute;left:14px;bottom:14px;right:14px;background:#fff;border:1.5px solid rgba(18,51,28,.14);border-radius:18px;padding:14px 16px;display:flex;align-items:center;gap:13px;box-shadow:0 8px 24px rgba(18,51,28,.10)">
+      <div style="width:44px;height:44px;border-radius:13px;background:#0E7C3A;display:flex;align-items:center;justify-content:center;font:800 17px/1 'Plus Jakarta Sans',sans-serif;color:#fff;flex:none">4</div>
+      <div style="flex:1;min-width:0">
+        <div style="font:700 14.5px/1.2 'Plus Jakarta Sans',sans-serif;color:#12331C">Eclipse</div>
+        <div style="font:500 11.5px/1.3 'Plus Jakarta Sans',sans-serif;color:rgba(18,51,28,.5);margin-top:3px">Närmast dig · 40 m</div>
+      </div>
+      <div style="border-radius:99px;background:#C8102E;padding:9px 15px;font:800 11.5px/1 'Plus Jakarta Sans',sans-serif;color:#fff">Öppna</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:8px;padding:14px 16px 0">
+    <div style="flex:1;height:52px;border-radius:15px;background:#12331C;display:flex;align-items:center;justify-content:center;font:700 12.5px/1 'Plus Jakarta Sans',sans-serif;color:#FBF4E4">Karta</div>
+    <div style="flex:1;height:52px;border-radius:15px;display:flex;align-items:center;justify-content:center;font:600 12.5px/1 'Plus Jakarta Sans',sans-serif;color:rgba(18,51,28,.5)">Hållplatser</div>
+    <div style="flex:1;height:52px;border-radius:15px;display:flex;align-items:center;justify-content:center;font:600 12.5px/1 'Plus Jakarta Sans',sans-serif;color:rgba(18,51,28,.5)">Topplista</div>
+  </div>
+  <div style="height:34px"></div>
+</div>
+</x-import>
+<div class="cap">02 · Map board<i>Printed-map feel: paper ground, white walkways, dashed route between the stops already found.</i></div>
+</div>
+
+<div class="ph">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:100%;background:#FBF4E4;display:flex;flex-direction:column;font-family:'Plus Jakarta Sans',system-ui">
+  <div style="padding:62px 22px 16px">
+    <div style="font:700 8.5px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#C8102E;margin-bottom:8px">Skattjakten</div>
+    <div style="display:flex;align-items:flex-end;justify-content:space-between">
+      <div style="font:400 34px/1 'Instrument Serif',Georgia,serif;color:#12331C">Hållplatser</div>
+      <div style="font:700 12px/1 'Plus Jakarta Sans',sans-serif;color:rgba(18,51,28,.5)">1 240 p</div>
+    </div>
+    <div style="margin-top:16px;height:5px;border-radius:99px;background:rgba(18,51,28,.12);overflow:hidden"><div style="width:33%;height:100%;background:#C8102E"></div></div>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;gap:9px;padding:0 16px;overflow:hidden">
+
+    <div style="display:flex;align-items:center;gap:13px;border-radius:17px;background:#fff;border:1.5px solid rgba(18,51,28,.12);padding:14px 15px">
+      <div style="width:40px;height:40px;border-radius:12px;background:#0E7C3A;display:flex;align-items:center;justify-content:center;font:800 15px/1 'Plus Jakarta Sans',sans-serif;color:#fff;flex:none">1</div>
+      <div style="flex:1;min-width:0"><div style="font:700 14.5px/1.2 'Plus Jakarta Sans',sans-serif;color:#12331C">Lustiga Huset</div><div style="font:500 11px/1.3 'Plus Jakarta Sans',sans-serif;color:rgba(18,51,28,.5);margin-top:3px">Fråga · 150 p</div></div>
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" fill="#0E7C3A"></circle><path d="M6 10.4l2.6 2.6L14 7.6" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:13px;border-radius:17px;background:#fff;border:1.5px solid rgba(18,51,28,.12);padding:14px 15px">
+      <div style="width:40px;height:40px;border-radius:12px;background:#0E7C3A;display:flex;align-items:center;justify-content:center;font:800 15px/1 'Plus Jakarta Sans',sans-serif;color:#fff;flex:none">2</div>
+      <div style="flex:1;min-width:0"><div style="font:700 14.5px/1.2 'Plus Jakarta Sans',sans-serif;color:#12331C">Twister</div><div style="font:500 11px/1.3 'Plus Jakarta Sans',sans-serif;color:rgba(18,51,28,.5);margin-top:3px">Foto · 200 p</div></div>
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" fill="#0E7C3A"></circle><path d="M6 10.4l2.6 2.6L14 7.6" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:13px;border-radius:17px;background:#fff;border:1.5px solid rgba(18,51,28,.12);padding:14px 15px">
+      <div style="width:40px;height:40px;border-radius:12px;background:#0E7C3A;display:flex;align-items:center;justify-content:center;font:800 15px/1 'Plus Jakarta Sans',sans-serif;color:#fff;flex:none">3</div>
+      <div style="flex:1;min-width:0"><div style="font:700 14.5px/1.2 'Plus Jakarta Sans',sans-serif;color:#12331C">Jetline</div><div style="font:500 11px/1.3 'Plus Jakarta Sans',sans-serif;color:rgba(18,51,28,.5);margin-top:3px">Fråga · 150 p</div></div>
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" fill="#0E7C3A"></circle><path d="M6 10.4l2.6 2.6L14 7.6" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:13px;border-radius:17px;background:#fff;border:1.5px solid #C8102E;padding:14px 15px;box-shadow:0 6px 18px rgba(200,16,46,.14)">
+      <div style="width:40px;height:40px;border-radius:12px;border:1.5px solid #C8102E;display:flex;align-items:center;justify-content:center;font:800 15px/1 'Plus Jakarta Sans',sans-serif;color:#C8102E;flex:none">4</div>
+      <div style="flex:1;min-width:0"><div style="font:700 14.5px/1.2 'Plus Jakarta Sans',sans-serif;color:#12331C">Eclipse</div><div style="font:500 11px/1.3 'Plus Jakarta Sans',sans-serif;color:#C8102E;margin-top:3px">Du är här · 40 m</div></div>
+      <div style="border-radius:99px;background:#C8102E;padding:9px 15px;font:800 11.5px/1 'Plus Jakarta Sans',sans-serif;color:#fff">Spela</div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:13px;border-radius:17px;border:1.5px solid rgba(18,51,28,.1);padding:14px 15px">
+      <div style="width:40px;height:40px;border-radius:12px;background:rgba(18,51,28,.07);display:flex;align-items:center;justify-content:center;font:800 15px/1 'Plus Jakarta Sans',sans-serif;color:rgba(18,51,28,.4);flex:none">5</div>
+      <div style="flex:1;min-width:0"><div style="font:700 14.5px/1.2 'Plus Jakarta Sans',sans-serif;color:rgba(18,51,28,.7)">Fritt Fall</div><div style="font:500 11px/1.3 'Plus Jakarta Sans',sans-serif;color:rgba(18,51,28,.4);margin-top:3px">Foto · 250 p</div></div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:13px;border-radius:17px;border:1.5px solid rgba(18,51,28,.1);padding:14px 15px">
+      <div style="width:40px;height:40px;border-radius:12px;background:rgba(18,51,28,.07);display:flex;align-items:center;justify-content:center;font:800 15px/1 'Plus Jakarta Sans',sans-serif;color:rgba(18,51,28,.4);flex:none">6</div>
+      <div style="flex:1;min-width:0"><div style="font:700 14.5px/1.2 'Plus Jakarta Sans',sans-serif;color:rgba(18,51,28,.7)">Blå Tåget</div><div style="font:500 11px/1.3 'Plus Jakarta Sans',sans-serif;color:rgba(18,51,28,.4);margin-top:3px">Ledtråd · 100 p</div></div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:13px;border-radius:17px;border:1.5px solid rgba(18,51,28,.1);padding:14px 15px">
+      <div style="width:40px;height:40px;border-radius:12px;background:rgba(18,51,28,.07);display:flex;align-items:center;justify-content:center;font:800 15px/1 'Plus Jakarta Sans',sans-serif;color:rgba(18,51,28,.4);flex:none">7</div>
+      <div style="flex:1;min-width:0"><div style="font:700 14.5px/1.2 'Plus Jakarta Sans',sans-serif;color:rgba(18,51,28,.7)">Kvasten</div><div style="font:500 11px/1.3 'Plus Jakarta Sans',sans-serif;color:rgba(18,51,28,.4);margin-top:3px">Foto · 200 p</div></div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:13px;border-radius:17px;border:1.5px dashed rgba(200,16,46,.4);padding:14px 15px">
+      <div style="width:40px;height:40px;border-radius:12px;border:1.5px dashed rgba(200,16,46,.5);display:flex;align-items:center;justify-content:center;flex:none">
+        <svg width="15" height="18" viewBox="0 0 15 18" fill="none"><rect x="1" y="7" width="13" height="10" rx="2.5" stroke="#C8102E" stroke-width="1.5"></rect><path d="M4 7V4.5a3.5 3.5 0 017 0V7" stroke="#C8102E" stroke-width="1.5"></path></svg>
+      </div>
+      <div style="flex:1;min-width:0"><div style="font:700 14.5px/1.2 'Plus Jakarta Sans',sans-serif;color:#C8102E">Finalen</div><div style="font:500 11px/1.3 'Plus Jakarta Sans',sans-serif;color:rgba(18,51,28,.4);margin-top:3px">Öppnas efter åtta hållplatser</div></div>
+    </div>
+
+  </div>
+  <div style="height:34px"></div>
+</div>
+</x-import>
+<div class="cap">03 · Checkpoints<i>Cards lift off the paper; completed stops go solid green, the active one is outlined in red.</i></div>
+</div>
+
+<div class="ph">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:100%;background:#FBF4E4;display:flex;flex-direction:column;font-family:'Plus Jakarta Sans',system-ui">
+  <div style="padding:62px 22px 14px;display:flex;align-items:center;justify-content:space-between">
+    <div style="width:38px;height:38px;border-radius:12px;border:1.5px solid rgba(18,51,28,.18);background:#fff;display:flex;align-items:center;justify-content:center"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M9.5 2.5L4 7.5l5.5 5" stroke="#12331C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></div>
+    <div style="font:700 11.5px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#C8102E">Hållplats 5</div>
+    <div style="width:38px"></div>
+  </div>
+  <div style="margin:6px 16px 0;flex:1;border-radius:22px;background:#EFE6CE;border:1.5px dashed rgba(18,51,28,.22);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;position:relative;overflow:hidden">
+    <svg width="46" height="46" viewBox="0 0 24 24" fill="none"><rect x="2" y="6" width="20" height="14" rx="3" stroke="rgba(18,51,28,.45)" stroke-width="1.4"></rect><circle cx="12" cy="13" r="4" stroke="rgba(18,51,28,.45)" stroke-width="1.4"></circle><path d="M8.5 6l1.4-2.2h4.2L15.5 6" stroke="rgba(18,51,28,.45)" stroke-width="1.4"></path></svg>
+    <div style="font:700 12.5px/1.4 'Plus Jakarta Sans',sans-serif;color:rgba(18,51,28,.6);text-align:center;max-width:220px">Camera viewfinder</div>
+    <div style="font:500 11px/1.4 'Plus Jakarta Sans',sans-serif;color:rgba(18,51,28,.42);text-align:center;max-width:230px">Placeholder — live camera feed in the app</div>
+    <div style="position:absolute;left:16px;top:16px;background:#12331C;border-radius:99px;padding:8px 13px;font:700 11px/1 'Plus Jakarta Sans',sans-serif;color:#FBF4E4">Fritt Fall · 250 p</div>
+  </div>
+  <div style="padding:20px 22px 0">
+    <div style="font:700 8.5px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#C8102E;margin-bottom:10px">Uppdrag</div>
+    <div style="font:400 32px/1.08 'Instrument Serif',Georgia,serif;color:#12331C;text-wrap:balance">Fånga hela laget i fritt fall.</div>
+    <p style="margin:10px 0 0;font:500 13.5px/1.5 'Plus Jakarta Sans',sans-serif;color:rgba(18,51,28,.6)">Alla i bild, armarna i luften. Domaren poängsätter efteråt.</p>
+  </div>
+  <div style="padding:22px 16px 0;display:flex;flex-direction:column;gap:11px">
+    <div style="height:58px;border-radius:17px;background:#C8102E;display:flex;align-items:center;justify-content:center;font:800 16px/1 'Plus Jakarta Sans',sans-serif;color:#fff">Ta bilden</div>
+    <div style="height:58px;border-radius:17px;border:1.5px solid rgba(18,51,28,.2);display:flex;align-items:center;justify-content:center;font:700 15px/1 'Plus Jakarta Sans',sans-serif;color:#12331C">Hoppa över</div>
+  </div>
+  <div style="height:34px"></div>
+</div>
+</x-import>
+<div class="cap">04 · Photo mission<i>Serif display on the instruction gives the mission a written-invitation tone.</i></div>
+</div>
+
+<div class="ph">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:100%;background:#FBF4E4;display:flex;flex-direction:column;font-family:'Plus Jakarta Sans',system-ui">
+  <div style="padding:62px 22px 16px">
+    <div style="display:flex;align-items:center;gap:8px;font:700 8.5px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#C8102E;margin-bottom:8px"><span style="width:6px;height:6px;border-radius:50%;background:#C8102E"></span>Live</div>
+    <div style="font:400 34px/1 'Instrument Serif',Georgia,serif;color:#12331C">Topplistan</div>
+  </div>
+  <div style="margin:0 16px;border-radius:20px;background:#12331C;padding:16px 18px;display:flex;align-items:center;gap:14px">
+    <div style="font:800 30px/1 'Plus Jakarta Sans',sans-serif;color:#C79A3A">4</div>
+    <div style="flex:1"><div style="font:700 15px/1.2 'Plus Jakarta Sans',sans-serif;color:#FBF4E4">Familjen Lindqvist</div><div style="font:500 11.5px/1.3 'Plus Jakarta Sans',sans-serif;color:rgba(251,244,228,.6);margin-top:3px">Ditt lag · 3 hållplatser kvar</div></div>
+    <div style="font:800 17px/1 'Plus Jakarta Sans',sans-serif;color:#FBF4E4">1 240</div>
+  </div>
+  <div style="flex:1;padding:18px 20px 0;display:flex;flex-direction:column">
+    <div style="display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid rgba(18,51,28,.12)"><div style="width:26px;font:800 15px/1 'Plus Jakarta Sans',sans-serif;color:#C8102E">1</div><div style="width:34px;height:34px;border-radius:50%;background:#E7DCC0"></div><div style="flex:1;font:700 14px/1.2 'Plus Jakarta Sans',sans-serif;color:#12331C">Kanonkulorna</div><div style="font:700 14px/1 'Plus Jakarta Sans',sans-serif;color:#12331C">1 820</div></div>
+    <div style="display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid rgba(18,51,28,.12)"><div style="width:26px;font:800 15px/1 'Plus Jakarta Sans',sans-serif;color:#C8102E">2</div><div style="width:34px;height:34px;border-radius:50%;background:#E7DCC0"></div><div style="flex:1;font:700 14px/1.2 'Plus Jakarta Sans',sans-serif;color:#12331C">Team Tivoli</div><div style="font:700 14px/1 'Plus Jakarta Sans',sans-serif;color:#12331C">1 640</div></div>
+    <div style="display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid rgba(18,51,28,.12)"><div style="width:26px;font:800 15px/1 'Plus Jakarta Sans',sans-serif;color:#C8102E">3</div><div style="width:34px;height:34px;border-radius:50%;background:#E7DCC0"></div><div style="flex:1;font:700 14px/1.2 'Plus Jakarta Sans',sans-serif;color:#12331C">Blå Tåget-gänget</div><div style="font:700 14px/1 'Plus Jakarta Sans',sans-serif;color:#12331C">1 390</div></div>
+    <div style="display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid rgba(18,51,28,.12)"><div style="width:26px;font:800 15px/1 'Plus Jakarta Sans',sans-serif;color:rgba(18,51,28,.4)">5</div><div style="width:34px;height:34px;border-radius:50%;background:rgba(18,51,28,.08)"></div><div style="flex:1;font:600 14px/1.2 'Plus Jakarta Sans',sans-serif;color:rgba(18,51,28,.7)">Höjdarna</div><div style="font:600 14px/1 'Plus Jakarta Sans',sans-serif;color:rgba(18,51,28,.55)">1 180</div></div>
+    <div style="display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid rgba(18,51,28,.12)"><div style="width:26px;font:800 15px/1 'Plus Jakarta Sans',sans-serif;color:rgba(18,51,28,.4)">6</div><div style="width:34px;height:34px;border-radius:50%;background:rgba(18,51,28,.08)"></div><div style="flex:1;font:600 14px/1.2 'Plus Jakarta Sans',sans-serif;color:rgba(18,51,28,.7)">Karusellkungarna</div><div style="font:600 14px/1 'Plus Jakarta Sans',sans-serif;color:rgba(18,51,28,.55)">1 020</div></div>
+    <div style="display:flex;align-items:center;gap:14px;padding:13px 0"><div style="width:26px;font:800 15px/1 'Plus Jakarta Sans',sans-serif;color:rgba(18,51,28,.4)">7</div><div style="width:34px;height:34px;border-radius:50%;background:rgba(18,51,28,.08)"></div><div style="flex:1;font:600 14px/1.2 'Plus Jakarta Sans',sans-serif;color:rgba(18,51,28,.7)">Spökhusets vänner</div><div style="font:600 14px/1 'Plus Jakarta Sans',sans-serif;color:rgba(18,51,28,.55)">940</div></div>
+    <div style="flex:1"></div>
+    <div style="padding:0 0 16px;font:500 11px/1.4 'Plus Jakarta Sans',sans-serif;color:rgba(18,51,28,.42);text-align:center">Uppdateras direkt · 212 lag i kväll</div>
+  </div>
+  <div style="height:34px"></div>
+</div>
+</x-import>
+<div class="cap">05 · Live leaderboard<i>Dark band for your own team keeps it readable at a glance while walking.</i></div>
+</div>
+
+<div class="ph">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:100%;background:#FBF4E4;display:flex;flex-direction:column;align-items:center;padding:0 26px;font-family:'Plus Jakarta Sans',system-ui">
+  <div style="height:84px"></div>
+  <div style="font:700 9.5px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#C8102E">Skattjakten klar</div>
+  <h1 style="margin:14px 0 0;font:400 46px/1 'Instrument Serif',Georgia,serif;color:#12331C;text-align:center;text-wrap:balance">Nio av nio. Hela parken avklarad.</h1>
+  <div style="margin-top:26px;display:flex;align-items:center;gap:24px">
+    <div style="text-align:center"><div style="font:800 28px/1 'Plus Jakarta Sans',sans-serif;color:#0E7C3A">2 180</div><div style="margin-top:6px;font:600 10px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.12em;text-transform:uppercase;color:rgba(18,51,28,.45)">Poäng</div></div>
+    <div style="width:1px;height:40px;background:rgba(18,51,28,.15)"></div>
+    <div style="text-align:center"><div style="font:800 28px/1 'Plus Jakarta Sans',sans-serif;color:#0E7C3A">2:a</div><div style="margin-top:6px;font:600 10px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.12em;text-transform:uppercase;color:rgba(18,51,28,.45)">Placering</div></div>
+    <div style="width:1px;height:40px;background:rgba(18,51,28,.15)"></div>
+    <div style="text-align:center"><div style="font:800 28px/1 'Plus Jakarta Sans',sans-serif;color:#0E7C3A">1h 52</div><div style="margin-top:6px;font:600 10px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.12em;text-transform:uppercase;color:rgba(18,51,28,.45)">Tid</div></div>
+  </div>
+  <div style="flex:1"></div>
+  <div style="width:100%;border-radius:22px;background:#12331C;padding:22px;position:relative;overflow:hidden">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <div style="font:700 8.5px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#C79A3A">Din belöning</div>
+      <div style="font:600 10.5px/1 'Plus Jakarta Sans',sans-serif;color:rgba(251,244,228,.5)">Giltig i kväll</div>
+    </div>
+    <div style="margin-top:12px;font:400 30px/1.05 'Instrument Serif',Georgia,serif;color:#FBF4E4">En åktur på Fritt Fall</div>
+    <p style="margin:8px 0 0;font:500 12.5px/1.45 'Plus Jakarta Sans',sans-serif;color:rgba(251,244,228,.62)">Visa den här koden i kassan vid Fritt Fall.</p>
+    <div style="margin-top:16px;border-top:1px dashed rgba(251,244,228,.28);padding-top:16px;display:flex;align-items:center;gap:14px">
+      <div style="width:58px;height:58px;border-radius:12px;background:#FBF4E4;display:flex;align-items:center;justify-content:center">
+        <svg width="34" height="34" viewBox="0 0 34 34"><g fill="#12331C"><rect x="2" y="2" width="9" height="9" rx="1.5"></rect><rect x="23" y="2" width="9" height="9" rx="1.5"></rect><rect x="2" y="23" width="9" height="9" rx="1.5"></rect><rect x="15" y="15" width="4" height="4"></rect><rect x="23" y="15" width="4" height="4"></rect><rect x="15" y="23" width="4" height="4"></rect><rect x="27" y="23" width="5" height="4"></rect><rect x="23" y="29" width="9" height="3"></rect><rect x="15" y="6" width="4" height="5"></rect></g></svg>
+      </div>
+      <div><div style="font:800 17px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.1em;color:#FBF4E4">GL-2180</div><div style="margin-top:5px;font:600 10.5px/1 'Plus Jakarta Sans',sans-serif;color:rgba(251,244,228,.5)">Familjen Lindqvist</div></div>
+    </div>
+  </div>
+  <div style="width:100%;padding:12px 0 0"><div style="height:56px;border-radius:17px;border:1.5px solid rgba(18,51,28,.2);display:flex;align-items:center;justify-content:center;font:700 15px/1 'Plus Jakarta Sans',sans-serif;color:#12331C">Dela laget</div></div>
+  <div style="height:34px"></div>
+</div>
+</x-import>
+<div class="cap">06 · Finish &amp; reward<i>Voucher inverts to the dark green so it reads as a ticket, not another card.</i></div>
+</div>
+
+</div>
+</div>
+
+<div class="dv-opt" id="1c">
+<div class="dv-olabel"><a class="dv-oid" href="#1c">1c</a>One engine, three activation types — the same checkpoint screen dressed for other buyers</div>
+<div style="display:flex;gap: {{ gapPx }};flex-wrap:nowrap">
+
+<div class="ph">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:100%;background:#FFF8EF;display:flex;flex-direction:column;font-family:'Plus Jakarta Sans',system-ui">
+  <div style="padding:62px 22px 18px;background:#0E7C3A">
+    <div style="font:700 8.5px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.72);margin-bottom:9px">Familjejakten · Sommarlov</div>
+    <div style="font:800 27px/1.05 'Plus Jakarta Sans',sans-serif;letter-spacing:-.025em;color:#fff">Hitta alla nio</div>
+    <div style="margin-top:16px;display:flex;gap:7px">
+      <div style="flex:1;height:7px;border-radius:99px;background:#F2C94C"></div><div style="flex:1;height:7px;border-radius:99px;background:#F2C94C"></div><div style="flex:1;height:7px;border-radius:99px;background:#F2C94C"></div><div style="flex:1;height:7px;border-radius:99px;background:rgba(255,255,255,.28)"></div><div style="flex:1;height:7px;border-radius:99px;background:rgba(255,255,255,.28)"></div><div style="flex:1;height:7px;border-radius:99px;background:rgba(255,255,255,.28)"></div><div style="flex:1;height:7px;border-radius:99px;background:rgba(255,255,255,.28)"></div><div style="flex:1;height:7px;border-radius:99px;background:rgba(255,255,255,.28)"></div><div style="flex:1;height:7px;border-radius:99px;background:rgba(255,255,255,.28)"></div>
+    </div>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;gap:10px;padding:18px 16px 0;overflow:hidden">
+    <div style="display:flex;align-items:center;gap:13px;border-radius:20px;background:#fff;border:2px solid #0E7C3A;padding:15px">
+      <div style="width:44px;height:44px;border-radius:14px;background:#F2C94C;display:flex;align-items:center;justify-content:center;font:800 17px/1 'Plus Jakarta Sans',sans-serif;color:#12331C;flex:none">4</div>
+      <div style="flex:1;min-width:0"><div style="font:800 15.5px/1.2 'Plus Jakarta Sans',sans-serif;color:#12331C">Eclipse</div><div style="font:600 11.5px/1.3 'Plus Jakarta Sans',sans-serif;color:#0E7C3A;margin-top:3px">Ni är här! Kika uppåt.</div></div>
+      <div style="border-radius:99px;background:#0E7C3A;padding:10px 16px;font:800 12px/1 'Plus Jakarta Sans',sans-serif;color:#fff">Spela</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:13px;border-radius:20px;background:#fff;border:1.5px solid rgba(18,51,28,.1);padding:15px">
+      <div style="width:44px;height:44px;border-radius:14px;background:#E9F3E6;display:flex;align-items:center;justify-content:center;font:800 17px/1 'Plus Jakarta Sans',sans-serif;color:#0E7C3A;flex:none">5</div>
+      <div style="flex:1;min-width:0"><div style="font:800 15.5px/1.2 'Plus Jakarta Sans',sans-serif;color:#12331C">Fritt Fall</div><div style="font:600 11.5px/1.3 'Plus Jakarta Sans',sans-serif;color:rgba(18,51,28,.45);margin-top:3px">Fotouppdrag · 250 p</div></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:13px;border-radius:20px;background:#fff;border:1.5px solid rgba(18,51,28,.1);padding:15px">
+      <div style="width:44px;height:44px;border-radius:14px;background:#E9F3E6;display:flex;align-items:center;justify-content:center;font:800 17px/1 'Plus Jakarta Sans',sans-serif;color:#0E7C3A;flex:none">6</div>
+      <div style="flex:1;min-width:0"><div style="font:800 15.5px/1.2 'Plus Jakarta Sans',sans-serif;color:#12331C">Blå Tåget</div><div style="font:600 11.5px/1.3 'Plus Jakarta Sans',sans-serif;color:rgba(18,51,28,.45);margin-top:3px">Ledtråd · 100 p</div></div>
+    </div>
+    <div style="margin-top:6px;border-radius:20px;background:#E9F3E6;padding:18px;display:flex;align-items:center;gap:14px">
+      <div style="width:46px;height:46px;border-radius:14px;background:#0E7C3A;display:flex;align-items:center;justify-content:center;font:800 20px/1 'Plus Jakarta Sans',sans-serif;color:#F2C94C;flex:none">9</div>
+      <div style="font:600 12.5px/1.45 'Plus Jakarta Sans',sans-serif;color:#12331C">Alla nio klara ger en glass i Tivolishopen.</div>
+    </div>
+    <div style="flex:1"></div>
+  </div>
+  <div style="height:34px"></div>
+</div>
+</x-import>
+<div class="cap">Family trail<i>Bigger hit targets, fewer stops visible, reward stated up front. Same checkpoint model.</i></div>
+</div>
+
+<div class="ph">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dark="{{ true }}" hint-size="402px,874px">
+<div style="height:100%;background:#14181B;display:flex;flex-direction:column;font-family:'Plus Jakarta Sans',system-ui">
+  <div style="padding:62px 22px 18px;border-bottom:1px solid rgba(255,255,255,.08)">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div style="font:700 8.5px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#4FB4C6">Kickoff 2026 · Lag 6</div>
+      <div style="font:700 10.5px/1 'Plus Jakarta Sans',sans-serif;color:rgba(255,255,255,.45)">18:40</div>
+    </div>
+    <div style="font:800 26px/1.05 'Plus Jakarta Sans',sans-serif;letter-spacing:-.025em;color:#fff">Stationer</div>
+    <div style="margin-top:14px;display:flex;gap:18px">
+      <div><div style="font:800 18px/1 'Plus Jakarta Sans',sans-serif;color:#fff">3/9</div><div style="margin-top:4px;font:600 9px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4)">Klara</div></div>
+      <div><div style="font:800 18px/1 'Plus Jakarta Sans',sans-serif;color:#fff">1 240</div><div style="margin-top:4px;font:600 9px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4)">Poäng</div></div>
+      <div><div style="font:800 18px/1 'Plus Jakarta Sans',sans-serif;color:#fff">4:e</div><div style="margin-top:4px;font:600 9px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4)">Plats</div></div>
+    </div>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;padding:0 22px;overflow:hidden">
+    <div style="display:flex;align-items:center;gap:14px;padding:16px 0;border-bottom:1px solid rgba(255,255,255,.07)">
+      <div style="width:32px;height:32px;border-radius:9px;background:rgba(79,180,198,.16);display:flex;align-items:center;justify-content:center;font:700 13px/1 'Plus Jakarta Sans',sans-serif;color:#4FB4C6;flex:none">04</div>
+      <div style="flex:1;min-width:0"><div style="font:700 14.5px/1.2 'Plus Jakarta Sans',sans-serif;color:#fff">Eclipse</div><div style="font:500 11px/1.3 'Plus Jakarta Sans',sans-serif;color:rgba(255,255,255,.42);margin-top:3px">Lagfråga · 8 min</div></div>
+      <div style="border:1px solid #4FB4C6;border-radius:8px;padding:8px 13px;font:700 11.5px/1 'Plus Jakarta Sans',sans-serif;color:#4FB4C6">Starta</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px;padding:16px 0;border-bottom:1px solid rgba(255,255,255,.07)">
+      <div style="width:32px;height:32px;border-radius:9px;background:rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;font:700 13px/1 'Plus Jakarta Sans',sans-serif;color:rgba(255,255,255,.45);flex:none">05</div>
+      <div style="flex:1;min-width:0"><div style="font:700 14.5px/1.2 'Plus Jakarta Sans',sans-serif;color:rgba(255,255,255,.75)">Fritt Fall</div><div style="font:500 11px/1.3 'Plus Jakarta Sans',sans-serif;color:rgba(255,255,255,.35);margin-top:3px">Lagfoto · 250 p</div></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px;padding:16px 0;border-bottom:1px solid rgba(255,255,255,.07)">
+      <div style="width:32px;height:32px;border-radius:9px;background:rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;font:700 13px/1 'Plus Jakarta Sans',sans-serif;color:rgba(255,255,255,.45);flex:none">06</div>
+      <div style="flex:1;min-width:0"><div style="font:700 14.5px/1.2 'Plus Jakarta Sans',sans-serif;color:rgba(255,255,255,.75)">Blå Tåget</div><div style="font:500 11px/1.3 'Plus Jakarta Sans',sans-serif;color:rgba(255,255,255,.35);margin-top:3px">Förhandling · 150 p</div></div>
+    </div>
+    <div style="margin-top:18px;border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:16px">
+      <div style="font:700 8.5px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#4FB4C6;margin-bottom:8px">Från arrangören</div>
+      <div style="font:500 12.5px/1.5 'Plus Jakarta Sans',sans-serif;color:rgba(255,255,255,.72)">Samling vid Lustiga Huset 19:30. Sista stationen stänger 19:15.</div>
+    </div>
+    <div style="flex:1"></div>
+  </div>
+  <div style="height:34px"></div>
+</div>
+</x-import>
+<div class="cap">Corporate offsite<i>Neutral dark shell, ReadySet teal, timings and organiser broadcast instead of prizes.</i></div>
+</div>
+
+<div class="ph">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dark="{{ true }}" hint-size="402px,874px">
+<div style="height:100%;background:#120A24;background-image:radial-gradient(90% 50% at 20% 0%, rgba(255,58,138,.35), transparent 60%),radial-gradient(90% 50% at 90% 100%, rgba(0,229,255,.28), transparent 60%);display:flex;flex-direction:column;font-family:'Plus Jakarta Sans',system-ui">
+  <div style="padding:62px 22px 18px">
+    <div style="font:800 8.5px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.24em;text-transform:uppercase;color:#00E5FF;margin-bottom:10px">Grönan Nights · Scen 3</div>
+    <div style="font:800 30px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:-.03em;color:#fff;text-transform:uppercase">Checkpoints</div>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;gap:11px;padding:0 16px;overflow:hidden">
+    <div style="border-radius:18px;padding:16px;background:linear-gradient(135deg,rgba(255,58,138,.9),rgba(255,58,138,.35));display:flex;align-items:center;gap:13px">
+      <div style="width:44px;height:44px;border-radius:50%;background:#120A24;display:flex;align-items:center;justify-content:center;font:800 16px/1 'Plus Jakarta Sans',sans-serif;color:#fff;flex:none">4</div>
+      <div style="flex:1;min-width:0"><div style="font:800 15.5px/1.2 'Plus Jakarta Sans',sans-serif;color:#fff">Huvudscenen</div><div style="font:600 11.5px/1.3 'Plus Jakarta Sans',sans-serif;color:rgba(255,255,255,.8);margin-top:3px">Live nu · dubbla poäng</div></div>
+      <div style="border-radius:99px;background:#fff;padding:10px 15px;font:800 11.5px/1 'Plus Jakarta Sans',sans-serif;color:#120A24">Spela</div>
+    </div>
+    <div style="border-radius:18px;padding:16px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);display:flex;align-items:center;gap:13px">
+      <div style="width:44px;height:44px;border-radius:50%;background:rgba(0,229,255,.2);display:flex;align-items:center;justify-content:center;font:800 16px/1 'Plus Jakarta Sans',sans-serif;color:#00E5FF;flex:none">5</div>
+      <div style="flex:1;min-width:0"><div style="font:800 15.5px/1.2 'Plus Jakarta Sans',sans-serif;color:#fff">Ljustunneln</div><div style="font:600 11.5px/1.3 'Plus Jakarta Sans',sans-serif;color:rgba(255,255,255,.55);margin-top:3px">Foto · 250 p</div></div>
+    </div>
+    <div style="border-radius:18px;padding:16px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);display:flex;align-items:center;gap:13px">
+      <div style="width:44px;height:44px;border-radius:50%;background:rgba(0,229,255,.2);display:flex;align-items:center;justify-content:center;font:800 16px/1 'Plus Jakarta Sans',sans-serif;color:#00E5FF;flex:none">6</div>
+      <div style="flex:1;min-width:0"><div style="font:800 15.5px/1.2 'Plus Jakarta Sans',sans-serif;color:#fff">Silverdiscot</div><div style="font:600 11.5px/1.3 'Plus Jakarta Sans',sans-serif;color:rgba(255,255,255,.55);margin-top:3px">Fråga · 150 p</div></div>
+    </div>
+    <div style="margin-top:4px;border-radius:18px;border:1px solid rgba(255,255,255,.14);padding:16px;display:flex;align-items:center;gap:14px">
+      <div style="width:46px;height:46px;border-radius:12px;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;flex:none">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2l2.2 5.2 5.6.4-4.3 3.7 1.3 5.5L10 13.9l-4.8 2.9 1.3-5.5L2.2 7.6l5.6-.4L10 2Z" stroke="#00E5FF" stroke-width="1.4" stroke-linejoin="round"></path></svg>
+      </div>
+      <div style="font:600 12.5px/1.45 'Plus Jakarta Sans',sans-serif;color:rgba(255,255,255,.75)">Topp 10 i kväll får skippa kön till Fritt Fall.</div>
+    </div>
+    <div style="flex:1"></div>
+  </div>
+  <div style="height:34px"></div>
+</div>
+</x-import>
+<div class="cap">Festival / late-night<i>Same list, event-skin treatment: live checkpoint, multipliers, queue-jump as the reward.</i></div>
+</div>
+
+</div>
+</div>
+
+</div>
+<p class="dv-next">Try next: "turn <a class="dv-oid" href="#1a">1a</a> into the one-page leave-behind" · "add the organiser dashboard to <a class="dv-oid" href="#1b">1b</a>" · "make <a class="dv-oid" href="#1a">1a</a> use Gröna Lund's real park map" · "English copy instead of Swedish"</p>
+</section>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;boardBg&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#EFEBE2&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#EFEBE2&quot;,&quot;#F0EEE9&quot;,&quot;#141A15&quot;,&quot;#FBF4E4&quot;],&quot;section&quot;:&quot;Board&quot;},&quot;gap&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:26,&quot;min&quot;:12,&quot;max&quot;:64,&quot;step&quot;:2,&quot;unit&quot;:&quot;px&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Board&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      boardBg: this.props.boardBg ?? '#EFEBE2',
+      gapPx: (this.props.gap ?? 26) + 'px',
+    };
+  }
+}
+</script>
+</body>
+</html>
