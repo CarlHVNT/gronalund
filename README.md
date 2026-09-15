@@ -69,10 +69,23 @@ already has CORS enabled, so this just works cross-origin.
 3. In the Netlify site's **Environment variables**, add
    `VITE_API_URL` = the server URL from step 1 (no trailing slash), then
    trigger a deploy (env var changes need a rebuild to take effect).
-4. Open the Netlify URL, join with `GRONA26`, and it should behave exactly
+   If you skip this, the production build falls back to
+   `https://gronalund-server.onrender.com` (the service name in
+   `server/render.yaml`). If Render gave you a different URL, you must set
+   `VITE_API_URL`.
+4. Open the Netlify URL, join with `1234`, and it should behave exactly
    like the local dev version — including the shared leaderboard, since
    every visitor now hits the same live server.
 
 Note this is still a prototype backend: state is in-memory and resets
 whenever the server host restarts/redeploys/sleeps (free tiers on Render
 spin down when idle and lose state on wake).
+
+**If joining fails with every code**, the app cannot reach the API. The
+loading screen and the join form now show the exact problem and the API
+address the app tried. Check, in order:
+
+1. The server is deployed and awake (open `<server URL>/api/event` in a
+   browser; it should return JSON with `"code": "1234"`).
+2. `VITE_API_URL` in Netlify matches that URL exactly (no trailing slash).
+3. The Netlify site was rebuilt *after* the variable was added.

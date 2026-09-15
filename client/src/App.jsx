@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { api } from './lib/api'
+import { api, API_BASE } from './lib/api'
 import { THEMES, BRAND } from './lib/theme'
 import { formatElapsed } from './lib/format'
 import { WelcomeScreen } from './screens/WelcomeScreen'
@@ -28,6 +28,8 @@ export default function App() {
   })
   const [team, setTeam] = useState(null)
   const [appLoading, setAppLoading] = useState(true)
+  const [bootError, setBootError] = useState(null)
+  const [slowBoot, setSlowBoot] = useState(false)
   const [joining, setJoining] = useState(false)
   const [joinError, setJoinError] = useState(null)
 
@@ -43,9 +45,13 @@ export default function App() {
     async function boot() {
       try {
         const ev = await api.getEvent()
+        if (!ev || !Array.isArray(ev.checkpoints)) {
+          throw new Error('Oväntat svar från spelservern. Kontrollera att API-adressen pekar på servern.')
+        }
         if (!cancelled) setEvent(ev)
-      } catch {
-        // event fetch failure is surfaced via the loading screen staying up
+      } catch (e) {
+        // Shown on the loading screen so a broken API address is obvious.
+        if (!cancelled) setBootError(e.message)
       }
       if (session?.teamId && session?.token) {
         try {
@@ -64,6 +70,13 @@ export default function App() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  // Free-tier hosts can take a while to wake up; say so instead of just spinning.
+  useEffect(() => {
+    if (!appLoading) return
+    const id = setTimeout(() => setSlowBoot(true), 4000)
+    return () => clearTimeout(id)
+  }, [appLoading])
 
   // Live-ish leaderboard: poll every few seconds once a team has joined.
   useEffect(() => {
@@ -96,6 +109,7 @@ export default function App() {
     setJoinError(null)
     try {
       const { team: t, token } = await api.join({ teamName, code })
+      if (!t?.id || !token) throw new Error('Oväntat svar från spelservern vid anslutning. Försök igen.')
       const nextSession = { teamId: t.id, token }
       localStorage.setItem(SESSION_KEY, JSON.stringify(nextSession))
       setSession(nextSession)
@@ -176,8 +190,53 @@ export default function App() {
     return (
       <div style={{ minHeight: '100dvh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#111' }}>
         <div style={shellStyle}>
-          <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
-            Laddar {BRAND.name}…
+          <div
+            style={{
+              flex: 1,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 14,
+              padding: 24,
+              color: '#fff',
+              textAlign: 'center',
+            }}
+          >
+            {bootError ? (
+              <>
+                <div style={{ fontWeight: 700, fontSize: 16 }}>Kunde inte ladda eventet</div>
+                <div style={{ fontSize: 13, opacity: 0.85, wordBreak: 'break-word' }}>{bootError}</div>
+                <div style={{ fontSize: 11, opacity: 0.55, wordBreak: 'break-all' }}>API: {API_BASE}</div>
+                <button
+                  type="button"
+                  onClick={() => window.location.reload()}
+                  style={{
+                    marginTop: 6,
+                    height: 44,
+                    padding: '0 22px',
+                    borderRadius: 12,
+                    border: 'none',
+                    background: '#fff',
+                    color: '#111',
+                    fontWeight: 700,
+                    fontSize: 14,
+                    cursor: 'pointer',
+                  }}
+                >
+                  Försök igen
+                </button>
+              </>
+            ) : (
+              <>
+                <div>Laddar {BRAND.name}…</div>
+                {slowBoot && (
+                  <div style={{ fontSize: 13, opacity: 0.7 }}>
+                    Spelservern startar upp. Första gången kan det ta upp till en minut.
+                  </div>
+                )}
+              </>
+            )}
           </div>
         </div>
       </div>
