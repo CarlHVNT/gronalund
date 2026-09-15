@@ -23,3 +23,56 @@ The design medium is **HTML/CSS/JS** — these are prototypes, not production co
 - `README.md` — this file
 - `chats/` — conversation transcripts (read these!)
 - `project/` — the `Copy of Sales UI mockups` project files (HTML prototypes, assets, components)
+
+## The implemented prototype
+
+The mockups in `project/` (turns 2 and 3 — the shipped-app skeleton in Gröna
+Lund's colours, light + evening skins, with the isometric 3D map) have been
+built out as a real, interactive web app:
+
+- `client/` — React + Vite + Tailwind frontend (the phone-style screens:
+  welcome/join, isometric map, checkpoints list, mission sheet for
+  photo/quiz/clue challenges, live leaderboard, finish & reward).
+- `server/` — small Express API with an in-memory store, so multiple
+  browser tabs/devices can join the same event code and share one live
+  leaderboard (this is a prototype: state resets when the server restarts).
+
+**Run it:**
+
+```
+npm run install:all   # installs client + server deps
+npm run dev            # runs both — client on :5173, API on :4000
+```
+
+Then open http://localhost:5173, join with event code `GRONA26`, and play
+through. The gear icon (or the settings tab) has a light/evening theme
+toggle, a way to leave your team, and a "reset the whole event" button for
+re-running the demo.
+
+### Deploying to Netlify
+
+Netlify only serves the static `client/` build — it can't run the
+always-on `server/` process, so the API needs to live on a separate host.
+The client already supports this: it calls a relative `/api` path in dev,
+and an absolute URL (set via `VITE_API_URL`) in production. `server/`
+already has CORS enabled, so this just works cross-origin.
+
+1. **Deploy `server/` somewhere that runs a persistent Node process** —
+   Render, Fly.io, and Railway all have free tiers. For Render:
+   push this repo, create a new **Web Service**, point it at `server/`
+   (`server/render.yaml` has the settings pre-filled — root dir `server`,
+   build `npm install`, start `npm start`). Note the URL it gives you,
+   e.g. `https://gronalund-server.onrender.com`.
+2. **Connect this repo to Netlify** (Add new site → Import from Git). It
+   already has a root `netlify.toml` telling Netlify to build from the
+   `client/` subfolder, so the default settings should just work.
+3. In the Netlify site's **Environment variables**, add
+   `VITE_API_URL` = the server URL from step 1 (no trailing slash), then
+   trigger a deploy (env var changes need a rebuild to take effect).
+4. Open the Netlify URL, join with `GRONA26`, and it should behave exactly
+   like the local dev version — including the shared leaderboard, since
+   every visitor now hits the same live server.
+
+Note this is still a prototype backend: state is in-memory and resets
+whenever the server host restarts/redeploys/sleeps (free tiers on Render
+spin down when idle and lose state on wake).

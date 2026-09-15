@@ -1,0 +1,275 @@
+import { useEffect, useState } from 'react'
+import { api } from './lib/api'
+import { THEMES, BRAND } from './lib/theme'
+import { formatElapsed } from './lib/format'
+import { WelcomeScreen } from './screens/WelcomeScreen'
+import { MapScreen } from './screens/MapScreen'
+import { CheckpointsScreen } from './screens/CheckpointsScreen'
+import { LeaderboardScreen } from './screens/LeaderboardScreen'
+import { FinishScreen } from './screens/FinishScreen'
+import { TabBar } from './components/TabBar'
+import { MissionSheet } from './components/MissionSheet'
+import { SettingsSheet } from './components/SettingsSheet'
+
+const SESSION_KEY = 'rs-gl-session'
+const THEME_KEY = 'rs-gl-theme'
+
+export default function App() {
+  const [themeId, setThemeId] = useState(() => localStorage.getItem(THEME_KEY) || 'light')
+  const theme = THEMES[themeId]
+
+  const [event, setEvent] = useState(null)
+  const [session, setSession] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem(SESSION_KEY) || 'null')
+    } catch {
+      return null
+    }
+  })
+  const [team, setTeam] = useState(null)
+  const [appLoading, setAppLoading] = useState(true)
+  const [joining, setJoining] = useState(false)
+  const [joinError, setJoinError] = useState(null)
+
+  const [screen, setScreen] = useState('map')
+  const [settingsOpen, setSettingsOpen] = useState(false)
+  const [activeCheckpointId, setActiveCheckpointId] = useState(null)
+  const [submitting, setSubmitting] = useState(false)
+  const [leaderboard, setLeaderboard] = useState([])
+
+  // Boot: load event content, and try to resume a saved team session.
+  useEffect(() => {
+    let cancelled = false
+    async function boot() {
+      try {
+        const ev = await api.getEvent()
+        if (!cancelled) setEvent(ev)
+      } catch {
+        // event fetch failure is surfaced via the loading screen staying up
+      }
+      if (session?.teamId && session?.token) {
+        try {
+          const { team: t } = await api.getTeam(session.teamId, session.token)
+          if (!cancelled) setTeam(t)
+        } catch {
+          localStorage.removeItem(SESSION_KEY)
+          if (!cancelled) setSession(null)
+        }
+      }
+      if (!cancelled) setAppLoading(false)
+    }
+    boot()
+    return () => {
+      cancelled = true
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  // Live-ish leaderboard: poll every few seconds once a team has joined.
+  useEffect(() => {
+    if (!team) return
+    let cancelled = false
+    async function tick() {
+      try {
+        const { teams } = await api.getLeaderboard()
+        if (!cancelled) setLeaderboard(teams)
+      } catch {
+        /* ignore transient poll errors */
+      }
+    }
+    tick()
+    const id = setInterval(tick, 4000)
+    return () => {
+      cancelled = true
+      clearInterval(id)
+    }
+  }, [team?.id])
+
+  function toggleTheme(dark) {
+    const next = dark ? 'dark' : 'light'
+    setThemeId(next)
+    localStorage.setItem(THEME_KEY, next)
+  }
+
+  async function handleJoin({ teamName, code }) {
+    setJoining(true)
+    setJoinError(null)
+    try {
+      const { team: t, token } = await api.join({ teamName, code })
+      const nextSession = { teamId: t.id, token }
+      localStorage.setItem(SESSION_KEY, JSON.stringify(nextSession))
+      setSession(nextSession)
+      setTeam(t)
+      setScreen('map')
+    } catch (e) {
+      setJoinError(e.message)
+    } finally {
+      setJoining(false)
+    }
+  }
+
+  function handleLeaveTeam() {
+    localStorage.removeItem(SESSION_KEY)
+    setSession(null)
+    setTeam(null)
+    setSettingsOpen(false)
+    setScreen('map')
+  }
+
+  async function handleResetDemo() {
+    if (!window.confirm('Detta nollställer alla lags framsteg i eventet. Fortsätt?')) return
+    await api.resetDemo()
+    handleLeaveTeam()
+  }
+
+  async function refreshTeam(updatedTeam) {
+    setTeam(updatedTeam)
+  }
+
+  async function handleAttempt(checkpointId, payload) {
+    setSubmitting(true)
+    try {
+      const res = await api.attempt(checkpointId, { ...payload, teamId: session.teamId, token: session.token })
+      await refreshTeam(res.team)
+    } catch (e) {
+      setJoinError(null)
+      // eslint-disable-next-line no-console
+      console.error(e)
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  async function handleSkip(checkpointId) {
+    setSubmitting(true)
+    try {
+      const res = await api.skip(checkpointId, { teamId: session.teamId, token: session.token })
+      await refreshTeam(res.team)
+      setActiveCheckpointId(null)
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  function handleNavigate(key) {
+    if (key === 'settings') {
+      setSettingsOpen(true)
+    } else {
+      setSettingsOpen(false)
+      setScreen(key)
+    }
+  }
+
+  const shellStyle = {
+    width: '100%',
+    maxWidth: 460,
+    height: '100dvh',
+    background: theme.appBg,
+    position: 'relative',
+    overflow: 'hidden',
+    display: 'flex',
+    flexDirection: 'column',
+    fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
+  }
+
+  if (appLoading || !event) {
+    return (
+      <div style={{ minHeight: '100dvh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#111' }}>
+        <div style={shellStyle}>
+          <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
+            Laddar {BRAND.name}…
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (!team) {
+    return (
+      <div style={{ minHeight: '100dvh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#111' }}>
+        <div style={shellStyle} className="app-shell">
+          <WelcomeScreen
+            theme={theme}
+            eventCode={event.code}
+            eventTitle={event.title}
+            eventTagline={event.tagline}
+            onJoin={handleJoin}
+            joining={joining}
+            error={joinError}
+          />
+        </div>
+      </div>
+    )
+  }
+
+  const activeCheckpoint = event.checkpoints.find((c) => c.id === activeCheckpointId) || null
+  const currentCheckpoint = event.checkpoints.find((c) => team.progress[c.id]?.status !== 'found') || null
+  const myRankEntry = leaderboard.find((t) => t.id === team.id)
+
+  return (
+    <div style={{ minHeight: '100dvh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#111' }}>
+      <div style={shellStyle} className="app-shell">
+        <div style={{ flex: 1, overflow: 'hidden', position: 'relative' }}>
+          {screen === 'map' && (
+            <MapScreen
+              theme={theme}
+              checkpoints={event.checkpoints}
+              progress={team.progress}
+              currentId={currentCheckpoint?.id}
+              onSelect={setActiveCheckpointId}
+              onOpenSettings={() => setSettingsOpen(true)}
+            />
+          )}
+          {screen === 'checkpoints' && (
+            <CheckpointsScreen
+              theme={theme}
+              checkpoints={event.checkpoints}
+              progress={team.progress}
+              onSelect={setActiveCheckpointId}
+              onOpenSettings={() => setSettingsOpen(true)}
+            />
+          )}
+          {screen === 'leaderboard' && (
+            <LeaderboardScreen theme={theme} teams={leaderboard} myTeamId={team.id} onOpenSettings={() => setSettingsOpen(true)} />
+          )}
+          {screen === 'finish' && (
+            <FinishScreen
+              theme={theme}
+              team={team}
+              event={event}
+              myRank={myRankEntry?.rank}
+              elapsedLabel={formatElapsed(team.joinedAt)}
+              onBackToMap={() => setScreen('map')}
+            />
+          )}
+
+          {activeCheckpoint && (
+            <MissionSheet
+              theme={theme}
+              checkpoint={activeCheckpoint}
+              entry={team.progress[activeCheckpoint.id]}
+              submitting={submitting}
+              onAttempt={(payload) => handleAttempt(activeCheckpoint.id, payload)}
+              onSkip={() => handleSkip(activeCheckpoint.id)}
+              onClose={() => setActiveCheckpointId(null)}
+            />
+          )}
+
+          {settingsOpen && (
+            <SettingsSheet
+              theme={theme}
+              isDark={theme.isDark}
+              onToggleTheme={toggleTheme}
+              onLeaveTeam={handleLeaveTeam}
+              onResetDemo={handleResetDemo}
+              onClose={() => setSettingsOpen(false)}
+              teamName={team.name}
+            />
+          )}
+        </div>
+
+        <TabBar theme={theme} screen={settingsOpen ? 'settings' : screen} onNavigate={handleNavigate} />
+      </div>
+    </div>
+  )
+}
