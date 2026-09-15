@@ -1,25 +1,17 @@
 // Where the API lives.
 //
-// - In dev, requests go to a relative /api path and Vite proxies them to the
-//   local server (see vite.config.js).
-// - In production (e.g. the Netlify static deploy) the API runs on a separate
-//   host. Set VITE_API_URL to that host's origin at build time. If it is not
-//   set, fall back to the Render service name from server/render.yaml so a
-//   default deploy works without extra configuration.
-const DEFAULT_PROD_API_URL = 'https://gronalund-server.onrender.com'
-
-function resolveOrigin() {
-  const configured = (import.meta.env.VITE_API_URL || '').trim().replace(/\/$/, '')
-  if (configured) return configured
-  return import.meta.env.PROD ? DEFAULT_PROD_API_URL : ''
-}
-
-const API_ORIGIN = resolveOrigin()
+// - Dev: relative /api, which Vite proxies to the local Express server
+//   (see vite.config.js).
+// - Netlify: relative /api, served by the Netlify Function in
+//   netlify/functions/api.mjs on the same origin. No configuration needed.
+// - Separate server (e.g. Render): set VITE_API_URL to its origin at build
+//   time and requests become absolute.
+const API_ORIGIN = (import.meta.env.VITE_API_URL || '').trim().replace(/\/$/, '')
 export const API_BASE = `${API_ORIGIN}/api`
 
 // Human-readable description of where requests go, for error messages.
 function describeTarget() {
-  return API_ORIGIN || `${window.location.origin} (via Vite-proxyn till servern på :4000)`
+  return API_ORIGIN || window.location.origin
 }
 
 async function request(path, options = {}) {
@@ -46,7 +38,7 @@ async function request(path, options = {}) {
     // (e.g. Netlify's index.html fallback) instead of the API server.
     throw new Error(
       `Spelservern svarade inte med JSON (HTTP ${res.status} från ${url}). ` +
-        'Om appen är publicerad på Netlify: sätt VITE_API_URL till serverns adress och bygg om.',
+        'Kontrollera att API:et är utrullat (Netlify Functions) eller att VITE_API_URL pekar rätt.',
     )
   }
 

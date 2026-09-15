@@ -33,9 +33,13 @@ built out as a real, interactive web app:
 - `client/` — React + Vite + Tailwind frontend (the phone-style screens:
   welcome/join, isometric map, checkpoints list, mission sheet for
   photo/quiz/clue challenges, live leaderboard, finish & reward).
-- `server/` — small Express API with an in-memory store, so multiple
-  browser tabs/devices can join the same event code and share one live
-  leaderboard (this is a prototype: state resets when the server restarts).
+- `server/` — the game API. `server/game.js` holds every route as one
+  framework-agnostic handler with a pluggable team store; `server/index.js`
+  wraps it in Express with an in-memory store for local dev (or a Render
+  deploy), and `client/netlify/functions/api.mjs` wraps the same handler in a
+  Netlify Function backed by Netlify Blobs for the deployed site. Either way,
+  multiple browser tabs/devices join the same event code and share one live
+  leaderboard.
 
 **Run it:**
 
@@ -51,41 +55,31 @@ re-running the demo.
 
 ### Deploying to Netlify
 
-Netlify only serves the static `client/` build — it can't run the
-always-on `server/` process, so the API needs to live on a separate host.
-The client already supports this: it calls a relative `/api` path in dev,
-and an absolute URL (set via `VITE_API_URL`) in production. `server/`
-already has CORS enabled, so this just works cross-origin.
+Netlify serves the static `client/` build **and** runs the API as a Netlify
+Function (`client/netlify/functions/api.mjs`) at `/api/*`. Shared state
+(teams, progress, leaderboard) lives in Netlify Blobs, so every visitor to
+the site plays in the same live event. There is nothing to configure:
 
-1. **Deploy `server/` somewhere that runs a persistent Node process** —
-   Render, Fly.io, and Railway all have free tiers. For Render:
-   push this repo, create a new **Web Service**, point it at `server/`
-   (`server/render.yaml` has the settings pre-filled — root dir `server`,
-   build `npm install`, start `npm start`). Note the URL it gives you,
-   e.g. `https://gronalund-server.onrender.com`.
-2. **Connect this repo to Netlify** (Add new site → Import from Git). It
-   already has a root `netlify.toml` telling Netlify to build from the
-   `client/` subfolder, so the default settings should just work.
-3. In the Netlify site's **Environment variables**, add
-   `VITE_API_URL` = the server URL from step 1 (no trailing slash), then
-   trigger a deploy (env var changes need a rebuild to take effect).
-   If you skip this, the production build falls back to
-   `https://gronalund-server.onrender.com` (the service name in
-   `server/render.yaml`). If Render gave you a different URL, you must set
-   `VITE_API_URL`.
-4. Open the Netlify URL, join with `1234`, and it should behave exactly
-   like the local dev version — including the shared leaderboard, since
-   every visitor now hits the same live server.
+1. Connect this repo to Netlify (Add new site → Import from Git). The root
+   `netlify.toml` builds from `client/` and picks up the function.
+2. Open the Netlify URL and join with `1234`.
 
-Note this is still a prototype backend: state is in-memory and resets
-whenever the server host restarts/redeploys/sleeps (free tiers on Render
-spin down when idle and lose state on wake).
+State persists in Blobs until someone presses "reset the whole event" in
+the settings sheet.
 
-**If joining fails with every code**, the app cannot reach the API. The
-loading screen and the join form now show the exact problem and the API
-address the app tried. Check, in order:
+**Running the API elsewhere instead** (e.g. Render, using `server/`, which
+keeps state in memory): deploy `server/` (`server/render.yaml` has the
+settings pre-filled), then set `VITE_API_URL` to that server's origin in the
+Netlify site's environment variables and rebuild. The client then calls that
+server instead of the Netlify Function.
 
-1. The server is deployed and awake (open `<server URL>/api/event` in a
-   browser; it should return JSON with `"code": "1234"`).
-2. `VITE_API_URL` in Netlify matches that URL exactly (no trailing slash).
-3. The Netlify site was rebuilt *after* the variable was added.
+**If the app shows "Kunde inte ladda eventet"**, it cannot reach the API.
+The screen shows the exact problem and the API address the app tried:
+
+- Open `<site URL>/api/event` in a browser. It should return JSON with
+  `"code": "1234"` and `"storage": "blobs"`. HTML instead means the function
+  was not deployed: check the Netlify deploy log for `netlify/functions`.
+  `"storage": "memory"` means Netlify Blobs is unavailable on the site, so
+  state is not shared between devices.
+- If `VITE_API_URL` is set, make sure it matches the server URL exactly, with
+  no trailing slash, and that the site was rebuilt after setting it.

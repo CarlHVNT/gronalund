@@ -3,6 +3,15 @@
   command = "npm run build"
   publish = "dist"
 
+# The game API runs as a Netlify Function (client/netlify/functions/api.mjs)
+# with Netlify Blobs for shared state, so the site needs no separate server.
+# The function declares its own URL paths (/api and /api/*) via config.path,
+# which Netlify matches before any redirect rule below.
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+# Single-page app: every other path serves the client.
 [[redirects]]
   from = "/*"
   to = "/index.html"

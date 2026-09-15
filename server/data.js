@@ -137,4 +137,4 @@ function publicEvent() {
   }
 }
 
-module.exports = { EVENT, publicEvent }
+export { EVENT, publicEvent }
