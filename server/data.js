@@ -108,7 +108,8 @@ const CHECKPOINTS = [
 ]
 
 const EVENT = {
-  code: 'GRONA26',
+  // Fixed for now so anyone can join without being told a code.
+  code: '1234',
   name: 'Tivoli Gröna Lund',
   title: 'Skattjakten',
   tagline: 'Nio hållplatser i parken. Spela som lag, en kväll.',

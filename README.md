@@ -44,7 +44,7 @@ npm run install:all   # installs client + server deps
 npm run dev            # runs both — client on :5173, API on :4000
 ```
 
-Then open http://localhost:5173, join with event code `GRONA26`, and play
+Then open http://localhost:5173, join with event code `1234`, and play
 through. The gear icon (or the settings tab) has a light/evening theme
 toggle, a way to leave your team, and a "reset the whole event" button for
 re-running the demo.
