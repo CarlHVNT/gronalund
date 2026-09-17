@@ -141,8 +141,15 @@ holds the same projection for the client, and `client/src/lib/parkGeo.js`
 resolves checkpoint positions (an explicit `geo: [lat, lon]` on a checkpoint
 in `server/data.js` wins over name matching) and computes distances.
 
+The easiest way to refresh the data is the **"Update park geodata"** GitHub
+Actions workflow (Actions tab → Run workflow): it pulls from OpenStreetMap
+on a GitHub runner, prints a report of which checkpoints matched a named
+ride, commits the two data files to main and thereby triggers a Netlify
+redeploy. Locally:
+
 ```
 npm run geodata                                    # query Overpass and write both files
+node tools/park-report.mjs                         # which checkpoints matched a ride by name
 node tools/park-geodata.mjs convert --input tools/park-osm.raw.json   # re-convert offline
 node tools/park-fixture.mjs && node tools/park-geodata.mjs convert --input tools/park-fixture.json --synthetic
 ```

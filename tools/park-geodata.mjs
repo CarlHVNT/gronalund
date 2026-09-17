@@ -25,7 +25,9 @@ import { fileURLToPath } from 'node:url'
 import { makeProjector, metresPerDegree } from '../client/src/lib/geo.js'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
-const DEFAULT_BBOX = [59.3212, 18.092, 59.3262, 18.1015] // south, west, north, east
+// Generous box around the park (south, west, north, east); the converter
+// clips to the park itself plus a margin, so a big box only costs download time.
+const DEFAULT_BBOX = [59.3195, 18.088, 59.3275, 18.1045]
 const OVERPASS_URL = 'https://overpass-api.de/api/interpreter'
 
 export function overpassQuery(bbox) {
@@ -155,6 +157,11 @@ export function toGeoJSON(raw, opts = {}) {
   const maxBounds = [[round6(bounds[0][0] - padLon), round6(bounds[0][1] - padLat)], [round6(bounds[1][0] + padLon), round6(bounds[1][1] + padLat)]]
 
   const lonLat = ([lat, lon]) => [round6(lon), round6(lat)]
+  // Keep the bundle small: only things in or right around the park, plus
+  // water a bit further out for the shoreline.
+  const near = ([lat, lon], mLat, mLon) => lat >= bounds[0][1] - mLat && lat <= bounds[1][1] + mLat && lon >= bounds[0][0] - mLon && lon <= bounds[1][0] + mLon
+  const nearPark = (pt) => near(pt, 0.0009, 0.0018)
+  const nearWater = (pts) => pts.some((pt) => near(pt, 0.004, 0.008))
   const features = []
   const push = (geometry, properties) => features.push({ type: 'Feature', geometry, properties })
   const polygon = (rings) => ({ type: 'Polygon', coordinates: rings.map((r) => closeRing(r).map(lonLat)) })
@@ -176,7 +183,7 @@ export function toGeoJSON(raw, opts = {}) {
     const pt = el.type === 'node' ? [el.lat, el.lon] : pts.length ? centroid(pts) : null
 
     if (tags.attraction) {
-      if (!pt) continue
+      if (!pt || !nearPark(pt)) continue
       const kind = tags.attraction
       const props = {
         layer: 'attraction', id: `${el.type}/${el.id}`, name: tags.name || null, kind,
@@ -188,23 +195,24 @@ export function toGeoJSON(raw, opts = {}) {
       continue
     }
     if (tags.roller_coaster && rings.length) {
-      for (const r of rings) push(line(r), { layer: 'track', name: tags.name || null })
+      if (pt && nearPark(pt)) for (const r of rings) push(line(r), { layer: 'track', name: tags.name || null })
       continue
     }
     if (tags.building && rings.length) {
+      if (!pt || !nearPark(pt)) continue
       const closed = rings.filter(isClosed)
       if (closed.length) push(polygon(closed), { layer: 'building', name: tags.name || null, kind: tags.building, height: parseHeight(tags, 6) })
       continue
     }
     if ((tags.natural === 'water' || tags.natural === 'coastline' || tags.waterway) && rings.length) {
-      for (const r of rings) push(isClosed(r) ? polygon([r]) : line(r), { layer: 'water', kind: tags.natural || tags.waterway })
+      for (const r of rings) if (nearWater(r)) push(isClosed(r) ? polygon([r]) : line(r), { layer: 'water', kind: tags.natural || tags.waterway })
       continue
     }
     if (tags.highway && rings.length) {
-      for (const r of rings) push(line(r), { layer: 'path', kind: tags.highway })
+      for (const r of rings) if (r.some(nearPark)) push(line(r), { layer: 'path', kind: tags.highway })
       continue
     }
-    if ((tags.amenity || tags.shop || tags.tourism || tags.entrance) && pt) {
+    if ((tags.amenity || tags.shop || tags.tourism || tags.entrance) && pt && nearPark(pt)) {
       push(point(pt), { layer: 'poi', name: tags.name || null, kind: tags.amenity || tags.shop || tags.tourism || `entrance:${tags.entrance}` })
     }
   }
