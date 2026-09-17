@@ -8,6 +8,13 @@ import { EVENT, publicEvent } from './data.js'
 import { publicTeam, leaderboard } from './team.js'
 
 const reply = (status, body) => ({ status, body })
+
+// Short, user-visible description of a thrown error (prototype: we prefer a
+// readable cause over a generic message).
+export function describeError(e) {
+  const name = e?.name && e.name !== 'Error' ? `${e.name}: ` : ''
+  return `${name}${e?.message || String(e)}`.slice(0, 400)
+}
 const ok = (body) => reply(200, body)
 const unauthorized = () => reply(401, { error: 'Okänt lag eller ogiltig session. Anslut igen.' })
 
@@ -42,7 +49,29 @@ export function createGame(store) {
     let match
 
     if (m === 'GET' && p === '/event') {
-      return ok({ ...publicEvent(), storage: store.kind })
+      return ok({ ...publicEvent(), storage: store.kind, storageDetail: store.describe ? store.describe() : null })
+    }
+
+    // Diagnostics: round-trips the store so a deploy can be checked from a browser.
+    if (m === 'GET' && p === '/health') {
+      const storage = store.describe ? store.describe() : { kind: store.kind }
+      let checks = null
+      let error = null
+      if (store.selfTest) {
+        try {
+          checks = await store.selfTest()
+        } catch (e) {
+          error = describeError(e)
+        }
+      }
+      return reply(error ? 500 : 200, { ok: !error, storage, checks, error, time: new Date().toISOString() })
+    }
+
+    // One call per poll: the caller's team plus the leaderboard.
+    if (m === 'GET' && p === '/sync') {
+      const team = await requireTeam(query, body)
+      if (!team) return unauthorized()
+      return ok({ team: publicTeam(team), teams: leaderboard(await store.listTeams()) })
     }
 
     if (m === 'POST' && p === '/join') {

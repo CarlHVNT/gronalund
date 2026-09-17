@@ -2,7 +2,7 @@
 // The routes themselves live in game.js so the Netlify Function can share them.
 import express from 'express'
 import cors from 'cors'
-import { createGame } from './game.js'
+import { createGame, describeError } from './game.js'
 import { createMemoryStore } from './stores/memory.js'
 
 const PORT = process.env.PORT || 4000
@@ -22,8 +22,8 @@ app.use('/api', async (req, res) => {
     })
     res.status(status).json(body)
   } catch (e) {
-    console.error(e)
-    res.status(500).json({ error: 'Serverfel. Försök igen.' })
+    console.error(`[api] ${req.method} ${req.path} failed:`, e)
+    res.status(500).json({ error: `Serverfel: ${describeError(e)}`, code: 'server_error' })
   }
 })
 

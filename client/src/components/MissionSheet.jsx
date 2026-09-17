@@ -7,7 +7,7 @@ const TYPE_ICON = {
   clue: '🧭',
 }
 
-export function MissionSheet({ theme, checkpoint, entry, onAttempt, onSkip, onClose, submitting }) {
+export function MissionSheet({ theme, checkpoint, entry, onAttempt, onSkip, onClose, submitting, error }) {
   const [answerIndex, setAnswerIndex] = useState(null)
   const [code, setCode] = useState('')
   const [photo, setPhoto] = useState(null)
@@ -57,6 +57,11 @@ export function MissionSheet({ theme, checkpoint, entry, onAttempt, onSkip, onCl
           {justMissed && (
             <div style={{ background: theme.missedBg, border: `1px solid ${theme.missedBorder}`, borderRadius: 14, padding: '10px 14px', fontSize: 12.5, fontWeight: 600, color: theme.missedFg }}>
               Inte riktigt — försök igen.
+            </div>
+          )}
+          {error && (
+            <div style={{ background: theme.missedBg, border: `1px solid ${theme.missedBorder}`, borderRadius: 14, padding: '10px 14px', fontSize: 12.5, fontWeight: 600, color: theme.missedFg, wordBreak: 'break-word' }}>
+              Svaret kunde inte skickas. {error}
             </div>
           )}
 

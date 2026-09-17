@@ -8,6 +8,12 @@ export function createMemoryStore() {
 
   return {
     kind: 'memory',
+    describe() {
+      return { kind: 'memory', consistency: 'strong' }
+    },
+    async selfTest() {
+      return { writeMs: 0, readMs: 0, listMs: 0, deleteMs: 0, consistency: 'strong' }
+    },
     async createTeam(name) {
       const team = newTeam(name)
       teams.set(team.id, team)

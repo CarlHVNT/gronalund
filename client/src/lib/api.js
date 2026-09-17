@@ -55,6 +55,8 @@ export const api = {
   join: (body) => request('/join', { method: 'POST', body: JSON.stringify(body) }),
   getTeam: (teamId, token) => request(`/teams/${teamId}?token=${encodeURIComponent(token)}`),
   getLeaderboard: () => request('/leaderboard'),
+  sync: (teamId, token) => request(`/sync?teamId=${encodeURIComponent(teamId)}&token=${encodeURIComponent(token)}`),
+  health: () => request('/health'),
   attempt: (checkpointId, body) =>
     request(`/checkpoints/${checkpointId}/attempt`, { method: 'POST', body: JSON.stringify(body) }),
   skip: (checkpointId, body) =>

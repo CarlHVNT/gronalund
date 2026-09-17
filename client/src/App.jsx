@@ -48,6 +48,7 @@ export default function App() {
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [activeCheckpointId, setActiveCheckpointId] = useState(null)
   const [submitting, setSubmitting] = useState(false)
+  const [actionError, setActionError] = useState(null)
   const [leaderboard, setLeaderboard] = useState([])
 
   // Boot: load event content, and try to resume a saved team session.
@@ -68,9 +69,13 @@ export default function App() {
         try {
           const { team: t } = await api.getTeam(session.teamId, session.token)
           if (!cancelled) setTeam(t)
-        } catch {
-          localStorage.removeItem(SESSION_KEY)
-          if (!cancelled) setSession(null)
+        } catch (e) {
+          if (e.status === 401) {
+            localStorage.removeItem(SESSION_KEY)
+            if (!cancelled) setSession(null)
+          } else if (!cancelled) {
+            setBootError(e.message)
+          }
         }
       }
       if (!cancelled) setAppLoading(false)
@@ -89,34 +94,42 @@ export default function App() {
     return () => clearTimeout(id)
   }, [appLoading])
 
-  // Live-ish leaderboard and team sync: poll every few seconds once a team
-  // has joined, so several phones playing as one team see the same progress.
+  // Live sync: one /sync call every few seconds (leaderboard + own team) so
+  // several phones playing as one team see the same progress. Calls never
+  // overlap, and nothing is fetched while the tab is in the background.
   useEffect(() => {
     if (!team || !session) return
     let cancelled = false
+    let timer = null
+    const schedule = () => {
+      if (!cancelled) timer = setTimeout(tick, 5000)
+    }
     async function tick() {
+      if (document.visibilityState === 'hidden') return schedule()
       try {
-        const { teams } = await api.getLeaderboard()
-        if (!cancelled) setLeaderboard(teams)
-      } catch {
-        /* ignore transient poll errors */
-      }
-      try {
-        const { team: fresh } = await api.getTeam(session.teamId, session.token)
-        if (!cancelled && fresh) {
-          setTeam((prev) => (JSON.stringify(prev) === JSON.stringify(fresh) ? prev : fresh))
-        }
+        const { team: fresh, teams } = await api.sync(session.teamId, session.token)
+        if (cancelled) return
+        setLeaderboard(teams)
+        if (fresh) setTeam((prev) => (JSON.stringify(prev) === JSON.stringify(fresh) ? prev : fresh))
       } catch (e) {
         // The team is gone (event reset from another phone, or a bad invite
         // link): leave it here as well instead of failing on the next action.
-        if (!cancelled && e.status === 401) handleLeaveTeam()
+        if (!cancelled && e.status === 401) return handleLeaveTeam()
+      }
+      schedule()
+    }
+    const onVisibility = () => {
+      if (document.visibilityState === 'visible') {
+        clearTimeout(timer)
+        tick()
       }
     }
+    document.addEventListener('visibilitychange', onVisibility)
     tick()
-    const id = setInterval(tick, 4000)
     return () => {
       cancelled = true
-      clearInterval(id)
+      clearTimeout(timer)
+      document.removeEventListener('visibilitychange', onVisibility)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [team?.id, session?.teamId, session?.token])
@@ -155,8 +168,12 @@ export default function App() {
 
   async function handleResetDemo() {
     if (!window.confirm('Detta nollställer alla lags framsteg i eventet. Fortsätt?')) return
-    await api.resetDemo()
-    handleLeaveTeam()
+    try {
+      await api.resetDemo()
+      handleLeaveTeam()
+    } catch (e) {
+      window.alert(`Kunde inte återställa eventet.\n${e.message}`)
+    }
   }
 
   async function refreshTeam(updatedTeam) {
@@ -165,13 +182,13 @@ export default function App() {
 
   async function handleAttempt(checkpointId, payload) {
     setSubmitting(true)
+    setActionError(null)
     try {
       const res = await api.attempt(checkpointId, { ...payload, teamId: session.teamId, token: session.token })
       await refreshTeam(res.team)
     } catch (e) {
-      setJoinError(null)
-      // eslint-disable-next-line no-console
-      console.error(e)
+      if (e.status === 401) return handleLeaveTeam()
+      setActionError(e.message)
     } finally {
       setSubmitting(false)
     }
@@ -179,10 +196,14 @@ export default function App() {
 
   async function handleSkip(checkpointId) {
     setSubmitting(true)
+    setActionError(null)
     try {
       const res = await api.skip(checkpointId, { teamId: session.teamId, token: session.token })
       await refreshTeam(res.team)
       setActiveCheckpointId(null)
+    } catch (e) {
+      if (e.status === 401) return handleLeaveTeam()
+      setActionError(e.message)
     } finally {
       setSubmitting(false)
     }
@@ -331,9 +352,13 @@ export default function App() {
               checkpoint={activeCheckpoint}
               entry={team.progress[activeCheckpoint.id]}
               submitting={submitting}
+              error={actionError}
               onAttempt={(payload) => handleAttempt(activeCheckpoint.id, payload)}
               onSkip={() => handleSkip(activeCheckpoint.id)}
-              onClose={() => setActiveCheckpointId(null)}
+              onClose={() => {
+                setActiveCheckpointId(null)
+                setActionError(null)
+              }}
             />
           )}
 

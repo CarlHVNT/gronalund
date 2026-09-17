@@ -1,6 +1,6 @@
 // Netlify Function serving the game API at /api/* for the Netlify deploy.
 // Same routes as the local Express server: both call server/game.js.
-import { createGame } from '../../../server/game.js'
+import { createGame, describeError } from '../../../server/game.js'
 import { createMemoryStore } from '../../../server/stores/memory.js'
 import { createBlobsStore } from './lib/blobs-store.mjs'
 
@@ -48,8 +48,8 @@ export default async (req) => {
     })
     return json(out, status)
   } catch (e) {
-    console.error(e)
-    return json({ error: 'Serverfel. Försök igen.' }, 500)
+    console.error(`[api] ${req.method} ${url.pathname} failed:`, e)
+    return json({ error: `Serverfel: ${describeError(e)}`, code: 'server_error' }, 500)
   }
 }
 

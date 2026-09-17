@@ -80,11 +80,15 @@ server instead of the Netlify Function.
 **If the app shows "Kunde inte ladda eventet"**, it cannot reach the API.
 The screen shows the exact problem and the API address the app tried:
 
-- Open `<site URL>/api/event` in a browser. It should return JSON with
-  `"code": "1234"` and `"storage": "blobs"`. HTML instead means the function
-  was not deployed: check the Netlify deploy log for `netlify/functions`.
-  `"storage": "memory"` means Netlify Blobs is unavailable on the site, so
-  state is not shared between devices.
+- Open `<site URL>/api/health` in a browser. It writes, reads, lists and
+  deletes a probe blob and reports `"ok": true` with timings and the
+  consistency mode, or `"ok": false` with the exact error. HTML instead of
+  JSON means the function was not deployed: check the Netlify deploy log for
+  `netlify/functions`. `"storage": "memory"` means Netlify Blobs is
+  unavailable on the site, so state is not shared between devices.
+- Any 500 from the API now reads `Serverfel: <cause>` in the app, so the
+  message on screen names the failing call. The same text is in the Netlify
+  function log.
 - If `VITE_API_URL` is set, make sure it matches the server URL exactly, with
   no trailing slash, and that the site was rebuilt after setting it.
 
