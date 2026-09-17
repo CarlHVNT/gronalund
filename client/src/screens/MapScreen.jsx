@@ -1,14 +1,32 @@
+import { Suspense, lazy } from 'react'
 import { IsoMap } from '../components/IsoMap'
 import { GearButton } from '../components/ui'
 
-export function MapScreen({ theme, checkpoints, progress, currentId, onSelect, onOpenSettings }) {
+// The MapLibre renderer is a separate chunk, fetched only when the vector map is on.
+const VectorMap = lazy(() => import('../components/VectorMap'))
+
+export function MapScreen({ theme, checkpoints, progress, currentId, onSelect, onOpenSettings, mapMode = 'iso', onMapUnavailable }) {
   const foundCount = Object.values(progress).filter((p) => p.status === 'found').length
   const current = checkpoints.find((c) => c.id === currentId)
 
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       <div data-tour="map" data-tour-adjust="0 0 -36 0" style={{ flex: 1, position: 'relative', background: theme.mapBg, minHeight: 260 }}>
-        <IsoMap theme={theme} checkpoints={checkpoints} progress={progress} currentId={currentId} onSelect={onSelect} />
+        {mapMode === 'vector' ? (
+          <Suspense fallback={<IsoMap theme={theme} checkpoints={checkpoints} progress={progress} currentId={currentId} onSelect={onSelect} />}>
+            <VectorMap
+              key={theme.id}
+              theme={theme}
+              checkpoints={checkpoints}
+              progress={progress}
+              currentId={currentId}
+              onSelect={onSelect}
+              onUnavailable={onMapUnavailable}
+            />
+          </Suspense>
+        ) : (
+          <IsoMap theme={theme} checkpoints={checkpoints} progress={progress} currentId={currentId} onSelect={onSelect} />
+        )}
         <div
           style={{
             position: 'absolute', left: 18, top: 18, height: 46, borderRadius: 13,

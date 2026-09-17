@@ -13,6 +13,7 @@ import { MenuSheet } from './components/MenuSheet'
 import { IntroScreen } from './components/IntroScreen'
 import { TourOverlay } from './components/TourOverlay'
 import { INTRO_SEEN_KEY, TOUR_DONE_KEY, readFlag, tourSteps, writeFlag } from './lib/onboarding'
+import { readMapMode, writeMapMode } from './lib/mapMode'
 
 const SESSION_KEY = 'rs-gl-session'
 const THEME_KEY = 'rs-gl-theme'
@@ -55,6 +56,8 @@ export default function App() {
   // one tap away in the menu.
   const [introOpen, setIntroOpen] = useState(() => !readFlag(INTRO_SEEN_KEY) && !session)
   const [tourOpen, setTourOpen] = useState(false)
+  // 'iso' = illustrated plate (default), 'vector' = MapLibre map (beta, from the menu).
+  const [mapMode, setMapMode] = useState(() => readMapMode())
   const [activeCheckpointId, setActiveCheckpointId] = useState(null)
   const [submitting, setSubmitting] = useState(false)
   const [actionError, setActionError] = useState(null)
@@ -117,6 +120,16 @@ export default function App() {
   function finishTour() {
     writeFlag(TOUR_DONE_KEY)
     setTourOpen(false)
+  }
+
+  function changeMapMode(mode) {
+    writeMapMode(mode)
+    setMapMode(mode)
+  }
+
+  function handleMapUnavailable() {
+    changeMapMode('iso')
+    window.alert('3D-kartan kunde inte startas på den här enheten. Den illustrerade kartan visas i stället.')
   }
 
   function showIntroAgain() {
@@ -363,6 +376,8 @@ export default function App() {
               currentId={currentCheckpoint?.id}
               onSelect={setActiveCheckpointId}
               onOpenSettings={() => setSettingsOpen(true)}
+              mapMode={mapMode}
+              onMapUnavailable={handleMapUnavailable}
             />
           )}
           {screen === 'checkpoints' && (
@@ -415,6 +430,8 @@ export default function App() {
               onNavigate={handleNavigate}
               onShowIntro={showIntroAgain}
               onShowTour={showTourAgain}
+              mapMode={mapMode}
+              onToggleMapMode={(on) => changeMapMode(on ? 'vector' : 'iso')}
               team={team}
               rank={myRankEntry?.rank}
               event={event}

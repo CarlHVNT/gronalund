@@ -209,7 +209,7 @@ function ParkView({ theme, onBack }) {
 
 export function MenuSheet({
   theme, isDark, onToggleTheme, onLeaveTeam, onResetDemo, onClose, onNavigate, onShowIntro, onShowTour,
-  team, rank, event, inviteUrl,
+  mapMode, onToggleMapMode, team, rank, event, inviteUrl,
 }) {
   const [view, setView] = useState('root')
   const back = () => setView('root')
@@ -252,6 +252,13 @@ export function MenuSheet({
             title="Kvällsläge"
             subtitle="Mörk skin för parken efter mörkrets inbrott"
             trailing={<Toggle theme={theme} checked={isDark} onChange={onToggleTheme} />}
+          />
+          <Row
+            theme={theme}
+            icon="🎢"
+            title="3D-karta (beta)"
+            subtitle="Vektorkarta med parkens riktiga geometri i stället för den illustrerade plåten"
+            trailing={<Toggle theme={theme} checked={mapMode === 'vector'} onChange={onToggleMapMode} />}
           />
           <Row theme={theme} icon="🚪" title="Byt lag / logga ut" subtitle="Lämna laget på den här mobilen" onClick={onLeaveTeam} />
 

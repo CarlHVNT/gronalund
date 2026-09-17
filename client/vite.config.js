@@ -5,6 +5,8 @@ import { defineConfig } from 'vite'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  // MapLibre's worker is loaded as a module worker (see VectorMap.jsx).
+  worker: { format: 'es' },
   server: {
     port: 5173,
     proxy: {

@@ -101,21 +101,39 @@ The screen shows the exact problem and the API address the app tried:
 - If `VITE_API_URL` is set, make sure it matches the server URL exactly, with
   no trailing slash, and that the site was rebuilt after setting it.
 
-### Real park map (data pipeline)
+### Real park map
 
-`tools/park-geodata.mjs` pulls Gröna Lund's real layout from OpenStreetMap
-(park boundary, buildings, named attractions, coaster tracks, footpaths,
-shoreline, food/toilets/entrances) and projects it into the app's map
-coordinate space (`client/src/data/park-geo.json`), auto-rotated so the park
-fills a portrait phone screen. `client/src/lib/geo.js` holds the same
-projection for the client, so checkpoint pins and live GPS positions can be
-placed on the illustrated map with lat/lon.
+Two map renderers share one data pipeline:
+
+- **Illustrated plate** (default): the isometric SVG in `IsoMap.jsx`.
+- **3D vector map** (beta, menu → Inställningar → "3D-karta"): MapLibre GL
+  in `client/src/components/VectorMap.jsx` renders our own GeoJSON layers
+  from OpenStreetMap in the brand palette: park plate, footpaths, extruded
+  buildings and ride footprints, coaster tracks, water, a mask that fades
+  everything outside the park, numbered checkpoint pins that land on the
+  ride with the same name, ride-name chips when zoomed in, and a locate-me
+  button. No tile server: the geometry is bundled with the app, the
+  renderer is a lazily loaded chunk, and the choice is remembered per
+  device. MapLibre's worker is bundled by Vite and handed over with
+  `setWorkerUrl` (its default URL guessing does not work under a bundler).
+
+`tools/park-geodata.mjs` pulls the layout from OpenStreetMap (park
+boundary, buildings with heights, named attractions, coaster tracks,
+footpaths, shoreline, food/toilets/entrances) and writes both
+`client/src/data/park-geo.json` (projected for the plate) and
+`client/src/data/park.geojson.json` (WGS84 for the vector map, with the
+park's centre, axis bearing and bounds in `meta`). `client/src/lib/geo.js`
+holds the same projection for the client.
 
 ```
-npm run geodata                                  # query Overpass and write park-geo.json
+npm run geodata                                    # query Overpass and write both files
 node tools/park-geodata.mjs convert --input tools/park-osm.raw.json   # re-convert offline
+node tools/park-fixture.mjs && node tools/park-geodata.mjs convert --input tools/park-fixture.json --synthetic
 ```
 
-The Overpass query needs outbound network access to overpass-api.de. The
-output carries an attribution string; keep "© OpenStreetMap contributors"
-visible wherever the map is rendered (ODbL).
+The last line generates the **synthetic stand-in layout** that is committed
+today: it is not the real park, and the vector map shows a banner saying so
+until `npm run geodata` has replaced it with real data. The Overpass query
+needs outbound network access to overpass-api.de. The output carries an
+attribution string; keep "© OpenStreetMap contributors" visible wherever
+the map is rendered (ODbL).

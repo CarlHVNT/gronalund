@@ -6,3 +6,6 @@ dist/
 
 # Raw OpenStreetMap download from tools/park-geodata.mjs (regenerate with npm run geodata)
 tools/park-osm.raw.json
+
+# Generated stand-in layout for the vector map (node tools/park-fixture.mjs)
+tools/park-fixture.json

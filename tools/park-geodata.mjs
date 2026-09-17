@@ -6,7 +6,12 @@
 //   node tools/park-geodata.mjs fetch                    # query Overpass, then convert
 //   node tools/park-geodata.mjs convert --input raw.json # convert a saved Overpass response
 //
+// Writes two files: the projected plate data (--out) for the illustrated SVG
+// map and WGS84 GeoJSON (--geojson-out) for the MapLibre vector map.
+//
 // Options: --out <file>          default client/src/data/park-geo.json
+//          --geojson-out <file>  default client/src/data/park.geojson.json
+//          --synthetic           mark the output as a stand-in layout (not the real park)
 //          --raw <file>          where `fetch` saves the raw response (default tools/park-osm.raw.json)
 //          --bbox s,w,n,e        default is a box around the park
 //          --width/--height      viewBox size, default 402 x 620 (matches IsoMap)
@@ -47,8 +52,12 @@ function parseArgs(argv) {
   const opts = { command }
   for (let i = 0; i < rest.length; i++) {
     const key = rest[i].replace(/^--/, '')
-    opts[key] = rest[i + 1]
-    i++
+    const next = rest[i + 1]
+    if (next === undefined || next.startsWith('--')) opts[key] = true // boolean flag
+    else {
+      opts[key] = next
+      i++
+    }
   }
   return opts
 }
@@ -93,6 +102,146 @@ function principalAxisDeg(pts) {
 }
 
 const round1 = (v) => Math.round(v * 10) / 10
+const round6 = (v) => Math.round(v * 1e6) / 1e6
+
+function closeRing(ring) {
+  const a = ring[0]
+  const b = ring[ring.length - 1]
+  return a[0] === b[0] && a[1] === b[1] ? ring : [...ring, a]
+}
+
+// --- GeoJSON for the vector map ------------------------------------------------
+
+// Default heights (m) for ride footprints when OSM has no height tag.
+const ATTRACTION_HEIGHTS = {
+  roller_coaster: 22, drop_tower: 60, big_wheel: 32, swing_carousel: 45, carousel: 8,
+  dark_ride: 10, maze: 9, water_slide: 12, train: 4, bumper_car: 5, amusement_ride: 14,
+}
+
+function parseHeight(tags = {}, fallback) {
+  for (const key of ['height', 'building:height']) {
+    const m = tags[key] && String(tags[key]).match(/[\d.]+/)
+    if (m) return Number(m[0])
+  }
+  const levels = Number(tags['building:levels'])
+  if (levels) return Math.round(levels * 3.2 * 10) / 10
+  return fallback
+}
+
+// Compass bearing (clockwise from north, in (-90, 90]) of the park's long axis,
+// so the vector map can put that axis vertically like the illustrated plate.
+function axisBearingDeg(parkPts, lat0, lon0, mPerDegLat, mPerDegLon) {
+  const eastNorth = parkPts.map(([lat, lon]) => [(lon - lon0) * mPerDegLon, (lat - lat0) * mPerDegLat])
+  let bearing = 90 - principalAxisDeg(eastNorth)
+  while (bearing > 90) bearing -= 180
+  while (bearing <= -90) bearing += 180
+  return Math.round(bearing * 10) / 10
+}
+
+export function toGeoJSON(raw, opts = {}) {
+  const elements = raw.elements || []
+  const parks = elements.filter((e) => e.tags?.tourism === 'theme_park' && ringsOf(e).length)
+  if (parks.length === 0) throw new Error('No tourism=theme_park geometry in the input.')
+  const park = parks.find((e) => /gr[öo]na lund/i.test(e.tags?.name || '')) || parks[0]
+  const parkRings = ringsOf(park).map(closeRing)
+  const parkPts = parkRings.flat()
+  const [lat0, lon0] = centroid(parkPts)
+  const { mPerDegLat, mPerDegLon } = metresPerDegree(lat0)
+  const lats = parkPts.map((p) => p[0])
+  const lons = parkPts.map((p) => p[1])
+  const bounds = [[round6(Math.min(...lons)), round6(Math.min(...lats))], [round6(Math.max(...lons)), round6(Math.max(...lats))]]
+  const padLat = 0.0018
+  const padLon = padLat * (mPerDegLat / mPerDegLon)
+  const maxBounds = [[round6(bounds[0][0] - padLon), round6(bounds[0][1] - padLat)], [round6(bounds[1][0] + padLon), round6(bounds[1][1] + padLat)]]
+
+  const lonLat = ([lat, lon]) => [round6(lon), round6(lat)]
+  const features = []
+  const push = (geometry, properties) => features.push({ type: 'Feature', geometry, properties })
+  const polygon = (rings) => ({ type: 'Polygon', coordinates: rings.map((r) => closeRing(r).map(lonLat)) })
+  const line = (ring) => ({ type: 'LineString', coordinates: ring.map(lonLat) })
+  const point = (p) => ({ type: 'Point', coordinates: lonLat(p) })
+
+  const parkGeometry = parkRings.length === 1 ? polygon(parkRings) : { type: 'MultiPolygon', coordinates: parkRings.map((r) => [r.map(lonLat)]) }
+  push(parkGeometry, { layer: 'park', name: park.tags?.name || 'Gröna Lund' })
+  // Mask: a large ring with the park cut out, drawn on top to fade the surroundings.
+  const big = 0.03
+  const outer = [[lat0 - big, lon0 - big], [lat0 - big, lon0 + big], [lat0 + big, lon0 + big], [lat0 + big, lon0 - big], [lat0 - big, lon0 - big]]
+  push(polygon([outer, ...parkRings.map((r) => [...r].reverse())]), { layer: 'mask' })
+
+  for (const el of elements) {
+    if (el === park) continue
+    const tags = el.tags || {}
+    const rings = ringsOf(el)
+    const pts = rings.flat()
+    const pt = el.type === 'node' ? [el.lat, el.lon] : pts.length ? centroid(pts) : null
+
+    if (tags.attraction) {
+      if (!pt) continue
+      const kind = tags.attraction
+      const props = {
+        layer: 'attraction', id: `${el.type}/${el.id}`, name: tags.name || null, kind,
+        height: parseHeight(tags, ATTRACTION_HEIGHTS[kind] ?? ATTRACTION_HEIGHTS.amusement_ride),
+      }
+      push(point(pt), props)
+      const closed = rings.filter(isClosed)
+      if (closed.length) push(polygon(closed), { ...props, layer: 'attraction-footprint' })
+      continue
+    }
+    if (tags.roller_coaster && rings.length) {
+      for (const r of rings) push(line(r), { layer: 'track', name: tags.name || null })
+      continue
+    }
+    if (tags.building && rings.length) {
+      const closed = rings.filter(isClosed)
+      if (closed.length) push(polygon(closed), { layer: 'building', name: tags.name || null, kind: tags.building, height: parseHeight(tags, 6) })
+      continue
+    }
+    if ((tags.natural === 'water' || tags.natural === 'coastline' || tags.waterway) && rings.length) {
+      for (const r of rings) push(isClosed(r) ? polygon([r]) : line(r), { layer: 'water', kind: tags.natural || tags.waterway })
+      continue
+    }
+    if (tags.highway && rings.length) {
+      for (const r of rings) push(line(r), { layer: 'path', kind: tags.highway })
+      continue
+    }
+    if ((tags.amenity || tags.shop || tags.tourism || tags.entrance) && pt) {
+      push(point(pt), { layer: 'poi', name: tags.name || null, kind: tags.amenity || tags.shop || tags.tourism || `entrance:${tags.entrance}` })
+    }
+  }
+
+  // A ride mapped both as a node and as an area would label twice: keep one
+  // point per name, preferring the one that also has a footprint.
+  const norm = (n) => String(n).toLowerCase().replace(/[^a-z0-9åäö]/g, '')
+  const withFootprint = new Set(features.filter((f) => f.properties.layer === 'attraction-footprint' && f.properties.name).map((f) => f.properties.id))
+  const seenNames = new Set()
+  const deduped = []
+  const points = features.filter((f) => f.properties.layer === 'attraction' && f.properties.name)
+  points.sort((a, b) => Number(withFootprint.has(b.properties.id)) - Number(withFootprint.has(a.properties.id)))
+  for (const f of features) {
+    if (f.properties.layer === 'attraction' && f.properties.name) continue
+    deduped.push(f)
+  }
+  for (const f of points) {
+    const key = norm(f.properties.name)
+    if (seenNames.has(key)) continue
+    seenNames.add(key)
+    deduped.push(f)
+  }
+
+  return {
+    type: 'FeatureCollection',
+    attribution: '© OpenStreetMap contributors (ODbL)',
+    meta: {
+      synthetic: Boolean(opts.synthetic),
+      generatedAt: new Date().toISOString(),
+      center: [round6(lon0), round6(lat0)],
+      bearingDeg: axisBearingDeg(parkPts, lat0, lon0, mPerDegLat, mPerDegLon),
+      bounds,
+      maxBounds,
+    },
+    features: deduped,
+  }
+}
 
 // --- conversion ----------------------------------------------------------------
 
@@ -144,7 +293,7 @@ export function convert(raw, opts = {}) {
 
   const out = {
     attribution: '© OpenStreetMap contributors (ODbL)',
-    source: { bbox: opts.bbox || DEFAULT_BBOX, generatedAt: new Date().toISOString() },
+    source: { bbox: opts.bbox || DEFAULT_BBOX, generatedAt: new Date().toISOString(), synthetic: Boolean(opts.synthetic) },
     viewBox: [0, 0, width, height],
     projection,
     park: { name: park.tags?.name || 'Gröna Lund', rings: parkRings.map((r) => r.map(toXY)) },
@@ -240,6 +389,13 @@ async function main() {
   const geo = convert(raw, { ...opts, bbox })
   await fs.mkdir(path.dirname(outFile), { recursive: true })
   await fs.writeFile(outFile, JSON.stringify(geo))
+  const gj = toGeoJSON(raw, opts)
+  const gjFile = path.resolve(ROOT, opts['geojson-out'] || 'client/src/data/park.geojson.json')
+  await fs.mkdir(path.dirname(gjFile), { recursive: true })
+  await fs.writeFile(gjFile, JSON.stringify(gj))
+  const perLayer = {}
+  for (const f of gj.features) perLayer[f.properties.layer] = (perLayer[f.properties.layer] || 0) + 1
+  console.log(`wrote ${path.relative(ROOT, gjFile)}${gj.meta.synthetic ? ' (SYNTHETIC stand-in layout)' : ''}: center ${gj.meta.center}, bearing ${gj.meta.bearingDeg}°,`, perLayer)
   const counts = Object.fromEntries(['water', 'paths', 'buildings', 'tracks', 'attractions', 'pois'].map((k) => [k, geo[k].length]))
   console.log(`wrote ${path.relative(ROOT, outFile)}: rotate ${geo.projection.rotateDeg.toFixed(1)}°, scale ${geo.projection.scale.toFixed(3)} px/m,`, counts)
   const named = geo.attractions.filter((a) => a.name).map((a) => `${a.name} (${a.kind})`)
