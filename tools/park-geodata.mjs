@@ -28,7 +28,14 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 // Generous box around the park (south, west, north, east); the converter
 // clips to the park itself plus a margin, so a big box only costs download time.
 const DEFAULT_BBOX = [59.3195, 18.088, 59.3275, 18.1045]
-const OVERPASS_URL = 'https://overpass-api.de/api/interpreter'
+// Public Overpass instances, tried in order. The main instance answers
+// "406 Not Acceptable" to requests without a descriptive User-Agent.
+const OVERPASS_URLS = [
+  'https://overpass-api.de/api/interpreter',
+  'https://overpass.kumi.systems/api/interpreter',
+  'https://overpass.private.coffee/api/interpreter',
+]
+const USER_AGENT = 'gronalund-skattjakten-geodata/1.0 (+https://github.com/CarlHVNT/gronalund)'
 
 export function overpassQuery(bbox) {
   const b = bbox.join(',')
@@ -365,14 +372,37 @@ export function convert(raw, opts = {}) {
 
 // --- commands ------------------------------------------------------------------
 
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
+
 async function fetchOverpass(bbox) {
-  const res = await fetch(OVERPASS_URL, {
-    method: 'POST',
-    headers: { 'content-type': 'application/x-www-form-urlencoded' },
-    body: `data=${encodeURIComponent(overpassQuery(bbox))}`,
-  })
-  if (!res.ok) throw new Error(`Overpass answered HTTP ${res.status}: ${(await res.text()).slice(0, 300)}`)
-  return res.json()
+  const body = `data=${encodeURIComponent(overpassQuery(bbox))}`
+  const errors = []
+  for (const url of OVERPASS_URLS) {
+    for (let attempt = 1; attempt <= 2; attempt++) {
+      try {
+        console.log(`Overpass: ${url} (attempt ${attempt})`)
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: { 'content-type': 'application/x-www-form-urlencoded', accept: 'application/json', 'user-agent': USER_AGENT },
+          body,
+        })
+        if (res.ok) {
+          const json = await res.json()
+          if (!Array.isArray(json.elements)) throw new Error('response has no elements array')
+          return json
+        }
+        const text = (await res.text()).replace(/\s+/g, ' ').slice(0, 200)
+        errors.push(`${url}: HTTP ${res.status} ${text}`)
+        // 429 (rate limited) and 504 (timeout) are worth one retry after a pause; anything else, move on.
+        if (res.status !== 429 && res.status !== 504) break
+        await sleep(15000)
+      } catch (e) {
+        errors.push(`${url}: ${e.message}`)
+        await sleep(3000)
+      }
+    }
+  }
+  throw new Error(`Every Overpass instance failed:\n  ${errors.join('\n  ')}`)
 }
 
 async function main() {
