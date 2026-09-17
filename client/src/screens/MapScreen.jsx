@@ -34,7 +34,9 @@ export function MapScreen({ theme, checkpoints, progress, currentId, onSelect, o
           clipPath: 'inset(0 round 36px 36px 0 0)',
           background: theme.sheetBg,
           marginTop: -36,
-          padding: '24px 18px 18px',
+          // Bottom padding clears the tab bar's raised centre button (it pokes
+          // ~11px above the bar incl. its ring) with a comfortable gap.
+          padding: '24px 18px 32px',
           position: 'relative',
           zIndex: 2,
           boxShadow: theme.isDark ? 'none' : '0 -12px 30px rgba(11,59,34,.10)',
@@ -55,7 +57,9 @@ export function MapScreen({ theme, checkpoints, progress, currentId, onSelect, o
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ fontWeight: 700, fontSize: 14.5, color: theme.text }}>{current.name}</div>
-              <div style={{ fontSize: 11.5, color: theme.textMuted, marginTop: 2 }}>Nästa hållplats · {current.subtitle}</div>
+              <div style={{ fontSize: 11.5, color: theme.textMuted, marginTop: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                Nästa hållplats · {current.subtitle}
+              </div>
             </div>
             <button
               type="button"

@@ -41,6 +41,10 @@ built out as a real, interactive web app:
   multiple browser tabs/devices join the same event code and share one live
   leaderboard.
 
+The ☰ menu in the app holds how-to-play, an **invite** page (QR code +
+link that lets teammates' phones join the same team and share progress),
+park info, the light/evening theme toggle, leave-team, and a demo reset.
+
 **Run it:**
 
 ```
@@ -83,3 +87,22 @@ The screen shows the exact problem and the API address the app tried:
   state is not shared between devices.
 - If `VITE_API_URL` is set, make sure it matches the server URL exactly, with
   no trailing slash, and that the site was rebuilt after setting it.
+
+### Real park map (data pipeline)
+
+`tools/park-geodata.mjs` pulls Gröna Lund's real layout from OpenStreetMap
+(park boundary, buildings, named attractions, coaster tracks, footpaths,
+shoreline, food/toilets/entrances) and projects it into the app's map
+coordinate space (`client/src/data/park-geo.json`), auto-rotated so the park
+fills a portrait phone screen. `client/src/lib/geo.js` holds the same
+projection for the client, so checkpoint pins and live GPS positions can be
+placed on the illustrated map with lat/lon.
+
+```
+npm run geodata                                  # query Overpass and write park-geo.json
+node tools/park-geodata.mjs convert --input tools/park-osm.raw.json   # re-convert offline
+```
+
+The Overpass query needs outbound network access to overpass-api.de. The
+output carries an attribution string; keep "© OpenStreetMap contributors"
+visible wherever the map is rendered (ODbL).

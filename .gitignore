@@ -3,3 +3,6 @@ dist/
 .env
 *.log
 .netlify/
+
+# Raw OpenStreetMap download from tools/park-geodata.mjs (regenerate with npm run geodata)
+tools/park-osm.raw.json

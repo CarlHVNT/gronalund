@@ -9,7 +9,7 @@ import { LeaderboardScreen } from './screens/LeaderboardScreen'
 import { FinishScreen } from './screens/FinishScreen'
 import { TabBar } from './components/TabBar'
 import { MissionSheet } from './components/MissionSheet'
-import { SettingsSheet } from './components/SettingsSheet'
+import { MenuSheet } from './components/MenuSheet'
 
 const SESSION_KEY = 'rs-gl-session'
 const THEME_KEY = 'rs-gl-theme'
@@ -21,6 +21,17 @@ export default function App() {
   const [event, setEvent] = useState(null)
   const [session, setSession] = useState(() => {
     try {
+      // Invite link from the menu: ?team=<id>&key=<token> joins that team on
+      // this device too. The params are stripped so the URL stays shareable.
+      const params = new URLSearchParams(window.location.search)
+      const teamId = params.get('team')
+      const token = params.get('key')
+      if (teamId && token) {
+        const invited = { teamId, token }
+        localStorage.setItem(SESSION_KEY, JSON.stringify(invited))
+        window.history.replaceState(null, '', window.location.pathname)
+        return invited
+      }
       return JSON.parse(localStorage.getItem(SESSION_KEY) || 'null')
     } catch {
       return null
@@ -78,9 +89,10 @@ export default function App() {
     return () => clearTimeout(id)
   }, [appLoading])
 
-  // Live-ish leaderboard: poll every few seconds once a team has joined.
+  // Live-ish leaderboard and team sync: poll every few seconds once a team
+  // has joined, so several phones playing as one team see the same progress.
   useEffect(() => {
-    if (!team) return
+    if (!team || !session) return
     let cancelled = false
     async function tick() {
       try {
@@ -89,6 +101,16 @@ export default function App() {
       } catch {
         /* ignore transient poll errors */
       }
+      try {
+        const { team: fresh } = await api.getTeam(session.teamId, session.token)
+        if (!cancelled && fresh) {
+          setTeam((prev) => (JSON.stringify(prev) === JSON.stringify(fresh) ? prev : fresh))
+        }
+      } catch (e) {
+        // The team is gone (event reset from another phone, or a bad invite
+        // link): leave it here as well instead of failing on the next action.
+        if (!cancelled && e.status === 401) handleLeaveTeam()
+      }
     }
     tick()
     const id = setInterval(tick, 4000)
@@ -96,7 +118,8 @@ export default function App() {
       cancelled = true
       clearInterval(id)
     }
-  }, [team?.id])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [team?.id, session?.teamId, session?.token])
 
   function toggleTheme(dark) {
     const next = dark ? 'dark' : 'light'
@@ -315,14 +338,18 @@ export default function App() {
           )}
 
           {settingsOpen && (
-            <SettingsSheet
+            <MenuSheet
               theme={theme}
               isDark={theme.isDark}
               onToggleTheme={toggleTheme}
               onLeaveTeam={handleLeaveTeam}
               onResetDemo={handleResetDemo}
               onClose={() => setSettingsOpen(false)}
-              teamName={team.name}
+              onNavigate={handleNavigate}
+              team={team}
+              rank={myRankEntry?.rank}
+              event={event}
+              inviteUrl={`${window.location.origin}${window.location.pathname}?team=${encodeURIComponent(session.teamId)}&key=${encodeURIComponent(session.token)}`}
             />
           )}
         </div>

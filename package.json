@@ -2,12 +2,13 @@
   "name": "readyset-x-grona-lund-prototype",
   "private": true,
   "version": "1.0.0",
-  "description": "Interactive prototype: ReadySet white-labeled as a Gröna Lund park-wide scavenger hunt (Skattjakten).",
+  "description": "Interactive prototype: ReadySet white-labeled as a Gr\u00f6na Lund park-wide scavenger hunt (Skattjakten).",
   "scripts": {
     "dev": "concurrently -n server,client -c blue,green \"npm:dev:server\" \"npm:dev:client\"",
     "dev:server": "npm --prefix server run dev",
     "dev:client": "npm --prefix client run dev",
-    "install:all": "npm --prefix server install && npm --prefix client install"
+    "install:all": "npm --prefix server install && npm --prefix client install",
+    "geodata": "node tools/park-geodata.mjs fetch"
   },
   "devDependencies": {
     "concurrently": "^9.1.0"

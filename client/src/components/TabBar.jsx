@@ -25,7 +25,7 @@ function TabIcon({ theme, active, onClick, label, children }) {
 
 export function TabBar({ theme, screen, onNavigate }) {
   return (
-    <div style={{ flex: 'none', height: 104, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 16px', position: 'relative', background: theme.tabBarBg }}>
+    <div style={{ flex: 'none', height: 104, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 16px', position: 'relative', zIndex: 3, background: theme.tabBarBg }}>
       <TabIcon theme={theme} active={screen === 'settings'} onClick={() => onNavigate('settings')} label="Meny">
         {(c) => (
           <svg width="22" height="22" viewBox="0 0 22 22" fill="none">

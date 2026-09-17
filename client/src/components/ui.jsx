@@ -53,7 +53,7 @@ export function GearButton({ theme, onClick, dark }) {
     <button
       type="button"
       onClick={onClick}
-      aria-label="Inställningar"
+      aria-label="Meny"
       style={{
         width: 46,
         height: 46,

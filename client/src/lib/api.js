@@ -43,7 +43,9 @@ async function request(path, options = {}) {
   }
 
   if (!res.ok) {
-    throw new Error(data.error || `Något gick fel (HTTP ${res.status}). Försök igen.`)
+    const err = new Error(data.error || `Något gick fel (HTTP ${res.status}). Försök igen.`)
+    err.status = res.status
+    throw err
   }
   return data
 }
