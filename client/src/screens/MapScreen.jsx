@@ -1,11 +1,73 @@
-import { Suspense, lazy } from 'react'
+import { Component, Suspense, lazy } from 'react'
 import { IsoMap } from '../components/IsoMap'
 import { GearButton } from '../components/ui'
+import { formatDistance } from '../lib/parkGeo'
 
 // The MapLibre renderer is a separate chunk, fetched only when the vector map is on.
 const VectorMap = lazy(() => import('../components/VectorMap'))
 
-export function MapScreen({ theme, checkpoints, progress, currentId, onSelect, onOpenSettings, mapMode = 'iso', onMapUnavailable }) {
+// If the vector map chunk fails to load or the renderer throws, show the
+// reason on screen and keep the illustrated plate underneath instead of a
+// blank map or a silent fallback.
+class MapErrorBoundary extends Component {
+  constructor(props) {
+    super(props)
+    this.state = { error: null }
+  }
+
+  static getDerivedStateFromError(error) {
+    return { error }
+  }
+
+  componentDidCatch(error) {
+    console.warn('Vector map failed:', error)
+  }
+
+  render() {
+    return this.state.error ? this.props.fallback(this.state.error) : this.props.children
+  }
+}
+
+function MapModeSwitch({ theme, mapMode, onChange }) {
+  const option = (mode, label) => {
+    const active = mapMode === mode
+    return (
+      <button
+        key={mode}
+        type="button"
+        onClick={() => onChange(mode)}
+        aria-pressed={active}
+        data-map-mode-option={mode}
+        style={{
+          height: 34, padding: '0 12px', borderRadius: 10, border: 'none', fontWeight: 700, fontSize: 12,
+          background: active ? theme.accent : 'transparent', color: active ? theme.onAccent : theme.isDark ? '#fff' : theme.text,
+        }}
+      >
+        {label}
+      </button>
+    )
+  }
+  return (
+    <div
+      data-map-mode-switch
+      role="group"
+      aria-label="Kartläge"
+      style={{
+        position: 'absolute', top: 18, right: 72, height: 46, padding: 6, borderRadius: 13,
+        display: 'flex', gap: 2, background: theme.isDark ? 'rgba(255,255,255,.14)' : '#fff',
+        boxShadow: theme.isDark ? 'none' : theme.cardShadow,
+      }}
+    >
+      {option('iso', 'Ritad')}
+      {option('vector', '3D')}
+    </div>
+  )
+}
+
+export function MapScreen({
+  theme, checkpoints, progress, currentId, onSelect, onOpenSettings, mapMode = 'iso', onChangeMapMode, onMapUnavailable,
+  onPosition, currentDistance,
+}) {
   const foundCount = Object.values(progress).filter((p) => p.status === 'found').length
   const current = checkpoints.find((c) => c.id === currentId)
 
@@ -13,20 +75,47 @@ export function MapScreen({ theme, checkpoints, progress, currentId, onSelect, o
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       <div data-tour="map" data-tour-adjust="0 0 -36 0" style={{ flex: 1, position: 'relative', background: theme.mapBg, minHeight: 260 }}>
         {mapMode === 'vector' ? (
-          <Suspense fallback={<IsoMap theme={theme} checkpoints={checkpoints} progress={progress} currentId={currentId} onSelect={onSelect} />}>
-            <VectorMap
-              key={theme.id}
-              theme={theme}
-              checkpoints={checkpoints}
-              progress={progress}
-              currentId={currentId}
-              onSelect={onSelect}
-              onUnavailable={onMapUnavailable}
-            />
-          </Suspense>
+          <MapErrorBoundary
+            key={theme.id}
+            fallback={(error) => (
+              <>
+                <IsoMap theme={theme} checkpoints={checkpoints} progress={progress} currentId={currentId} onSelect={onSelect} />
+                <div
+                  data-map-error
+                  style={{
+                    position: 'absolute', left: 12, right: 12, bottom: 56, padding: '10px 12px', borderRadius: 12, fontSize: 12, lineHeight: 1.4,
+                    background: theme.missedBg, border: `1px solid ${theme.missedBorder}`, color: theme.missedFg, fontWeight: 600, wordBreak: 'break-word',
+                  }}
+                >
+                  3D-kartan kunde inte laddas: {error?.message || String(error)}
+                  <button
+                    type="button"
+                    onClick={() => onChangeMapMode?.('iso')}
+                    style={{ display: 'block', marginTop: 6, background: 'none', border: 'none', padding: 0, color: theme.missedFg, fontWeight: 800, fontSize: 12 }}
+                  >
+                    Använd den illustrerade kartan
+                  </button>
+                </div>
+              </>
+            )}
+          >
+            <Suspense fallback={<IsoMap theme={theme} checkpoints={checkpoints} progress={progress} currentId={currentId} onSelect={onSelect} />}>
+              <VectorMap
+                key={theme.id}
+                theme={theme}
+                checkpoints={checkpoints}
+                progress={progress}
+                currentId={currentId}
+                onSelect={onSelect}
+                onUnavailable={onMapUnavailable}
+                onPosition={onPosition}
+              />
+            </Suspense>
+          </MapErrorBoundary>
         ) : (
           <IsoMap theme={theme} checkpoints={checkpoints} progress={progress} currentId={currentId} onSelect={onSelect} />
         )}
+        {onChangeMapMode && <MapModeSwitch theme={theme} mapMode={mapMode} onChange={onChangeMapMode} />}
         <div
           style={{
             position: 'absolute', left: 18, top: 18, height: 46, borderRadius: 13,
@@ -75,7 +164,14 @@ export function MapScreen({ theme, checkpoints, progress, currentId, onSelect, o
               {current.order}
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontWeight: 700, fontSize: 14.5, color: theme.text }}>{current.name}</div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 0 }}>
+                <div style={{ fontWeight: 700, fontSize: 14.5, color: theme.text, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{current.name}</div>
+                {currentDistance != null && (
+                  <span data-distance style={{ flexShrink: 0, fontSize: 10.5, fontWeight: 800, padding: '2px 7px', borderRadius: 99, background: theme.gold, color: '#0B3B22' }}>
+                    {formatDistance(currentDistance)}
+                  </span>
+                )}
+              </div>
               <div style={{ fontSize: 11.5, color: theme.textMuted, marginTop: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 Nästa hållplats · {current.subtitle}
               </div>

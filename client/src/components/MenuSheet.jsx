@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import qrcode from 'qrcode-generator'
 import { BRAND } from '../lib/theme'
+import { buildLabel } from '../lib/build'
 import { PrimaryButton, SecondaryButton, Sheet, Toggle } from './ui'
 
 const PARK_URL = 'https://www.gronalund.com'
@@ -268,6 +269,7 @@ export function MenuSheet({
 
           <div style={{ marginTop: 14, textAlign: 'center', fontSize: 11, color: theme.textFaint }}>
             Skattjakten · {BRAND.name} × ReadySet · prototyp
+            <div data-build-stamp style={{ marginTop: 3, fontSize: 10.5 }}>Version {buildLabel()}</div>
           </div>
         </div>
       )}

@@ -103,19 +103,33 @@ The screen shows the exact problem and the API address the app tried:
 
 ### Real park map
 
-Two map renderers share one data pipeline:
+Two map renderers share one data pipeline, and the map screen has a
+"Ritad | 3D" switch in its top-right corner (also under menu → Inställningar):
 
 - **Illustrated plate** (default): the isometric SVG in `IsoMap.jsx`.
-- **3D vector map** (beta, menu → Inställningar → "3D-karta"): MapLibre GL
-  in `client/src/components/VectorMap.jsx` renders our own GeoJSON layers
-  from OpenStreetMap in the brand palette: park plate, footpaths, extruded
-  buildings and ride footprints, coaster tracks, water, a mask that fades
-  everything outside the park, numbered checkpoint pins that land on the
-  ride with the same name, ride-name chips when zoomed in, and a locate-me
-  button. No tile server: the geometry is bundled with the app, the
+- **3D vector map** (beta): MapLibre GL in `client/src/components/VectorMap.jsx`
+  renders our own GeoJSON layers from OpenStreetMap in the brand palette:
+  park plate with a soft glow, footpaths with casing, extruded buildings and
+  ride footprints coloured by kind and height, coaster tracks with a shadow,
+  water and shoreline, points of interest, and a mask that fades everything
+  outside the park. Numbered checkpoint pins land on the ride with the same
+  name; name chips with icons for checkpoints, rides and food/toilets appear
+  as you zoom, laid out without overlaps. Controls: 2D/3D pitch toggle,
+  recentre, and a locate-me button whose position feeds distance hints (a
+  "300 m" pill on the next-stop card, and a note in the mission sheet when
+  the team is far from the stop). The camera frames the whole park inside
+  the visible area at the chosen pitch, both styles follow the theme, the
   renderer is a lazily loaded chunk, and the choice is remembered per
   device. MapLibre's worker is bundled by Vite and handed over with
   `setWorkerUrl` (its default URL guessing does not work under a bundler).
+  If the chunk fails to load, the reason is shown on the map and the plate
+  stays.
+
+**Installable and offline-tolerant.** `vite-plugin-pwa` precaches the app
+shell (including the map chunk) and caches the event content; the API is
+otherwise never cached. A new deploy takes over on the next visit. The menu
+footer shows the build stamp (`Version <time> · <commit>`), so anyone can
+tell which version a phone is running.
 
 `tools/park-geodata.mjs` pulls the layout from OpenStreetMap (park
 boundary, buildings with heights, named attractions, coaster tracks,
@@ -123,13 +137,22 @@ footpaths, shoreline, food/toilets/entrances) and writes both
 `client/src/data/park-geo.json` (projected for the plate) and
 `client/src/data/park.geojson.json` (WGS84 for the vector map, with the
 park's centre, axis bearing and bounds in `meta`). `client/src/lib/geo.js`
-holds the same projection for the client.
+holds the same projection for the client, and `client/src/lib/parkGeo.js`
+resolves checkpoint positions (an explicit `geo: [lat, lon]` on a checkpoint
+in `server/data.js` wins over name matching) and computes distances.
 
 ```
 npm run geodata                                    # query Overpass and write both files
 node tools/park-geodata.mjs convert --input tools/park-osm.raw.json   # re-convert offline
 node tools/park-fixture.mjs && node tools/park-geodata.mjs convert --input tools/park-fixture.json --synthetic
 ```
+
+**Optional street context.** Drop a Protomaps extract at
+`client/public/context.pmtiles` and the vector map draws muted water, roads
+and buildings around the park underneath the mask. Create it with the
+`pmtiles` CLI, for example
+`pmtiles extract https://build.protomaps.com/<date>.pmtiles context.pmtiles --bbox=18.085,59.315,18.110,59.332`.
+Nothing happens when the file is absent.
 
 The last line generates the **synthetic stand-in layout** that is committed
 today: it is not the real park, and the vector map shows a banner saying so

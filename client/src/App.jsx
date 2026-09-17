@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { api, API_BASE } from './lib/api'
 import { THEMES, BRAND } from './lib/theme'
 import { formatElapsed } from './lib/format'
@@ -14,6 +14,7 @@ import { IntroScreen } from './components/IntroScreen'
 import { TourOverlay } from './components/TourOverlay'
 import { INTRO_SEEN_KEY, TOUR_DONE_KEY, readFlag, tourSteps, writeFlag } from './lib/onboarding'
 import { readMapMode, writeMapMode } from './lib/mapMode'
+import { distanceMetres, resolveCheckpointPositions } from './lib/parkGeo'
 
 const SESSION_KEY = 'rs-gl-session'
 const THEME_KEY = 'rs-gl-theme'
@@ -58,6 +59,8 @@ export default function App() {
   const [tourOpen, setTourOpen] = useState(false)
   // 'iso' = illustrated plate (default), 'vector' = MapLibre map (beta, from the menu).
   const [mapMode, setMapMode] = useState(() => readMapMode())
+  // Last known phone position (from the vector map's locate button), for distances.
+  const [position, setPosition] = useState(null)
   const [activeCheckpointId, setActiveCheckpointId] = useState(null)
   const [submitting, setSubmitting] = useState(false)
   const [actionError, setActionError] = useState(null)
@@ -268,6 +271,9 @@ export default function App() {
     }
   }
 
+  // Where every checkpoint is on the real map, for distance hints.
+  const checkpointPositions = useMemo(() => (event ? resolveCheckpointPositions(event.checkpoints) : new Map()), [event])
+
   const shellStyle = {
     width: '100%',
     maxWidth: 460,
@@ -280,10 +286,13 @@ export default function App() {
     fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
   }
 
-  if (appLoading || !event) {
+  // Stay on the boot screen while loading, and also when the event loaded but
+  // the saved team could not be verified (e.g. offline): the error and the
+  // retry button live there.
+  if (appLoading || !event || bootError) {
     return (
       <div style={{ minHeight: '100dvh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#111' }}>
-        <div style={shellStyle}>
+        <div style={shellStyle} className="app-shell">
           <div
             style={{
               flex: 1,
@@ -363,6 +372,11 @@ export default function App() {
   const activeCheckpoint = event.checkpoints.find((c) => c.id === activeCheckpointId) || null
   const currentCheckpoint = event.checkpoints.find((c) => team.progress[c.id]?.status !== 'found') || null
   const myRankEntry = leaderboard.find((t) => t.id === team.id)
+  const distanceTo = (cp) => {
+    if (!position || !cp) return null
+    const target = checkpointPositions.get(cp.id)
+    return target ? distanceMetres([position.lon, position.lat], target) : null
+  }
 
   return (
     <div style={{ minHeight: '100dvh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#111' }}>
@@ -377,7 +391,10 @@ export default function App() {
               onSelect={setActiveCheckpointId}
               onOpenSettings={() => setSettingsOpen(true)}
               mapMode={mapMode}
+              onChangeMapMode={changeMapMode}
               onMapUnavailable={handleMapUnavailable}
+              onPosition={setPosition}
+              currentDistance={distanceTo(currentCheckpoint)}
             />
           )}
           {screen === 'checkpoints' && (
@@ -410,6 +427,7 @@ export default function App() {
               entry={team.progress[activeCheckpoint.id]}
               submitting={submitting}
               error={actionError}
+              distance={distanceTo(activeCheckpoint)}
               onAttempt={(payload) => handleAttempt(activeCheckpoint.id, payload)}
               onSkip={() => handleSkip(activeCheckpoint.id)}
               onClose={() => {

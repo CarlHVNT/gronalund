@@ -11,6 +11,7 @@ const CHECKPOINTS = [
     type: 'quiz',
     points: 150,
     pin: { x: 158, y: 404, r: 16 },
+    geo: null, // [lat, lon]; when null the map matches the ride by name
     prompt: 'Hur många speglar måste ni gå förbi innan ni hittar utgången?',
     options: ['3', '5', '7', '9'],
     correctIndex: 2,
@@ -23,6 +24,7 @@ const CHECKPOINTS = [
     type: 'photo',
     points: 200,
     pin: { x: 103, y: 344, r: 16 },
+    geo: null, // [lat, lon]; when null the map matches the ride by name
     prompt: 'Ta en bild på hela laget med armarna i luften framför Twister.',
   },
   {
@@ -33,6 +35,7 @@ const CHECKPOINTS = [
     type: 'clue',
     points: 130,
     pin: { x: 209, y: 374, r: 16 },
+    geo: null, // [lat, lon]; when null the map matches the ride by name
     prompt: 'Hitta skylten vid Jetlines köentré och skriv av koden ni ser.',
     hint: 'Koden börjar på "JET".',
     code: 'JET-7',
@@ -45,6 +48,7 @@ const CHECKPOINTS = [
     type: 'quiz',
     points: 180,
     pin: { x: 231, y: 292, r: 19 },
+    geo: null, // [lat, lon]; when null the map matches the ride by name
     prompt: 'Hur många gånger vänder ni upp och ner under en tur med Eclipse?',
     options: ['0', '1', '2', '4'],
     correctIndex: 2,
@@ -57,6 +61,7 @@ const CHECKPOINTS = [
     type: 'photo',
     points: 200,
     pin: { x: 142, y: 228, r: 16 },
+    geo: null, // [lat, lon]; when null the map matches the ride by name
     prompt: 'Fånga ett foto av laget mitt i snurren på Kvasten.',
   },
   {
@@ -67,6 +72,7 @@ const CHECKPOINTS = [
     type: 'quiz',
     points: 150,
     pin: { x: 261, y: 112, r: 16 },
+    geo: null, // [lat, lon]; when null the map matches the ride by name
     prompt: 'Hur många sekunder känns fallet på Fritt Fall som?',
     options: ['1', '3', '5', '10'],
     correctIndex: 1,
@@ -79,6 +85,7 @@ const CHECKPOINTS = [
     type: 'clue',
     points: 130,
     pin: { x: 330, y: 196, r: 16 },
+    geo: null, // [lat, lon]; when null the map matches the ride by name
     prompt: 'Leta upp ledtråden inne i tunneln på Blå Tåget och skriv av ordet.',
     hint: 'Ordet är målat i blått.',
     code: 'DRAKEN',
@@ -91,6 +98,7 @@ const CHECKPOINTS = [
     type: 'photo',
     points: 200,
     pin: { x: 208, y: 134, r: 16 },
+    geo: null, // [lat, lon]; when null the map matches the ride by name
     prompt: 'Ta en actionbild av laget precis innan Insane svänger upp.',
   },
   {
@@ -101,6 +109,7 @@ const CHECKPOINTS = [
     type: 'quiz',
     points: 180,
     pin: { x: 330, y: 330, r: 16 },
+    geo: null, // [lat, lon]; when null the map matches the ride by name
     prompt: 'Vilken topphastighet skjuter Katapulten iväg med?',
     options: ['50 km/h', '70 km/h', '90 km/h', '120 km/h'],
     correctIndex: 2,

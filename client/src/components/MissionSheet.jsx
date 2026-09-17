@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { PrimaryButton, SecondaryButton, Sheet, TypeLabel } from './ui'
+import { formatDistance } from '../lib/parkGeo'
 
 const TYPE_ICON = {
   quiz: '❓',
@@ -14,7 +15,7 @@ const TYPE_HELP = {
   clue: 'Koden står på skylten vid hållplatsen. Stora och små bokstäver spelar ingen roll.',
 }
 
-export function MissionSheet({ theme, checkpoint, entry, onAttempt, onSkip, onClose, submitting, error }) {
+export function MissionSheet({ theme, checkpoint, entry, onAttempt, onSkip, onClose, submitting, error, distance }) {
   const [answerIndex, setAnswerIndex] = useState(null)
   const [code, setCode] = useState('')
   const [photo, setPhoto] = useState(null)
@@ -69,6 +70,11 @@ export function MissionSheet({ theme, checkpoint, entry, onAttempt, onSkip, onCl
           {error && (
             <div style={{ background: theme.missedBg, border: `1px solid ${theme.missedBorder}`, borderRadius: 14, padding: '10px 14px', fontSize: 12.5, fontWeight: 600, color: theme.missedFg, wordBreak: 'break-word' }}>
               Svaret kunde inte skickas. {error}
+            </div>
+          )}
+          {distance != null && distance > 75 && (
+            <div data-proximity style={{ background: theme.accentSoft, border: `1px solid ${theme.accentBorder}`, borderRadius: 14, padding: '10px 14px', fontSize: 12.5, fontWeight: 600, color: theme.text }}>
+              📍 Ni verkar vara {formatDistance(distance)} från hållplatsen. Gå dit innan ni svarar.
             </div>
           )}
 

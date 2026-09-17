@@ -59,7 +59,7 @@ button {
 /* Vector map (MapLibre) */
 .vector-map .maplibregl-ctrl-bottom-right {
   bottom: 46px;
-  right: 10px;
+  right: 12px;
 }
 .vector-map .maplibregl-ctrl-bottom-left {
   bottom: 46px;
@@ -70,8 +70,31 @@ button {
   border-radius: 8px;
 }
 .vector-map .maplibregl-ctrl-group {
-  border-radius: 12px;
+  border-radius: 13px;
+  background: var(--vm-ctrl-bg, #fff);
   box-shadow: 0 4px 14px rgba(11, 59, 34, 0.16);
+}
+.vector-map .maplibregl-ctrl-group button {
+  width: 44px;
+  height: 44px;
+}
+.vector-map .maplibregl-ctrl-group button + button {
+  border-top: none;
+}
+.vector-map .maplibregl-ctrl button .maplibregl-ctrl-icon {
+  filter: var(--vm-ctrl-icon-filter, none);
+}
+.vector-map .maplibregl-user-location-dot,
+.vector-map .maplibregl-user-location-dot::before {
+  background-color: #c8102e;
+}
+.vm-controls {
+  position: absolute;
+  right: 12px;
+  bottom: 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 .vm-pin {
   width: 34px;
@@ -93,6 +116,9 @@ button {
   font-size: 14px;
 }
 .vm-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
   padding: 3px 8px;
   border-radius: 99px;
   font-size: 10.5px;
@@ -101,10 +127,17 @@ button {
   pointer-events: none;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
 }
+.vm-label[data-priority='0'] {
+  font-size: 11px;
+}
+.vm-ico {
+  font-size: 12px;
+  line-height: 1;
+}
 .vm-banner {
   position: absolute;
   left: 12px;
-  right: 12px;
+  right: 68px;
   bottom: 84px;
   padding: 7px 10px;
   border-radius: 10px;
