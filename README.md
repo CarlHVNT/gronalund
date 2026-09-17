@@ -161,9 +161,19 @@ and buildings around the park underneath the mask. Create it with the
 `pmtiles extract https://build.protomaps.com/<date>.pmtiles context.pmtiles --bbox=18.085,59.315,18.110,59.332`.
 Nothing happens when the file is absent.
 
-The last line generates the **synthetic stand-in layout** that is committed
-today: it is not the real park, and the vector map shows a banner saying so
-until `npm run geodata` has replaced it with real data. The Overpass query
-needs outbound network access to overpass-api.de. The output carries an
-attribution string; keep "© OpenStreetMap contributors" visible wherever
-the map is rendered (ODbL).
+The committed data is **real OpenStreetMap geometry** pulled by the workflow
+(all nine checkpoints match their ride by name; the report in the workflow
+summary shows the matches). The last line above regenerates the labelled
+synthetic stand-in used for development; the vector map shows a banner when
+that is what it is drawing. The Overpass query needs outbound network
+access to overpass-api.de and identifies itself with a User-Agent, which
+the public instance requires. The output carries an attribution string;
+keep "© OpenStreetMap contributors" visible wherever the map is rendered
+(ODbL).
+
+Two derived pieces make the real data look like the park: OpenStreetMap has
+no sea polygons, only coastline lines with land on the left, so
+`client/src/lib/sea.js` builds the sea (and islands) inside the camera's
+reach from those lines; and `client/src/lib/bearing.js` picks the map
+rotation that makes the park narrowest on a portrait screen, with north-up
+as the tie-break, because the park's outline is nearly square.

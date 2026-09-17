@@ -5,7 +5,7 @@ import 'maplibre-gl/dist/maplibre-gl.css'
 // neither the dev server nor the production bundle can serve. Let Vite bundle
 // the worker (with its shared chunk) and hand MapLibre the resulting URL.
 import maplibreWorkerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url'
-import { PARK as park, norm, resolveCheckpointPositions } from '../lib/parkGeo'
+import { MAP_DATA, PARK as park, norm, portraitBearing, resolveCheckpointPositions } from '../lib/parkGeo'
 
 // Vector map of the park (option C): MapLibre GL rendering our own GeoJSON
 // layers from OpenStreetMap in the brand palette. No tile server: the whole
@@ -15,6 +15,12 @@ import { PARK as park, norm, resolveCheckpointPositions } from '../lib/parkGeo'
 setWorkerUrl(maplibreWorkerUrl)
 
 const PITCH = 52
+// Rotation that shows the park with its long side vertical (computed from the
+// outline, so it holds for real and stand-in data alike).
+const BEARING = portraitBearing()
+// Tall towers are landmarks, but at phone scale a 121 m extrusion swallows the
+// map; cap what we extrude.
+const MAX_EXTRUSION = 60
 // Screen area the park must fit in: status chips at the top, the "Kartan"
 // sheet overlapping the bottom, a little air at the sides.
 const SAFE = { top: 84, bottom: 140, left: 28, right: 28 }
@@ -86,9 +92,9 @@ function settle(map, shape) {
 function computeFraming(map, pins, pitched) {
   const saved = { center: map.getCenter(), zoom: map.getZoom(), pitch: map.getPitch(), bearing: map.getBearing() }
   const shape = frameShape(pins)
-  map.jumpTo({ center: park.meta.center, zoom: 16, pitch: pitched ? PITCH : 0, bearing: park.meta.bearingDeg })
+  map.jumpTo({ center: park.meta.center, zoom: 16, pitch: pitched ? PITCH : 0, bearing: BEARING })
   settle(map, shape)
-  const framing = { center: map.getCenter(), zoom: map.getZoom(), pitch: pitched ? PITCH : 0, bearing: park.meta.bearingDeg }
+  const framing = { center: map.getCenter(), zoom: map.getZoom(), pitch: pitched ? PITCH : 0, bearing: BEARING }
   map.jumpTo(saved)
   return framing
 }
@@ -109,7 +115,7 @@ function iconFor(props) {
 }
 
 function buildStyle(t) {
-  const water = t.isDark ? '#0A2417' : '#B7D6E2'
+  const water = t.isDark ? '#10344A' : '#B7D6E2' // evening: deep blue so the sea still reads as water
   const ride = t.isDark ? '#1E5A34' : '#9FD3AE'
   const byLayer = (name) => ['==', ['get', 'layer'], name]
   const zoomWidth = (a, b, c) => ['interpolate', ['linear'], ['zoom'], 15, a, 17, b, 19, c]
@@ -117,18 +123,9 @@ function buildStyle(t) {
   const buildingColor = ['match', ['get', 'kind'], ['retail', 'commercial', 'kiosk'], t.isDark ? '#2F4A31' : '#E7DFC8', t.mapBlockFill]
   return {
     version: 8,
-    sources: { park: { type: 'geojson', data: park } },
+    sources: { park: { type: 'geojson', data: MAP_DATA } },
     layers: [
       { id: 'bg', type: 'background', paint: { 'background-color': t.mapBg } },
-      {
-        id: 'water', type: 'fill', source: 'park',
-        filter: ['all', byLayer('water'), ['==', ['geometry-type'], 'Polygon']],
-        paint: { 'fill-color': water, 'fill-opacity': t.isDark ? 0.7 : 1 },
-      },
-      {
-        id: 'water-edge', type: 'line', source: 'park', filter: byLayer('water'),
-        paint: { 'line-color': t.isDark ? 'rgba(227,190,94,.25)' : '#FFFFFF', 'line-width': zoomWidth(1, 2, 4), 'line-opacity': 0.7 },
-      },
       { id: 'park-glow', type: 'line', source: 'park', filter: byLayer('park'), paint: { 'line-color': t.mapPlateEdge, 'line-width': 16, 'line-blur': 12, 'line-opacity': 0.55 } },
       { id: 'park', type: 'fill', source: 'park', filter: byLayer('park'), paint: { 'fill-color': t.mapPlate } },
       { id: 'park-edge', type: 'line', source: 'park', filter: byLayer('park'), paint: { 'line-color': t.mapPlateEdge, 'line-width': 3 } },
@@ -146,7 +143,7 @@ function buildStyle(t) {
         id: 'buildings', type: 'fill-extrusion', source: 'park', filter: byLayer('building'),
         paint: {
           'fill-extrusion-color': buildingColor,
-          'fill-extrusion-height': ['coalesce', ['get', 'height'], 6],
+          'fill-extrusion-height': ['min', ['coalesce', ['get', 'height'], 6], MAX_EXTRUSION],
           'fill-extrusion-opacity': 0.96,
           'fill-extrusion-vertical-gradient': true,
         },
@@ -155,7 +152,7 @@ function buildStyle(t) {
         id: 'rides', type: 'fill-extrusion', source: 'park', filter: byLayer('attraction-footprint'),
         paint: {
           'fill-extrusion-color': rideColor,
-          'fill-extrusion-height': ['min', ['coalesce', ['get', 'height'], 12], 40],
+          'fill-extrusion-height': ['min', ['coalesce', ['get', 'height'], 12], MAX_EXTRUSION],
           'fill-extrusion-opacity': 0.9,
           'fill-extrusion-vertical-gradient': true,
         },
@@ -179,8 +176,21 @@ function buildStyle(t) {
         id: 'pois', type: 'circle', source: 'park', filter: byLayer('poi'),
         paint: { 'circle-radius': zoomWidth(1.5, 3, 5), 'circle-color': t.isDark ? 'rgba(255,255,255,.55)' : 'rgba(11,59,34,.35)' },
       },
-      // Drawn last: fades everything outside the park so it reads as the park, not a street map.
+      // Fades everything outside the park so it reads as the park, not a street map...
       { id: 'mask', type: 'fill', source: 'park', filter: byLayer('mask'), paint: { 'fill-color': t.appBg, 'fill-opacity': 0.72 } },
+      // ...except the water, which is part of Gröna Lund's identity and stays blue.
+      { id: 'sea', type: 'fill', source: 'park', filter: byLayer('sea'), paint: { 'fill-color': water, 'fill-opacity': t.isDark ? 0.85 : 0.9 } },
+      {
+        id: 'water', type: 'fill', source: 'park',
+        filter: ['all', byLayer('water'), ['==', ['geometry-type'], 'Polygon']],
+        paint: { 'fill-color': water, 'fill-opacity': t.isDark ? 0.75 : 0.9 },
+      },
+      // Islands are land again, in the same faded tone as the masked surroundings.
+      { id: 'island', type: 'fill', source: 'park', filter: byLayer('island'), paint: { 'fill-color': t.appBg, 'fill-opacity': 0.95 } },
+      {
+        id: 'water-edge', type: 'line', source: 'park', filter: byLayer('water'),
+        paint: { 'line-color': t.isDark ? 'rgba(227,190,94,.25)' : '#FFFFFF', 'line-width': zoomWidth(1, 2, 4), 'line-opacity': 0.7 },
+      },
     ],
   }
 }
@@ -332,7 +342,7 @@ export default function VectorMap({ theme, checkpoints, progress, currentId, onS
         minZoom: 14.5,
         maxZoom: 19.5,
         pitch: PITCH,
-        bearing: park.meta.bearingDeg,
+        bearing: BEARING,
         maxBounds: park.meta.maxBounds,
         attributionControl: false,
         dragRotate: false,

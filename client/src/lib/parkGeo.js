@@ -1,7 +1,28 @@
 // Park geometry helpers shared by the vector map and the app (distances).
 import park from '../data/park.geojson.json'
+import { portraitBearing as bearingForOutline } from './bearing'
+import { coastFeatures } from './sea'
 
 export const PARK = park
+
+// What the vector map draws: the pipeline's features plus sea and island
+// polygons derived from the coastline lines (OSM has no sea polygons), built
+// for a box comfortably larger than the camera can reach.
+function withCoast(data) {
+  const [[w, s], [e, n]] = data.meta?.maxBounds || data.meta?.bounds || [[0, 0], [0, 0]]
+  const padLon = (e - w) * 0.6
+  const padLat = (n - s) * 0.6
+  const box = [[w - padLon, s - padLat], [e + padLon, n + padLat]]
+  let extra = []
+  try {
+    extra = coastFeatures(data.features, box)
+  } catch (err) {
+    console.warn('Coast polygons skipped:', err?.message || err)
+  }
+  return { ...data, features: [...data.features, ...extra] }
+}
+
+export const MAP_DATA = withCoast(park)
 
 export const norm = (s) => String(s).toLowerCase().replace(/[^a-z0-9åäö]/g, '')
 
@@ -40,6 +61,22 @@ export function distanceMetres([lon1, lat1], [lon2, lat2]) {
   const dLon = toRad(lon2 - lon1)
   const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2
   return 2 * R * Math.asin(Math.sqrt(a))
+}
+
+// All outline vertices of the park polygon(s) as [lon, lat].
+export function parkOutline() {
+  const pts = []
+  for (const f of park.features) {
+    if (f.properties.layer !== 'park') continue
+    const polys = f.geometry.type === 'MultiPolygon' ? f.geometry.coordinates : [f.geometry.coordinates]
+    for (const rings of polys) for (const ring of rings) for (const c of ring) pts.push(c)
+  }
+  return pts
+}
+
+// Map rotation for the park outline (see bearing.js).
+export function portraitBearing(points = parkOutline()) {
+  return bearingForOutline(points, park.meta?.bearingDeg || 0)
 }
 
 export function formatDistance(m) {

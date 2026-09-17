@@ -23,6 +23,7 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { makeProjector, metresPerDegree } from '../client/src/lib/geo.js'
+import { portraitBearing } from '../client/src/lib/bearing.js'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 // Generous box around the park (south, west, north, east); the converter
@@ -139,12 +140,8 @@ function parseHeight(tags = {}, fallback) {
 
 // Compass bearing (clockwise from north, in (-90, 90]) of the park's long axis,
 // so the vector map can put that axis vertically like the illustrated plate.
-function axisBearingDeg(parkPts, lat0, lon0, mPerDegLat, mPerDegLon) {
-  const eastNorth = parkPts.map(([lat, lon]) => [(lon - lon0) * mPerDegLon, (lat - lat0) * mPerDegLat])
-  let bearing = 90 - principalAxisDeg(eastNorth)
-  while (bearing > 90) bearing -= 180
-  while (bearing <= -90) bearing += 180
-  return Math.round(bearing * 10) / 10
+function axisBearingDeg(parkPts) {
+  return portraitBearing(parkPts.map(([lat, lon]) => [lon, lat]), 0)
 }
 
 export function toGeoJSON(raw, opts = {}) {
@@ -250,7 +247,7 @@ export function toGeoJSON(raw, opts = {}) {
       synthetic: Boolean(opts.synthetic),
       generatedAt: new Date().toISOString(),
       center: [round6(lon0), round6(lat0)],
-      bearingDeg: axisBearingDeg(parkPts, lat0, lon0, mPerDegLat, mPerDegLon),
+      bearingDeg: axisBearingDeg(parkPts),
       bounds,
       maxBounds,
     },
