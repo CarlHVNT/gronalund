@@ -155,6 +155,11 @@ export function TypeLabel(type) {
   return { quiz: 'Fråga', photo: 'Foto', clue: 'Ledtråd' }[type] || type
 }
 
+// The tab bar's raised centre button pokes about 11px (button + ring) above
+// the bar into the area a bottom sheet occupies. Sheets keep this much empty
+// space at the bottom so scrolling content never runs underneath it.
+export const SHEET_BOTTOM_CLEARANCE = 30
+
 export function Sheet({ theme, onClose, children, title }) {
   return (
     <div
@@ -169,21 +174,26 @@ export function Sheet({ theme, onClose, children, title }) {
           position: 'relative',
           background: theme.sheetBg,
           borderRadius: '28px 28px 0 0',
-          padding: '18px 20px 26px',
           maxHeight: '88%',
-          overflowY: 'auto',
+          display: 'flex',
+          flexDirection: 'column',
           boxShadow: '0 -20px 50px rgba(0,0,0,.35)',
         }}
       >
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 10 }}>
-          <div style={{ width: 40, height: 5, borderRadius: 99, background: theme.textFaint, opacity: 0.4 }} />
-        </div>
-        {title && (
-          <div style={{ fontWeight: 800, fontSize: 20, color: theme.text, marginBottom: 14, letterSpacing: '-.02em' }}>
-            {title}
+        <div style={{ flex: 'none', padding: '18px 20px 0' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 10 }}>
+            <div style={{ width: 40, height: 5, borderRadius: 99, background: theme.textFaint, opacity: 0.4 }} />
           </div>
-        )}
-        {children}
+          {title && (
+            <div style={{ fontWeight: 800, fontSize: 20, color: theme.text, marginBottom: 14, letterSpacing: '-.02em' }}>
+              {title}
+            </div>
+          )}
+        </div>
+        <div style={{ flex: '1 1 auto', minHeight: 0, overflowY: 'auto', padding: '0 20px 16px' }}>
+          {children}
+        </div>
+        <div style={{ flex: 'none', height: SHEET_BOTTOM_CLEARANCE }} aria-hidden="true" />
       </div>
     </div>
   )
