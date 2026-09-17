@@ -7,7 +7,7 @@ export function MapScreen({ theme, checkpoints, progress, currentId, onSelect, o
 
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-      <div style={{ flex: 1, position: 'relative', background: theme.mapBg, minHeight: 260 }}>
+      <div data-tour="map" data-tour-adjust="0 0 -36 0" style={{ flex: 1, position: 'relative', background: theme.mapBg, minHeight: 260 }}>
         <IsoMap theme={theme} checkpoints={checkpoints} progress={progress} currentId={currentId} onSelect={onSelect} />
         <div
           style={{
@@ -47,6 +47,7 @@ export function MapScreen({ theme, checkpoints, progress, currentId, onSelect, o
         </div>
         {current ? (
           <div
+            data-tour="next"
             style={{
               display: 'flex', alignItems: 'center', gap: 13, height: 64, padding: '0 15px',
               borderRadius: 18, background: theme.foundBg, border: `1px solid ${theme.foundBorder}`,

@@ -115,7 +115,7 @@ function QrCode({ value, size = 176, fg = '#0B3B22', bg = '#FFFFFF' }) {
   )
 }
 
-function HowToView({ theme, event, onBack }) {
+function HowToView({ theme, event, onBack, onShowIntro }) {
   return (
     <>
       <SubHeader theme={theme} title="Så funkar Skattjakten" onBack={onBack} />
@@ -135,6 +135,9 @@ function HowToView({ theme, event, onBack }) {
         <Step theme={theme} n={5} title="Belöningen">
           När alla hållplatser är klara låses belöningen upp: {event.reward.title}. Visa koden under Mål för personalen.
         </Step>
+      </div>
+      <div style={{ marginTop: 18 }}>
+        <SecondaryButton theme={theme} onClick={onShowIntro}>Visa introduktionen igen</SecondaryButton>
       </div>
     </>
   )
@@ -205,7 +208,7 @@ function ParkView({ theme, onBack }) {
 }
 
 export function MenuSheet({
-  theme, isDark, onToggleTheme, onLeaveTeam, onResetDemo, onClose, onNavigate,
+  theme, isDark, onToggleTheme, onLeaveTeam, onResetDemo, onClose, onNavigate, onShowIntro, onShowTour,
   team, rank, event, inviteUrl,
 }) {
   const [view, setView] = useState('root')
@@ -213,7 +216,7 @@ export function MenuSheet({
 
   return (
     <Sheet theme={theme} onClose={onClose} title={view === 'root' ? 'Meny' : undefined}>
-      {view === 'howto' && <HowToView theme={theme} event={event} onBack={back} />}
+      {view === 'howto' && <HowToView theme={theme} event={event} onBack={back} onShowIntro={onShowIntro} />}
       {view === 'invite' && <InviteView theme={theme} inviteUrl={inviteUrl} teamName={team.name} onBack={back} />}
       {view === 'park' && <ParkView theme={theme} onBack={back} />}
 
@@ -233,6 +236,7 @@ export function MenuSheet({
 
           <SectionLabel theme={theme}>Spela</SectionLabel>
           <Row theme={theme} icon="📖" title="Så funkar Skattjakten" subtitle="Regler, poäng och de tre uppdragstyperna" onClick={() => setView('howto')} />
+          <Row theme={theme} icon="🗺️" title="Rundtur i appen" subtitle="Visa var allt finns på skärmen" onClick={onShowTour} />
           <Row theme={theme} icon="👥" title="Bjud in lagkamrater" subtitle="Spela på samma lag från flera mobiler" onClick={() => setView('invite')} />
           <Row theme={theme} icon="🎁" title="Mål & belöning" subtitle={`${event.reward.title} när allt är klart`} onClick={() => { onNavigate('finish'); onClose() }} />
 

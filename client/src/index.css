@@ -39,3 +39,19 @@ button {
     height: min(100dvh, 900px) !important;
   }
 }
+
+/* Onboarding steps slide in as you move through them. */
+.intro-step {
+  animation: intro-in 0.28s ease;
+}
+
+@keyframes intro-in {
+  from {
+    opacity: 0;
+    transform: translateX(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}

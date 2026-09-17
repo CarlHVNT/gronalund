@@ -10,6 +10,9 @@ import { FinishScreen } from './screens/FinishScreen'
 import { TabBar } from './components/TabBar'
 import { MissionSheet } from './components/MissionSheet'
 import { MenuSheet } from './components/MenuSheet'
+import { IntroScreen } from './components/IntroScreen'
+import { TourOverlay } from './components/TourOverlay'
+import { INTRO_SEEN_KEY, TOUR_DONE_KEY, readFlag, tourSteps, writeFlag } from './lib/onboarding'
 
 const SESSION_KEY = 'rs-gl-session'
 const THEME_KEY = 'rs-gl-theme'
@@ -46,6 +49,12 @@ export default function App() {
 
   const [screen, setScreen] = useState('map')
   const [settingsOpen, setSettingsOpen] = useState(false)
+  // Onboarding: intro carousel before the first join, guided tour after it.
+  // A device that already holds a session (returning, or opened via an invite
+  // link) skips the carousel and goes straight to the team; the rules stay
+  // one tap away in the menu.
+  const [introOpen, setIntroOpen] = useState(() => !readFlag(INTRO_SEEN_KEY) && !session)
+  const [tourOpen, setTourOpen] = useState(false)
   const [activeCheckpointId, setActiveCheckpointId] = useState(null)
   const [submitting, setSubmitting] = useState(false)
   const [actionError, setActionError] = useState(null)
@@ -93,6 +102,34 @@ export default function App() {
     const id = setTimeout(() => setSlowBoot(true), 4000)
     return () => clearTimeout(id)
   }, [appLoading])
+
+  // First team on this device: run the short tour once the map is up.
+  useEffect(() => {
+    if (team && !readFlag(TOUR_DONE_KEY)) setTourOpen(true)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [team?.id])
+
+  function finishIntro() {
+    writeFlag(INTRO_SEEN_KEY)
+    setIntroOpen(false)
+  }
+
+  function finishTour() {
+    writeFlag(TOUR_DONE_KEY)
+    setTourOpen(false)
+  }
+
+  function showIntroAgain() {
+    setSettingsOpen(false)
+    setIntroOpen(true)
+  }
+
+  function showTourAgain() {
+    setSettingsOpen(false)
+    setActiveCheckpointId(null)
+    setScreen('map')
+    setTourOpen(true)
+  }
 
   // Live sync: one /sync call every few seconds (leaderboard + own team) so
   // several phones playing as one team see the same progress. Calls never
@@ -291,15 +328,20 @@ export default function App() {
     return (
       <div style={{ minHeight: '100dvh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#111' }}>
         <div style={shellStyle} className="app-shell">
-          <WelcomeScreen
-            theme={theme}
-            eventCode={event.code}
-            eventTitle={event.title}
-            eventTagline={event.tagline}
-            onJoin={handleJoin}
-            joining={joining}
-            error={joinError}
-          />
+          {introOpen ? (
+            <IntroScreen theme={theme} onDone={finishIntro} />
+          ) : (
+            <WelcomeScreen
+              theme={theme}
+              eventCode={event.code}
+              eventTitle={event.title}
+              eventTagline={event.tagline}
+              onJoin={handleJoin}
+              joining={joining}
+              error={joinError}
+              onShowIntro={() => setIntroOpen(true)}
+            />
+          )}
         </div>
       </div>
     )
@@ -371,6 +413,8 @@ export default function App() {
               onResetDemo={handleResetDemo}
               onClose={() => setSettingsOpen(false)}
               onNavigate={handleNavigate}
+              onShowIntro={showIntroAgain}
+              onShowTour={showTourAgain}
               team={team}
               rank={myRankEntry?.rank}
               event={event}
@@ -380,6 +424,15 @@ export default function App() {
         </div>
 
         <TabBar theme={theme} screen={settingsOpen ? 'settings' : screen} onNavigate={handleNavigate} />
+
+        {tourOpen && screen === 'map' && !settingsOpen && !activeCheckpoint && !introOpen && (
+          <TourOverlay theme={theme} steps={tourSteps(team.name)} onClose={finishTour} />
+        )}
+        {introOpen && (
+          <div style={{ position: 'absolute', inset: 0, zIndex: 70 }}>
+            <IntroScreen theme={theme} onDone={finishIntro} />
+          </div>
+        )}
       </div>
     </div>
   )

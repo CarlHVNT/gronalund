@@ -41,6 +41,15 @@ built out as a real, interactive web app:
   multiple browser tabs/devices join the same event code and share one live
   leaderboard.
 
+**Onboarding.** A device's first visit gets a four-step intro carousel
+(what the hunt is, the three mission types, points, the reward) before the
+join form, swipeable and keyboard-navigable. Right after a team is in, a
+short spotlight tour points out the map, the next-stop card and the tabs.
+Phones that arrive through an invite link skip the carousel and get the
+tour with a team greeting. Both are remembered per device (localStorage
+keys `rs-gl-intro-seen` and `rs-gl-tour-done`) and can be replayed from the
+menu. Every mission sheet carries a one-line instruction for its type.
+
 The ☰ menu in the app holds how-to-play, an **invite** page (QR code +
 link that lets teammates' phones join the same team and share progress),
 park info, the light/evening theme toggle, leave-team, and a demo reset.

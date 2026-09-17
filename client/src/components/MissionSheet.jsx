@@ -7,6 +7,13 @@ const TYPE_ICON = {
   clue: '🧭',
 }
 
+// One line of instructions per mission type, shown under the prompt.
+const TYPE_HELP = {
+  quiz: 'Välj ett svar och tryck Skicka svar. Blir det fel får ni försöka igen.',
+  photo: 'Ta en bild där hela laget syns framför attraktionen, tryck sedan Fortsätt.',
+  clue: 'Koden står på skylten vid hållplatsen. Stora och små bokstäver spelar ingen roll.',
+}
+
 export function MissionSheet({ theme, checkpoint, entry, onAttempt, onSkip, onClose, submitting, error }) {
   const [answerIndex, setAnswerIndex] = useState(null)
   const [code, setCode] = useState('')
@@ -66,6 +73,12 @@ export function MissionSheet({ theme, checkpoint, entry, onAttempt, onSkip, onCl
           )}
 
           <p style={{ margin: 0, fontSize: 15, lineHeight: 1.5, color: theme.text, fontWeight: 600 }}>{checkpoint.prompt}</p>
+          {TYPE_HELP[checkpoint.type] && (
+            <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start', fontSize: 12.5, lineHeight: 1.45, color: theme.textMuted, marginTop: -4 }}>
+              <span aria-hidden="true">💡</span>
+              <span>{TYPE_HELP[checkpoint.type]}</span>
+            </div>
+          )}
 
           {checkpoint.type === 'quiz' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 9 }}>

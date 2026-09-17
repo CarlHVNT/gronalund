@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { BRAND } from '../lib/theme'
 import { PrimaryButton } from '../components/ui'
 
-export function WelcomeScreen({ theme, eventCode, eventTitle, eventTagline, onJoin, joining, error }) {
+export function WelcomeScreen({ theme, eventCode, eventTitle, eventTagline, onJoin, joining, error, onShowIntro }) {
   const [teamName, setTeamName] = useState('')
   const [code, setCode] = useState(eventCode || '')
 
@@ -97,9 +97,16 @@ export function WelcomeScreen({ theme, eventCode, eventTitle, eventTagline, onJo
           Ange en kod för att fortsätta
         </div>
         <PrimaryButton theme={theme} type="submit" disabled={joining}>
-          {joining ? 'Ansluter…' : 'Anslut med QR-kod'}
+          {joining ? 'Ansluter…' : 'Anslut till Skattjakten'}
         </PrimaryButton>
-        <div style={{ textAlign: 'center', marginTop: 8, fontSize: 10, letterSpacing: '.06em', fontWeight: 600, color: theme.textFaint }}>
+        <button
+          type="button"
+          onClick={onShowIntro}
+          style={{ background: 'none', border: 'none', marginTop: 4, padding: 8, fontSize: 13, fontWeight: 700, color: theme.isDark ? 'rgba(255,255,255,.8)' : theme.accent }}
+        >
+          Så funkar Skattjakten
+        </button>
+        <div style={{ textAlign: 'center', fontSize: 10, letterSpacing: '.06em', fontWeight: 600, color: theme.textFaint }}>
           Drivs av ReadySet
         </div>
       </form>
