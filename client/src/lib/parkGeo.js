@@ -2,6 +2,7 @@
 import park from '../data/park.geojson.json'
 import { portraitBearing as bearingForOutline } from './bearing'
 import { coastFeatures } from './sea'
+import { buildModelFeatures } from './models'
 
 export const PARK = park
 
@@ -19,7 +20,13 @@ function withCoast(data) {
   } catch (err) {
     console.warn('Coast polygons skipped:', err?.message || err)
   }
-  return { ...data, features: [...data.features, ...extra] }
+  let models = []
+  try {
+    models = buildModelFeatures(data.features).features
+  } catch (err) {
+    console.warn('3D models skipped:', err?.message || err)
+  }
+  return { ...data, features: [...data.features, ...extra, ...models] }
 }
 
 export const MAP_DATA = withCoast(park)

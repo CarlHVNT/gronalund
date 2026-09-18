@@ -53,6 +53,10 @@ export function overpassQuery(bbox) {
   nwr["shop"](${b});
   nwr["tourism"~"^(information|attraction)$"](${b});
   node["entrance"](${b});
+  node["natural"="tree"](${b});
+  way["natural"~"^(tree_row|wood|scrub|grassland)$"](${b});
+  way["landuse"~"^(grass|flowerbed|meadow|village_green)$"](${b});
+  way["leisure"~"^(garden|playground|pitch)$"](${b});
 );
 out geom;`
 }
@@ -124,7 +128,7 @@ function closeRing(ring) {
 
 // Default heights (m) for ride footprints when OSM has no height tag.
 const ATTRACTION_HEIGHTS = {
-  roller_coaster: 22, drop_tower: 60, big_wheel: 32, swing_carousel: 45, carousel: 8,
+  roller_coaster: 22, drop_tower: 60, big_wheel: 32, swing_carousel: 14, carousel: 8,
   dark_ride: 10, maze: 9, water_slide: 12, train: 4, bumper_car: 5, amusement_ride: 14,
 }
 
@@ -136,6 +140,45 @@ function parseHeight(tags = {}, fallback) {
   const levels = Number(tags['building:levels'])
   if (levels) return Math.round(levels * 3.2 * 10) / 10
   return fallback
+}
+
+const parseNumber = (v) => {
+  const m = v != null && String(v).match(/[\d.]+/)
+  return m ? Number(m[0]) : null
+}
+
+const GREEN_LANDUSE = new Set(['grass', 'flowerbed', 'meadow', 'village_green'])
+const GREEN_LEISURE = new Set(['garden', 'playground', 'pitch'])
+const GREEN_NATURAL = new Set(['wood', 'scrub', 'grassland'])
+const isGreen = (tags) => GREEN_LANDUSE.has(tags.landuse) || GREEN_LEISURE.has(tags.leisure) || GREEN_NATURAL.has(tags.natural)
+
+// Points every `stepDeg` (in latitude degrees) along a [lat, lon] line.
+function sampleAlong(line, stepDeg, lonScale) {
+  const out = []
+  let carry = 0
+  for (let i = 0; i < line.length - 1; i++) {
+    const [lat0, lon0] = line[i]
+    const [lat1, lon1] = line[i + 1]
+    const len = Math.hypot(lat1 - lat0, (lon1 - lon0) / lonScale) // in latitude degrees
+    let d = carry
+    while (d <= len) {
+      const t = len ? d / len : 0
+      out.push([lat0 + (lat1 - lat0) * t, lon0 + (lon1 - lon0) * t])
+      d += stepDeg
+    }
+    carry = d - len
+  }
+  return out
+}
+
+function ringAreaM2(ring, mPerDegLat, mPerDegLon) {
+  let a = 0
+  for (let i = 0; i < ring.length - 1; i++) {
+    const [lat0, lon0] = ring[i]
+    const [lat1, lon1] = ring[i + 1]
+    a += lon0 * mPerDegLon * lat1 * mPerDegLat - lon1 * mPerDegLon * lat0 * mPerDegLat
+  }
+  return Math.abs(a / 2)
 }
 
 // Compass bearing (clockwise from north, in (-90, 90]) of the park's long axis,
@@ -210,6 +253,25 @@ export function toGeoJSON(raw, opts = {}) {
     }
     if ((tags.natural === 'water' || tags.natural === 'coastline' || tags.waterway) && rings.length) {
       for (const r of rings) if (nearWater(r)) push(isClosed(r) ? polygon([r]) : line(r), { layer: 'water', kind: tags.natural || tags.waterway })
+      continue
+    }
+    if (tags.natural === 'tree' && el.type === 'node') {
+      if (nearPark(pt)) push(point(pt), { layer: 'tree', height: parseHeight(tags, null), crown: parseNumber(tags.diameter_crown), kind: tags.leaf_type || null })
+      continue
+    }
+    if (tags.natural === 'tree_row' && rings.length) {
+      // A row of trees mapped as a line: one tree every ~7 m along it.
+      for (const r of rings) for (const p of sampleAlong(r, 7 / mPerDegLat, mPerDegLat / mPerDegLon)) if (nearPark(p)) push(point(p), { layer: 'tree', height: parseHeight(tags, null), crown: null, kind: tags.leaf_type || null })
+      continue
+    }
+    if (isGreen(tags) && rings.length) {
+      // Lawns, flower beds and gardens in and around the park; big park-wide
+      // polygons (all of Djurgården is a park) would paint over everything.
+      for (const r of rings) {
+        if (!isClosed(r) || !r.some(nearPark)) continue
+        if (ringAreaM2(r, mPerDegLat, mPerDegLon) > 20000) continue
+        push(polygon([r]), { layer: 'green', kind: tags.landuse || tags.leisure || tags.natural })
+      }
       continue
     }
     if (tags.highway && rings.length) {

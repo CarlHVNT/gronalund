@@ -109,8 +109,8 @@ Two map renderers share one data pipeline, and the map screen has a
 - **Illustrated plate** (default): the isometric SVG in `IsoMap.jsx`.
 - **3D vector map** (beta): MapLibre GL in `client/src/components/VectorMap.jsx`
   renders our own GeoJSON layers from OpenStreetMap in the brand palette:
-  park plate with a soft glow, footpaths with casing, extruded buildings and
-  ride footprints coloured by kind and height, coaster tracks with a shadow,
+  park plate with a soft glow, footpaths with casing, lawns, extruded
+  buildings with roof tiers, stylised 3D models of the rides (see below),
   water and shoreline, points of interest, and a mask that fades everything
   outside the park. Numbered checkpoint pins land on the ride with the same
   name; name chips with icons for checkpoints, rides and food/toilets appear
@@ -171,9 +171,33 @@ the public instance requires. The output carries an attribution string;
 keep "© OpenStreetMap contributors" visible wherever the map is rendered
 (ODbL).
 
-Two derived pieces make the real data look like the park: OpenStreetMap has
+Three derived pieces make the real data look like the park: OpenStreetMap has
 no sea polygons, only coastline lines with land on the left, so
 `client/src/lib/sea.js` builds the sea (and islands) inside the camera's
-reach from those lines; and `client/src/lib/bearing.js` picks the map
+reach from those lines; `client/src/lib/bearing.js` picks the map
 rotation that makes the park narrowest on a portrait screen, with north-up
-as the tie-break, because the park's outline is nearly square.
+as the tie-break, because the park's outline is nearly square; and
+`client/src/lib/models.js` turns the rides into small 3D models.
+
+**Ride models.** OpenStreetMap only gives each ride a point, a kind and, for
+some, a footprint, so `models.js` builds stylised assets from that at load
+time, as plain `fill-extrusion` polygons with a base, a height and a tone
+(the tones map to colours in `VectorMap.jsx`, in both themes): drop towers
+with a shaft, gondola ring and crown (Fritt fall gets its four cars and a
+machine house), the Eclipse StarFlyer as a 121 m mast with a seat ring
+(its height comes from the OSM "tower" building it stands on, which is no
+longer drawn as a prism), Kättingflygaren as a wave swinger with a canopy
+and hanging chairs, the Ferris wheel as a ring of gondolas on two supports,
+the carousel with tiered canopies, teacups, the magic carpet, the octopus /
+rocket / elephant arm rides, bumper cars under a canopy, dark rides and game
+halls as their footprint with a roof tier, and every other building with a
+roof tier. Coaster tracks become a ribbon on supports that starts low at
+the station, climbs a lift hill and rolls on with decaying hills, each
+coaster with its own height and colour (Monster dark green and tall, Twister
+a cream track on wooden bents, Jetline blue around its footprint since OSM
+maps it as an area, Kvasten teal, Vilda musen orange, Insane a steel frame
+with the track climbing through it). Trees (`natural=tree`, and one every
+7 m along `tree_row`s) get a trunk and a crown, and lawns / flower beds /
+gardens become the `green` layer. Kinds OSM leaves as plain
+"amusement_ride" are refined from the ride's name, so a renamed or new ride
+falls back to a generic pavilion rather than disappearing.

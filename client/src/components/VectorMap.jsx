@@ -116,10 +116,8 @@ function iconFor(props) {
 
 function buildStyle(t) {
   const water = t.isDark ? '#10344A' : '#B7D6E2' // evening: deep blue so the sea still reads as water
-  const ride = t.isDark ? '#1E5A34' : '#9FD3AE'
   const byLayer = (name) => ['==', ['get', 'layer'], name]
   const zoomWidth = (a, b, c) => ['interpolate', ['linear'], ['zoom'], 15, a, 17, b, 19, c]
-  const rideColor = ['match', ['get', 'kind'], 'roller_coaster', '#C8102E', ['drop_tower', 'swing_carousel', 'big_wheel'], t.gold, ride]
   const buildingColor = ['match', ['get', 'kind'], ['retail', 'commercial', 'kiosk'], t.isDark ? '#2F4A31' : '#E7DFC8', t.mapBlockFill]
   return {
     version: 8,
@@ -139,8 +137,10 @@ function buildStyle(t) {
         layout: { 'line-cap': 'round', 'line-join': 'round' },
         paint: { 'line-color': t.mapWalkway, 'line-width': zoomWidth(1.5, 5, 14), 'line-opacity': 0.95 },
       },
+      { id: 'green', type: 'fill', source: 'park', filter: byLayer('green'), paint: { 'fill-color': t.isDark ? '#164A2C' : '#CFE6CF', 'fill-opacity': 0.9 } },
       {
-        id: 'buildings', type: 'fill-extrusion', source: 'park', filter: byLayer('building'),
+        id: 'buildings', type: 'fill-extrusion', source: 'park',
+        filter: ['all', byLayer('building'), ['<', ['coalesce', ['get', 'height'], 6], 40]],
         paint: {
           'fill-extrusion-color': buildingColor,
           'fill-extrusion-height': ['min', ['coalesce', ['get', 'height'], 6], MAX_EXTRUSION],
@@ -148,24 +148,47 @@ function buildStyle(t) {
           'fill-extrusion-vertical-gradient': true,
         },
       },
+      // Stylised ride models, roofs and trees: per-part base/height/tone (see lib/models.js).
       {
-        id: 'rides', type: 'fill-extrusion', source: 'park', filter: byLayer('attraction-footprint'),
+        id: 'models', type: 'fill-extrusion', source: 'park', filter: byLayer('model'),
         paint: {
-          'fill-extrusion-color': rideColor,
-          'fill-extrusion-height': ['min', ['coalesce', ['get', 'height'], 12], MAX_EXTRUSION],
-          'fill-extrusion-opacity': 0.9,
+          'fill-extrusion-color': [
+            'match', ['get', 'tone'],
+            'steel', t.isDark ? '#7C8B92' : '#C3CCD1',
+            'steelDark', t.isDark ? '#4E5B62' : '#8A979E',
+            'accent', '#C8102E',
+            'gold', t.gold,
+            'floor', t.isDark ? '#1A4A2E' : '#E9E4D2',
+            'canopy', t.isDark ? '#7A1F2A' : '#D8434E',
+            'canopy2', t.isDark ? '#4A4636' : '#FFF4D6',
+            'cup', t.isDark ? '#B9C7D6' : '#F3F7FB',
+            'wall', t.mapBlockFill,
+            'roof', t.isDark ? '#2C5A3A' : '#A9C4A6',
+            'track', t.isDark ? '#E8503C' : '#E2572F',
+            'trackDark', t.isDark ? '#2F8F6A' : '#1F6E4F',
+            'trackBlue', t.isDark ? '#5B8FD6' : '#2F6FC4',
+            'trackTeal', t.isDark ? '#3FB3B0' : '#1F9490',
+            'trackWood', t.isDark ? '#D8B98F' : '#F1E3CB',
+            'wood', t.isDark ? '#7A5A3A' : '#B58A5C',
+            'trunk', t.isDark ? '#4A3626' : '#7A5A3A',
+            'leaf', t.isDark ? '#1F6B3A' : '#5FAE6E',
+            '#9AA3A8',
+          ],
+          'fill-extrusion-base': ['get', 'base'],
+          'fill-extrusion-height': ['get', 'height'],
+          'fill-extrusion-opacity': 1,
           'fill-extrusion-vertical-gradient': true,
         },
       },
       {
         id: 'tracks-shadow', type: 'line', source: 'park', filter: byLayer('track'),
         layout: { 'line-cap': 'round', 'line-join': 'round' },
-        paint: { 'line-color': 'rgba(11,59,34,.30)', 'line-width': zoomWidth(3, 7, 14), 'line-translate': [1, 3] },
+        paint: { 'line-color': 'rgba(11,59,34,.18)', 'line-width': zoomWidth(3, 7, 14), 'line-translate': [1, 3] },
       },
       {
         id: 'tracks', type: 'line', source: 'park', filter: byLayer('track'),
         layout: { 'line-cap': 'round', 'line-join': 'round' },
-        paint: { 'line-color': '#C8102E', 'line-width': zoomWidth(1.5, 3.5, 7) },
+        paint: { 'line-color': t.isDark ? 'rgba(255,255,255,.35)' : 'rgba(11,59,34,.30)', 'line-width': zoomWidth(1, 2, 4), 'line-opacity': 0.5 },
       },
       {
         id: 'attraction-dots', type: 'circle', source: 'park',
