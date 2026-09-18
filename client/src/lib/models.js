@@ -370,9 +370,9 @@ export function buildModelFeatures(features) {
     }
   }
 
-  // --- buildings get a roof tier; tall ride structures are drawn as models above ---
+  // --- buildings in the park get a roof tier; tall ride structures are drawn as models above ---
   for (const f of features) {
-    if (f.properties.layer !== 'building' || f.geometry.type !== 'Polygon') continue
+    if (f.properties.layer !== 'building' || f.geometry.type !== 'Polygon' || f.properties.outside) continue
     const h = Number(f.properties.height) || 6
     if (h >= 40) continue
     const ring = f.geometry.coordinates[0]
@@ -382,7 +382,7 @@ export function buildModelFeatures(features) {
 
   // --- trees ---------------------------------------------------------------
   for (const f of features) {
-    if (f.properties.layer !== 'tree' || f.geometry.type !== 'Point') continue
+    if (f.properties.layer !== 'tree' || f.geometry.type !== 'Point' || f.properties.outside) continue
     const frame = frameAt(f.geometry.coordinates)
     const h = Math.min(18, Math.max(4, Number(f.properties.height) || 8))
     const crown = Math.min(6, Math.max(1.6, (Number(f.properties.crown) || h * 0.55) / 2))

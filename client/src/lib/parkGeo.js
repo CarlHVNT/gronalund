@@ -6,27 +6,76 @@ import { buildModelFeatures } from './models'
 
 export const PARK = park
 
-// What the vector map draws: the pipeline's features plus sea and island
-// polygons derived from the coastline lines (OSM has no sea polygons), built
-// for a box comfortably larger than the camera can reach.
+// Ray casting against the park's outer ring(s), for [lon, lat].
+function insidePark(pt, rings) {
+  let inside = false
+  for (const ring of rings) {
+    for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+      const [xi, yi] = ring[i]
+      const [xj, yj] = ring[j]
+      if (yi > pt[1] !== yj > pt[1] && pt[0] < ((xj - xi) * (pt[1] - yi)) / (yj - yi) + xi) inside = !inside
+    }
+  }
+  return inside
+}
+
+// Buildings and trees outside the park are marked `outside`: the mask that
+// fades the surroundings is a flat layer and cannot dim extruded shapes, so
+// the style draws them faded by their own layer instead (see VectorMap).
+function markOutside(features) {
+  const rings = []
+  for (const f of features) {
+    if (f.properties.layer !== 'park') continue
+    const polys = f.geometry.type === 'MultiPolygon' ? f.geometry.coordinates : [f.geometry.coordinates]
+    for (const poly of polys) rings.push(poly[0])
+  }
+  if (!rings.length) return features
+  return features.map((f) => {
+    if (f.properties.layer !== 'building' && f.properties.layer !== 'tree') return f
+    const pt = f.geometry.type === 'Point' ? f.geometry.coordinates : ringCentroid(f.geometry.coordinates[0])
+    return insidePark(pt, rings) ? f : { ...f, properties: { ...f.properties, outside: true } }
+  })
+}
+
+function ringCentroid(ring) {
+  const n = ring.length - 1 || 1
+  let x = 0
+  let y = 0
+  for (let i = 0; i < n; i++) {
+    x += ring[i][0]
+    y += ring[i][1]
+  }
+  return [x / n, y / n]
+}
+
+// What the vector map draws: the pipeline's features (with the outside flag)
+// plus sea and island polygons derived from the coastline lines (OSM has no
+// sea polygons), built for a box comfortably larger than the camera can
+// reach, plus the 3D ride models.
 function withCoast(data) {
   const [[w, s], [e, n]] = data.meta?.maxBounds || data.meta?.bounds || [[0, 0], [0, 0]]
   const padLon = (e - w) * 0.6
   const padLat = (n - s) * 0.6
   const box = [[w - padLon, s - padLat], [e + padLon, n + padLat]]
+  let features = data.features
+  try {
+    features = markOutside(features)
+  } catch (err) {
+    console.warn('Outside flag skipped:', err?.message || err)
+  }
   let extra = []
   try {
-    extra = coastFeatures(data.features, box)
+    extra = coastFeatures(features, box)
   } catch (err) {
     console.warn('Coast polygons skipped:', err?.message || err)
   }
   let models = []
   try {
-    models = buildModelFeatures(data.features).features
+    models = buildModelFeatures(features).features
   } catch (err) {
     console.warn('3D models skipped:', err?.message || err)
   }
-  return { ...data, features: [...data.features, ...extra, ...models] }
+  return { ...data, features: [...features, ...extra, ...models] }
 }
 
 export const MAP_DATA = withCoast(park)

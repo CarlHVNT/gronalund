@@ -139,8 +139,49 @@ function buildStyle(t) {
       },
       { id: 'green', type: 'fill', source: 'park', filter: byLayer('green'), paint: { 'fill-color': t.isDark ? '#164A2C' : '#CFE6CF', 'fill-opacity': 0.9 } },
       {
+        id: 'tracks-shadow', type: 'line', source: 'park', filter: byLayer('track'),
+        layout: { 'line-cap': 'round', 'line-join': 'round' },
+        paint: { 'line-color': 'rgba(11,59,34,.18)', 'line-width': zoomWidth(3, 7, 14), 'line-translate': [1, 3] },
+      },
+      {
+        id: 'tracks', type: 'line', source: 'park', filter: byLayer('track'),
+        layout: { 'line-cap': 'round', 'line-join': 'round' },
+        paint: { 'line-color': t.isDark ? 'rgba(255,255,255,.35)' : 'rgba(11,59,34,.30)', 'line-width': zoomWidth(1, 2, 4), 'line-opacity': 0.5 },
+      },
+      {
+        id: 'pois', type: 'circle', source: 'park', filter: byLayer('poi'),
+        paint: { 'circle-radius': zoomWidth(1.5, 3, 5), 'circle-color': t.isDark ? 'rgba(255,255,255,.55)' : 'rgba(11,59,34,.35)' },
+      },
+      // Fades everything outside the park so it reads as the park, not a street map...
+      { id: 'mask', type: 'fill', source: 'park', filter: byLayer('mask'), paint: { 'fill-color': t.appBg, 'fill-opacity': 0.72 } },
+      // ...except the water, which is part of Gröna Lund's identity and stays blue.
+      { id: 'sea', type: 'fill', source: 'park', filter: byLayer('sea'), paint: { 'fill-color': water, 'fill-opacity': t.isDark ? 0.85 : 0.9 } },
+      {
+        id: 'water', type: 'fill', source: 'park',
+        filter: ['all', byLayer('water'), ['==', ['geometry-type'], 'Polygon']],
+        paint: { 'fill-color': water, 'fill-opacity': t.isDark ? 0.75 : 0.9 },
+      },
+      // Islands are land again, in the same faded tone as the masked surroundings.
+      { id: 'island', type: 'fill', source: 'park', filter: byLayer('island'), paint: { 'fill-color': t.appBg, 'fill-opacity': 0.95 } },
+      {
+        id: 'water-edge', type: 'line', source: 'park', filter: byLayer('water'),
+        paint: { 'line-color': t.isDark ? 'rgba(227,190,94,.25)' : '#FFFFFF', 'line-width': zoomWidth(1, 2, 4), 'line-opacity': 0.7 },
+      },
+      // Flat layers end here: fill-extrusion layers are drawn with depth after
+      // all of the above, so nothing flat (the mask, the sea) can paint over a
+      // tower or a canopy. Buildings outside the park fade by their own layer.
+      {
+        id: 'buildings-out', type: 'fill-extrusion', source: 'park',
+        filter: ['all', byLayer('building'), ['==', ['get', 'outside'], true], ['<', ['coalesce', ['get', 'height'], 6], 40]],
+        paint: {
+          'fill-extrusion-color': t.isDark ? '#173822' : '#D9E3DA',
+          'fill-extrusion-height': ['min', ['coalesce', ['get', 'height'], 6], MAX_EXTRUSION],
+          'fill-extrusion-opacity': 0.55,
+        },
+      },
+      {
         id: 'buildings', type: 'fill-extrusion', source: 'park',
-        filter: ['all', byLayer('building'), ['<', ['coalesce', ['get', 'height'], 6], 40]],
+        filter: ['all', byLayer('building'), ['!=', ['get', 'outside'], true], ['<', ['coalesce', ['get', 'height'], 6], 40]],
         paint: {
           'fill-extrusion-color': buildingColor,
           'fill-extrusion-height': ['min', ['coalesce', ['get', 'height'], 6], MAX_EXTRUSION],
@@ -181,38 +222,9 @@ function buildStyle(t) {
         },
       },
       {
-        id: 'tracks-shadow', type: 'line', source: 'park', filter: byLayer('track'),
-        layout: { 'line-cap': 'round', 'line-join': 'round' },
-        paint: { 'line-color': 'rgba(11,59,34,.18)', 'line-width': zoomWidth(3, 7, 14), 'line-translate': [1, 3] },
-      },
-      {
-        id: 'tracks', type: 'line', source: 'park', filter: byLayer('track'),
-        layout: { 'line-cap': 'round', 'line-join': 'round' },
-        paint: { 'line-color': t.isDark ? 'rgba(255,255,255,.35)' : 'rgba(11,59,34,.30)', 'line-width': zoomWidth(1, 2, 4), 'line-opacity': 0.5 },
-      },
-      {
         id: 'attraction-dots', type: 'circle', source: 'park',
         filter: ['all', byLayer('attraction'), ['==', ['geometry-type'], 'Point']],
         paint: { 'circle-radius': zoomWidth(2, 4, 7), 'circle-color': t.gold, 'circle-stroke-color': '#fff', 'circle-stroke-width': 1.5 },
-      },
-      {
-        id: 'pois', type: 'circle', source: 'park', filter: byLayer('poi'),
-        paint: { 'circle-radius': zoomWidth(1.5, 3, 5), 'circle-color': t.isDark ? 'rgba(255,255,255,.55)' : 'rgba(11,59,34,.35)' },
-      },
-      // Fades everything outside the park so it reads as the park, not a street map...
-      { id: 'mask', type: 'fill', source: 'park', filter: byLayer('mask'), paint: { 'fill-color': t.appBg, 'fill-opacity': 0.72 } },
-      // ...except the water, which is part of Gröna Lund's identity and stays blue.
-      { id: 'sea', type: 'fill', source: 'park', filter: byLayer('sea'), paint: { 'fill-color': water, 'fill-opacity': t.isDark ? 0.85 : 0.9 } },
-      {
-        id: 'water', type: 'fill', source: 'park',
-        filter: ['all', byLayer('water'), ['==', ['geometry-type'], 'Polygon']],
-        paint: { 'fill-color': water, 'fill-opacity': t.isDark ? 0.75 : 0.9 },
-      },
-      // Islands are land again, in the same faded tone as the masked surroundings.
-      { id: 'island', type: 'fill', source: 'park', filter: byLayer('island'), paint: { 'fill-color': t.appBg, 'fill-opacity': 0.95 } },
-      {
-        id: 'water-edge', type: 'line', source: 'park', filter: byLayer('water'),
-        paint: { 'line-color': t.isDark ? 'rgba(227,190,94,.25)' : '#FFFFFF', 'line-width': zoomWidth(1, 2, 4), 'line-opacity': 0.7 },
       },
     ],
   }

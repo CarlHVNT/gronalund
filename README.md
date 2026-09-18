@@ -200,4 +200,10 @@ with the track climbing through it). Trees (`natural=tree`, and one every
 7 m along `tree_row`s) get a trunk and a crown, and lawns / flower beds /
 gardens become the `green` layer. Kinds OSM leaves as plain
 "amusement_ride" are refined from the ride's name, so a renamed or new ride
-falls back to a generic pavilion rather than disappearing.
+falls back to a generic pavilion rather than disappearing. Draw order
+matters for this: MapLibre paints flat layers over anything extruded, so
+the style puts every flat layer (including the mask that fades the
+surroundings and the sea) below the buildings and models. Because the mask
+therefore cannot dim extruded shapes, `parkGeo.js` flags buildings and trees
+outside the park (point-in-polygon against the park outline) and the style
+draws those from their own faded layer.
